@@ -66,43 +66,82 @@ public final class PocuBasketballAssociation {
         }
     }
 
-    public static Player findPlayerPointsPerGame(final Player[] players, int targetPoints) {
-        // pointsPerGame에 가장 가까운 선수들을 찾음 (별도의 컨테이너 저장은 불가능하니 순차적으로 탐색하면서 조건 검사)
-        // 배열을 순회하면서 득점에 가장 가까운 사람을 저장. 그 사람의 득점 차이도 저장
+    public static Player binarySearchRecurcive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right)
+    {
+        if (left > right)
+            return targetPlayer;
 
-        // 초기값 업데이트
-        Player resultPlayer = players[0];
-        var minPointsGap = Math.abs(targetPoints - resultPlayer.getPointsPerGame());
+        int mid = (left + right) / 2;
+        int targetPlayersPointGap = Math.abs(targetPlayer.getPointsPerGame() - targetPoints);
+        int midPlayersPointGap = Math.abs(players[mid].getPointsPerGame() - targetPoints);
 
-        for (int i = 1; i < players.length; ++i)
+        // 타깃 플레이어의 갭과 mid 플레이어의 갭이 같을 경우
+        if (targetPlayersPointGap == midPlayersPointGap)
         {
-            var pointsGap = Math.abs(targetPoints - players[i].getPointsPerGame());
-
-            // 이전 플레이어의 타깃 득점 차이보다 높다면 패스
-            if (pointsGap > minPointsGap)
-                continue;
-
-            // 이전에 득점 차이 보다 새로운 선수의 득점 차이가 적다면 그 사람으로 대체
-            else if (pointsGap < minPointsGap)
-            {
-                resultPlayer = players[i];
-                minPointsGap = pointsGap;
-                continue;
-            }
-
-            // 득점 차이가 동일하다면
-            else
-            {
-                //이전에 저장된 선수보다 평균 득점이 높을 경우에만 업데이트, 아니면 패스
-                if (resultPlayer.getPointsPerGame() < players[i].getPointsPerGame())
-                {
-                    resultPlayer = players[i];
-                    minPointsGap = pointsGap;
-                }
-            }
+            // 둘의 평득을 비교해서 mid 플레이어의 평득이 높으면 타깃 플레이어를 mid로 교체
+            if (targetPlayer.getPointsPerGame() < players[mid].getPointsPerGame())
+                targetPlayer = players[mid];
         }
 
-        return resultPlayer;
+        // 타깃 플레이어의 갭보다 mid의 갭이 더 작을 경우 타깃 플레이어를 mid로 교체
+        else if (targetPlayersPointGap > midPlayersPointGap)
+        {
+            targetPlayer = players[mid];
+        }
+
+        // 이외의 경우에는 타깃 플레이어 유지
+        // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
+        if (players[mid].getPointsPerGame() > targetPoints)
+        {
+            return binarySearchRecurcive(players, targetPlayer, targetPoints, left, mid-1);
+        }
+        else
+        {
+            return binarySearchRecurcive(players, targetPlayer, targetPoints, mid+1, right);
+        }
+    }
+
+    public static Player findPlayerPointsPerGame(final Player[] players, int targetPoints) {
+        // pointsPerGame에 가장 가까운 선수들을 찾음 (별도의 컨테이너 저장은 불가능하니 순차적으로 탐색하면서 조건 검사)
+        // 이진 탐색을 사용해서 가장 가까운 사람을 탐색할 것 (선수들이 경기당 득점 포인트의 오름 차순으로 정렬되어 있음)
+        // 선형탐색 반복문에서 => 재귀로 작성할 것
+
+        return binarySearchRecurcive(players, players[(0 + players.length -1) / 2], targetPoints, 0, players.length -1);
+
+
+        // 초기값 업데이트
+//        Player resultPlayer = players[0];
+//        var minPointsGap = Math.abs(targetPoints - resultPlayer.getPointsPerGame());
+//
+//        for (int i = 1; i < players.length; ++i)
+//        {
+//            var pointsGap = Math.abs(targetPoints - players[i].getPointsPerGame());
+//
+//            // 이전 플레이어의 타깃 득점 차이보다 높다면 패스
+//            if (pointsGap > minPointsGap)
+//                continue;
+//
+//            // 이전에 득점 차이 보다 새로운 선수의 득점 차이가 적다면 그 사람으로 대체
+//            else if (pointsGap < minPointsGap)
+//            {
+//                resultPlayer = players[i];
+//                minPointsGap = pointsGap;
+//                continue;
+//            }
+//
+//            // 득점 차이가 동일하다면
+//            else
+//            {
+//                //이전에 저장된 선수보다 평균 득점이 높을 경우에만 업데이트, 아니면 패스
+//                if (resultPlayer.getPointsPerGame() < players[i].getPointsPerGame())
+//                {
+//                    resultPlayer = players[i];
+//                    minPointsGap = pointsGap;
+//                }
+//            }
+//        }
+//
+//        return resultPlayer;
     }
 
     public static Player findPlayerShootingPercentage(final Player[] players, int targetShootingPercentage) {
