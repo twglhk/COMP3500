@@ -66,7 +66,7 @@ public final class PocuBasketballAssociation {
         }
     }
 
-    public static Player binarySearchRecurcive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right)
+    public static Player PointsPerGameBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right)
     {
         if (left > right)
             return targetPlayer;
@@ -93,11 +93,11 @@ public final class PocuBasketballAssociation {
         // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
         if (players[mid].getPointsPerGame() > targetPoints)
         {
-            return binarySearchRecurcive(players, targetPlayer, targetPoints, left, mid-1);
+            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, left, mid-1);
         }
         else
         {
-            return binarySearchRecurcive(players, targetPlayer, targetPoints, mid+1, right);
+            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, mid+1, right);
         }
     }
 
@@ -106,7 +106,7 @@ public final class PocuBasketballAssociation {
         // 이진 탐색을 사용해서 가장 가까운 사람을 탐색할 것 (선수들이 경기당 득점 포인트의 오름 차순으로 정렬되어 있음)
         // 선형탐색 반복문에서 => 재귀로 작성할 것
 
-        return binarySearchRecurcive(players, players[(0 + players.length -1) / 2], targetPoints, 0, players.length -1);
+        return PointsPerGameBinarySearchRecurcive(players, players[(players.length -1) / 2], targetPoints, 0, players.length -1);
 
 
         // 초기값 업데이트
@@ -144,8 +144,43 @@ public final class PocuBasketballAssociation {
 //        return resultPlayer;
     }
 
+    public static Player ShootingPercentageBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetSP, int left, int right)
+    {
+        if (left > right)
+            return targetPlayer;
+
+        int mid = (left + right) / 2;
+        int targetPlayerSPGap = Math.abs(targetPlayer.getShootingPercentage() - targetSP);
+        int midPlayerSPGap = Math.abs(players[mid].getShootingPercentage() - targetSP);
+
+        // 타깃 플레이어의 갭과 mid 플레이어의 갭이 같을 경우
+        if (targetPlayerSPGap == midPlayerSPGap)
+        {
+            // 둘의 평득을 비교해서 mid 플레이어의 슛 성공률이 높으면 타깃 플레이어를 mid로 교체
+            if (targetPlayer.getShootingPercentage() < players[mid].getShootingPercentage())
+                targetPlayer = players[mid];
+        }
+
+        // 타깃 플레이어의 갭보다 mid의 갭이 더 작을 경우 타깃 플레이어를 mid로 교체
+        else if (targetPlayerSPGap > midPlayerSPGap)
+        {
+            targetPlayer = players[mid];
+        }
+
+        // 이외의 경우에는 타깃 플레이어 유지
+        // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
+        if (players[mid].getShootingPercentage() > targetSP)
+        {
+            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, left, mid-1);
+        }
+        else
+        {
+            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, mid+1, right);
+        }
+    }
+
     public static Player findPlayerShootingPercentage(final Player[] players, int targetShootingPercentage) {
-        return null;
+        return ShootingPercentageBinarySearchRecurcive(players, players[(players.length -1) / 2], targetShootingPercentage, 0, players.length-1);
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
