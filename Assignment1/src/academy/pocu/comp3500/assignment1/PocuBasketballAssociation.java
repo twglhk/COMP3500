@@ -8,16 +8,15 @@ public final class PocuBasketballAssociation {
     }
 
     /*
-    * 각 선수마다 필요한 정보
-    * 1. 선수의 이름
-    * 2. 경기당 평균 득점 수
-    * 3. 경기당 평균 어시스트 수
-    * 4. 경기당 평균 패스 수
-    * 5. 슛 성공률, 슛 성공률 = 100 * [총 슛 성공 수] / [총 슛 시도 수], 계산 후에 소수점 버림
-    * */
+     * 각 선수마다 필요한 정보
+     * 1. 선수의 이름
+     * 2. 경기당 평균 득점 수
+     * 3. 경기당 평균 어시스트 수
+     * 4. 경기당 평균 패스 수
+     * 5. 슛 성공률, 슛 성공률 = 100 * [총 슛 성공 수] / [총 슛 시도 수], 계산 후에 소수점 버림
+     * */
     public static void processGameStats(final GameStat[] gameStats, final Player[] outPlayers) {
-        for (int playerIndex = 0; playerIndex < outPlayers.length; ++playerIndex)
-        {
+        for (int playerIndex = 0; playerIndex < outPlayers.length; ++playerIndex) {
             Player updateTargetPlayer = outPlayers[playerIndex];
             int totalGames = 0;
             int totalPoints = 0;
@@ -26,18 +25,14 @@ public final class PocuBasketballAssociation {
             int totalGoals = 0;
             int totalGoalAttempts = 0;
 
-            for (int gameStatIndex = 0; gameStatIndex < gameStats.length; ++gameStatIndex)
-            {
+            for (int gameStatIndex = 0; gameStatIndex < gameStats.length; ++gameStatIndex) {
                 if (gameStats[gameStatIndex] == null)
                     continue;
 
-                if (updateTargetPlayer.getName() != null)
-                {
+                if (updateTargetPlayer.getName() != null) {
                     if (updateTargetPlayer.getName() != gameStats[gameStatIndex].getPlayerName())
                         continue;
-                }
-
-                else
+                } else
                     updateTargetPlayer.setName(gameStats[gameStatIndex].getPlayerName());
 
                 // Data 세팅
@@ -51,10 +46,10 @@ public final class PocuBasketballAssociation {
                 gameStats[gameStatIndex] = null;
             }
 
-            updateTargetPlayer.setPointsPerGame((int)((float)totalPoints/(float)totalGames));
-            updateTargetPlayer.setAssistsPerGame((int)((float)totalAssists/(float)totalGames));
-            updateTargetPlayer.setPassesPerGame((int)((float)totalPasses/(float)totalGames));
-            updateTargetPlayer.setShootingPercentage((int)(100f * (float)totalGoals / (float)totalGoalAttempts));
+            updateTargetPlayer.setPointsPerGame((int) ((float) totalPoints / (float) totalGames));
+            updateTargetPlayer.setAssistsPerGame((int) ((float) totalAssists / (float) totalGames));
+            updateTargetPlayer.setPassesPerGame((int) ((float) totalPasses / (float) totalGames));
+            updateTargetPlayer.setShootingPercentage((int) (100f * (float) totalGoals / (float) totalGoalAttempts));
 
             // Test Print
 //            System.out.println("게임 스탯 배열 사이즈 > " + gameStats.length);
@@ -66,8 +61,7 @@ public final class PocuBasketballAssociation {
         }
     }
 
-    public static Player PointsPerGameBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right)
-    {
+    public static Player PointsPerGameBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right) {
         if (left > right)
             return targetPlayer;
 
@@ -76,28 +70,23 @@ public final class PocuBasketballAssociation {
         int midPlayersPointGap = Math.abs(players[mid].getPointsPerGame() - targetPoints);
 
         // 타깃 플레이어의 갭과 mid 플레이어의 갭이 같을 경우
-        if (targetPlayersPointGap == midPlayersPointGap)
-        {
+        if (targetPlayersPointGap == midPlayersPointGap) {
             // 둘의 평득을 비교해서 mid 플레이어의 평득이 높으면 타깃 플레이어를 mid로 교체
             if (targetPlayer.getPointsPerGame() < players[mid].getPointsPerGame())
                 targetPlayer = players[mid];
         }
 
         // 타깃 플레이어의 갭보다 mid의 갭이 더 작을 경우 타깃 플레이어를 mid로 교체
-        else if (targetPlayersPointGap > midPlayersPointGap)
-        {
+        else if (targetPlayersPointGap > midPlayersPointGap) {
             targetPlayer = players[mid];
         }
 
         // 이외의 경우에는 타깃 플레이어 유지
         // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
-        if (players[mid].getPointsPerGame() > targetPoints)
-        {
-            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, left, mid-1);
-        }
-        else
-        {
-            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, mid+1, right);
+        if (players[mid].getPointsPerGame() > targetPoints) {
+            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, left, mid - 1);
+        } else {
+            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, mid + 1, right);
         }
     }
 
@@ -106,7 +95,7 @@ public final class PocuBasketballAssociation {
         // 이진 탐색을 사용해서 가장 가까운 사람을 탐색할 것 (선수들이 경기당 득점 포인트의 오름 차순으로 정렬되어 있음)
         // 선형탐색 반복문에서 => 재귀로 작성할 것
 
-        return PointsPerGameBinarySearchRecurcive(players, players[(players.length -1) / 2], targetPoints, 0, players.length -1);
+        return PointsPerGameBinarySearchRecurcive(players, players[(players.length - 1) / 2], targetPoints, 0, players.length - 1);
 
 
         // 초기값 업데이트
@@ -144,8 +133,7 @@ public final class PocuBasketballAssociation {
 //        return resultPlayer;
     }
 
-    public static Player ShootingPercentageBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetSP, int left, int right)
-    {
+    public static Player ShootingPercentageBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetSP, int left, int right) {
         if (left > right)
             return targetPlayer;
 
@@ -154,33 +142,28 @@ public final class PocuBasketballAssociation {
         int midPlayerSPGap = Math.abs(players[mid].getShootingPercentage() - targetSP);
 
         // 타깃 플레이어의 갭과 mid 플레이어의 갭이 같을 경우
-        if (targetPlayerSPGap == midPlayerSPGap)
-        {
+        if (targetPlayerSPGap == midPlayerSPGap) {
             // 둘의 평득을 비교해서 mid 플레이어의 슛 성공률이 높으면 타깃 플레이어를 mid로 교체
             if (targetPlayer.getShootingPercentage() < players[mid].getShootingPercentage())
                 targetPlayer = players[mid];
         }
 
         // 타깃 플레이어의 갭보다 mid의 갭이 더 작을 경우 타깃 플레이어를 mid로 교체
-        else if (targetPlayerSPGap > midPlayerSPGap)
-        {
+        else if (targetPlayerSPGap > midPlayerSPGap) {
             targetPlayer = players[mid];
         }
 
         // 이외의 경우에는 타깃 플레이어 유지
         // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
-        if (players[mid].getShootingPercentage() > targetSP)
-        {
-            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, left, mid-1);
-        }
-        else
-        {
-            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, mid+1, right);
+        if (players[mid].getShootingPercentage() > targetSP) {
+            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, left, mid - 1);
+        } else {
+            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, mid + 1, right);
         }
     }
 
     public static Player findPlayerShootingPercentage(final Player[] players, int targetShootingPercentage) {
-        return ShootingPercentageBinarySearchRecurcive(players, players[(players.length -1) / 2], targetShootingPercentage, 0, players.length-1);
+        return ShootingPercentageBinarySearchRecurcive(players, players[(players.length - 1) / 2], targetShootingPercentage, 0, players.length - 1);
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
