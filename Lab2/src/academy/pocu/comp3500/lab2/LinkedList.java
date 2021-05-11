@@ -11,13 +11,21 @@ public final class LinkedList {
         }
 
         var newNode = new Node(data);
-        rootOrNull.setNext(newNode);
+        var tempNode = rootOrNull;
+        while (tempNode.getNextOrNull() != null)
+            tempNode = tempNode.getNextOrNull();
 
-        return newNode;
+        tempNode.setNext(newNode);
+        return rootOrNull;
     }
 
     public static Node prepend(final Node rootOrNull, final int data) {
-        return null;
+        if (rootOrNull == null)
+            return null;
+
+        var newNode = new Node(data);
+        newNode.setNext(rootOrNull);
+        return newNode;
     }
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
