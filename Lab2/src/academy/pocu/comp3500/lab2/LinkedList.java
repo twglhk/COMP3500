@@ -2,6 +2,8 @@ package academy.pocu.comp3500.lab2;
 
 import academy.pocu.comp3500.lab2.datastructure.Node;
 
+import javax.swing.plaf.IconUIResource;
+
 public final class LinkedList {
     private LinkedList() { }
 
@@ -29,7 +31,31 @@ public final class LinkedList {
     }
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
-        return null;
+        if (rootOrNull == null)
+            return null;
+
+        if (index == 0)
+        {
+            Node newNode = new Node(data);
+            newNode.setNext(rootOrNull);
+        }
+
+        else {
+            Node currentNode = rootOrNull;
+            var currentIndex = 1;
+            while (currentIndex != index) {
+                currentNode = currentNode.getNextOrNull();
+                if (currentNode == null)
+                    return null;
+                currentIndex++;
+            }
+
+            var newNode = new Node(data);
+            newNode.setNext(currentNode.getNextOrNull());
+            currentNode.setNext(newNode);
+        }
+
+        return rootOrNull;
     }
 
     public static Node removeAt(final Node rootOrNull, final int index) {
