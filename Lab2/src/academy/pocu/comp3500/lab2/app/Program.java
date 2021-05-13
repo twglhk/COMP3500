@@ -54,6 +54,8 @@ public class Program {
 
             root = LinkedList.insertAt(root, 1, 12);
 
+            root = LinkedList.insertAt(root, 3, 20);
+
             assert (root.getData() == 11);
 
             Node next = root.getNextOrNull();
@@ -63,6 +65,13 @@ public class Program {
             next = next.getNextOrNull();
 
             assert (next.getData() == 10);
+
+            Node tempNode = root;
+            while (tempNode != null)
+            {
+                System.out.println(tempNode.getData());
+                tempNode = tempNode.getNextOrNull();
+            }
         }
 
         {
@@ -178,78 +187,78 @@ public class Program {
             assert (next.getData() == 10);
         }
 
-        {
-            Stack stack = new Stack();
-
-            stack.push(20);
-            stack.push(21); // stack: 21
-            //        20
-
-            int data = stack.pop();
-
-            assert (data == 21);
-
-            data = stack.pop();
-
-            assert (data == 20);
-        }
-
-        {
-            Stack stack = new Stack();
-
-            stack.push(20); // stack: 20
-
-            assert (stack.peek() == 20);
-
-            stack.push(21); // stack: 21
-            //        20
-
-            assert (stack.peek() == 21);
-        }
-
-        {
-            Stack stack  = new Stack();
-
-            stack.push(20);
-            stack.push(21);
-
-            assert (stack.getSize() == 2);
-        }
-
-        {
-            Queue queue = new Queue();
-
-            queue.enqueue(20);
-
-            assert (queue.peek() == 20);
-
-            queue.enqueue(21);
-
-            assert (queue.peek() == 20);
-        }
-
-        {
-            Queue queue = new Queue();
-
-            queue.enqueue(20);
-            queue.enqueue(21);
-
-            int data = queue.dequeue();
-
-            assert (data == 20);
-
-            data = queue.dequeue();
-
-            assert (data == 21);
-        }
-
-        {
-            Queue queue = new Queue();
-
-            queue.enqueue(20);
-            queue.enqueue(21);
-
-            assert (queue.getSize() == 2);
-        }
+//        {
+//            Stack stack = new Stack();
+//
+//            stack.push(20);
+//            stack.push(21); // stack: 21
+//            //        20
+//
+//            int data = stack.pop();
+//
+//            assert (data == 21);
+//
+//            data = stack.pop();
+//
+//            assert (data == 20);
+//        }
+//
+//        {
+//            Stack stack = new Stack();
+//
+//            stack.push(20); // stack: 20
+//
+//            assert (stack.peek() == 20);
+//
+//            stack.push(21); // stack: 21
+//            //        20
+//
+//            assert (stack.peek() == 21);
+//        }
+//
+//        {
+//            Stack stack  = new Stack();
+//
+//            stack.push(20);
+//            stack.push(21);
+//
+//            assert (stack.getSize() == 2);
+//        }
+//
+//        {
+//            Queue queue = new Queue();
+//
+//            queue.enqueue(20);
+//
+//            assert (queue.peek() == 20);
+//
+//            queue.enqueue(21);
+//
+//            assert (queue.peek() == 20);
+//        }
+//
+//        {
+//            Queue queue = new Queue();
+//
+//            queue.enqueue(20);
+//            queue.enqueue(21);
+//
+//            int data = queue.dequeue();
+//
+//            assert (data == 20);
+//
+//            data = queue.dequeue();
+//
+//            assert (data == 21);
+//        }
+//
+//        {
+//            Queue queue = new Queue();
+//
+//            queue.enqueue(20);
+//            queue.enqueue(21);
+//
+//            assert (queue.getSize() == 2);
+//        }
     }
 }

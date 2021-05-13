@@ -44,7 +44,7 @@ public final class LinkedList {
             var beforeNode = rootOrNull;
             var currentNode = rootOrNull.getNextOrNull();
             var currentIndex = 1;
-            while (currentIndex < index || currentNode != null) {
+            while (currentIndex < index && currentNode != null) {
                 beforeNode = currentNode;
                 currentNode = currentNode.getNextOrNull();
                 currentIndex++;
@@ -53,7 +53,7 @@ public final class LinkedList {
             if (currentIndex != index)
                 return rootOrNull;
 
-            newNode.setNext(beforeNode.getNextOrNull());
+            newNode.setNext(currentNode);
             beforeNode.setNext(newNode);
 
             return rootOrNull;
