@@ -51,6 +51,9 @@ public final class LinkedList {
                 currentIndex++;
             }
 
+            if (currentIndex != index)
+                return rootOrNull;
+
             newNode.setNext(beforeNode.getNextOrNull());
             beforeNode.setNext(newNode);
 
@@ -117,7 +120,22 @@ public final class LinkedList {
     }
 
     public static Node reverse(final Node rootOrNull) {
-        return null;
+        if (rootOrNull == null)
+            return null;
+
+        Node tempNode = null;
+        var currentNode = rootOrNull;
+        var nextNode = rootOrNull.getNextOrNull();
+        currentNode.setNext(null);
+
+        while(nextNode != null) {
+            tempNode = nextNode.getNextOrNull();
+            nextNode.setNext(currentNode);
+            currentNode = nextNode;
+            nextNode = tempNode;
+        }
+
+        return currentNode;
     }
 
     public static Node interleaveOrNull(final Node root0OrNull, final Node root1OrNull) {
