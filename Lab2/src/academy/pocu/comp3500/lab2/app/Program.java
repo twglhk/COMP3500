@@ -54,8 +54,10 @@ public class Program {
 
             root = LinkedList.insertAt(root, 1, 12);
 
-            root = LinkedList.insertAt(root, 3, 20);
+            root = LinkedList.insertAt(root, 0, 20);
+            root = LinkedList.insertAt(root, -1, 30);
 
+            Node testNode = LinkedList.insertAt(null, 3, 999);
             assert (root.getData() == 11);
 
             Node next = root.getNextOrNull();

@@ -31,9 +31,6 @@ public final class LinkedList {
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
         var newNode = new Node(data);
 
-        if (rootOrNull == null)
-            return newNode;
-
         if (index < 0)
             return rootOrNull;
 
@@ -41,6 +38,9 @@ public final class LinkedList {
             newNode.setNext(rootOrNull);
             return newNode;
         } else {
+            if (rootOrNull == null)
+                return null;
+
             var beforeNode = rootOrNull;
             var currentNode = rootOrNull.getNextOrNull();
             var currentIndex = 1;
