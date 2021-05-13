@@ -8,11 +8,10 @@ public final class LinkedList {
     private LinkedList() { }
 
     public static Node append(final Node rootOrNull, final int data) {
-        if (rootOrNull == null){
-            return null;
-        }
-
         var newNode = new Node(data);
+        if (rootOrNull == null){
+            return newNode;
+        }
         var tempNode = rootOrNull;
         while (tempNode.getNextOrNull() != null)
             tempNode = tempNode.getNextOrNull();
@@ -22,22 +21,21 @@ public final class LinkedList {
     }
 
     public static Node prepend(final Node rootOrNull, final int data) {
-        if (rootOrNull == null)
-            return null;
-
         var newNode = new Node(data);
-        newNode.setNext(rootOrNull);
+        if (rootOrNull != null)
+            newNode.setNext(rootOrNull);
         return newNode;
     }
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
-        if (rootOrNull == null)
-            return null;
+        Node newNode = new Node(data);
 
-        if (index == 0)
-        {
-            Node newNode = new Node(data);
+        if (rootOrNull == null)
+            return newNode;
+
+        if (index == 0) {
             newNode.setNext(rootOrNull);
+            return newNode;
         }
 
         else {
@@ -50,12 +48,11 @@ public final class LinkedList {
                 currentIndex++;
             }
 
-            var newNode = new Node(data);
             newNode.setNext(currentNode.getNextOrNull());
             currentNode.setNext(newNode);
-        }
 
-        return rootOrNull;
+            return rootOrNull;
+        }
     }
 
     public static Node removeAt(final Node rootOrNull, final int index) {
