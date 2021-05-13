@@ -30,6 +30,9 @@ public final class LinkedList {
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
         var newNode = new Node(data);
 
+        if (index < 0)
+            return rootOrNull;
+
         if (rootOrNull == null)
             return newNode;
 
@@ -39,44 +42,52 @@ public final class LinkedList {
         }
 
         else {
-            var currentNode = rootOrNull;
+            var beforeNode = rootOrNull;
+            var currentNode = rootOrNull.getNextOrNull();
             var currentIndex = 1;
-            while (currentIndex < index) {
+            while (currentIndex < index && currentNode != null) {
+                beforeNode = currentNode;
                 currentNode = currentNode.getNextOrNull();
-
-                if (currentNode == null)
-                    return rootOrNull;
-
                 currentIndex++;
             }
 
-            newNode.setNext(currentNode.getNextOrNull());
-            currentNode.setNext(newNode);
+            newNode.setNext(beforeNode.getNextOrNull());
+            beforeNode.setNext(newNode);
 
             return rootOrNull;
         }
     }
 
     public static Node removeAt(final Node rootOrNull, final int index) {
+        if (index < 0)
+            return rootOrNull;
+
         if (rootOrNull == null)
             return null;
 
+        var beforeNode = rootOrNull;
+        var currentNode = rootOrNull.getNextOrNull();
+
         if (index == 0) {
-            return rootOrNull.getNextOrNull();
+            if (currentNode == null)
+                return null;
+            else
+                return currentNode;
         }
 
-        var beforeNode = rootOrNull;
-        var currentNode = rootOrNull;
         var currentIndex = 1;
-        while (currentIndex < index) {
+        while (currentIndex < index && currentNode != null) {
             beforeNode = currentNode;
             currentNode = currentNode.getNextOrNull();
-            if (currentNode == null)
-                return rootOrNull;
             currentIndex++;
         }
 
-        beforeNode.setNext(currentNode.getNextOrNull());
+        if (currentNode == null)
+            beforeNode.setNext(null);
+
+        else
+            beforeNode.setNext(currentNode.getNextOrNull());
+
         return rootOrNull;
     }
 
