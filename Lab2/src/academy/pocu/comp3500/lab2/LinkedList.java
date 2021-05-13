@@ -40,8 +40,7 @@ public final class LinkedList {
         if (index == 0) {
             newNode.setNext(rootOrNull);
             return newNode;
-        }
-        else {
+        } else {
             var beforeNode = rootOrNull;
             var currentNode = rootOrNull.getNextOrNull();
             var currentIndex = 1;
@@ -128,7 +127,7 @@ public final class LinkedList {
         var nextNode = rootOrNull.getNextOrNull();
         currentNode.setNext(null);
 
-        while(nextNode != null) {
+        while (nextNode != null) {
             tempNode = nextNode.getNextOrNull();
             nextNode.setNext(currentNode);
             currentNode = nextNode;
@@ -147,18 +146,16 @@ public final class LinkedList {
         if (root0OrNull != null) {
             root = firstListCurrentNode;
             firstListCurrentNode = firstListCurrentNode.getNextOrNull();
-        }
-        else if (root1OrNull != null) {
+        } else if (root1OrNull != null) {
             root = secondListCurrentNode;
             secondListCurrentNode = secondListCurrentNode.getNextOrNull();
-        }
-        else {
+        } else {
             return null;
         }
 
         currentNode = root;
         while (firstListCurrentNode != null || secondListCurrentNode != null) {
-            if (secondListCurrentNode != null){
+            if (secondListCurrentNode != null) {
                 currentNode.setNext(secondListCurrentNode);
                 currentNode = secondListCurrentNode;
                 secondListCurrentNode = secondListCurrentNode.getNextOrNull();
