@@ -5,13 +5,14 @@ import academy.pocu.comp3500.lab2.datastructure.Node;
 import javax.swing.plaf.IconUIResource;
 
 public final class LinkedList {
-    private LinkedList() { }
+    private LinkedList() {
+    }
 
     public static Node append(final Node rootOrNull, final int data) {
         var newNode = new Node(data);
-        if (rootOrNull == null){
+        if (rootOrNull == null)
             return newNode;
-        }
+
         var tempNode = rootOrNull;
         while (tempNode.getNextOrNull() != null)
             tempNode = tempNode.getNextOrNull();
@@ -28,19 +29,17 @@ public final class LinkedList {
     }
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
-        var newNode = new Node(data);
+        if (rootOrNull == null)
+            return null;
 
         if (index < 0)
             return rootOrNull;
 
-        if (rootOrNull == null)
-            return newNode;
-
+        var newNode = new Node(data);
         if (index == 0) {
             newNode.setNext(rootOrNull);
             return newNode;
         }
-
         else {
             var beforeNode = rootOrNull;
             var currentNode = rootOrNull.getNextOrNull();
@@ -139,6 +138,37 @@ public final class LinkedList {
     }
 
     public static Node interleaveOrNull(final Node root0OrNull, final Node root1OrNull) {
-        return null;
+        Node root;
+        Node currentNode;
+        Node firstListCurrentNode = root0OrNull;
+        Node secondListCurrentNode = root1OrNull;
+
+        if (root0OrNull != null) {
+            root = firstListCurrentNode;
+            firstListCurrentNode = firstListCurrentNode.getNextOrNull();
+        }
+        else if (root1OrNull != null) {
+            root = secondListCurrentNode;
+            secondListCurrentNode = secondListCurrentNode.getNextOrNull();
+        }
+        else {
+            return null;
+        }
+
+        currentNode = root;
+        while (firstListCurrentNode != null || secondListCurrentNode != null) {
+            if (secondListCurrentNode != null){
+                currentNode.setNext(secondListCurrentNode);
+                currentNode = secondListCurrentNode;
+                secondListCurrentNode = secondListCurrentNode.getNextOrNull();
+            }
+            if (firstListCurrentNode != null) {
+                currentNode.setNext(firstListCurrentNode);
+                currentNode = firstListCurrentNode;
+                firstListCurrentNode = firstListCurrentNode.getNextOrNull();
+            }
+        }
+
+        return root;
     }
 }
