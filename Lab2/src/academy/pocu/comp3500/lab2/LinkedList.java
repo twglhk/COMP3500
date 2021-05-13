@@ -28,7 +28,7 @@ public final class LinkedList {
     }
 
     public static Node insertAt(final Node rootOrNull, final int index, final int data) {
-        Node newNode = new Node(data);
+        var newNode = new Node(data);
 
         if (rootOrNull == null)
             return newNode;
@@ -39,12 +39,14 @@ public final class LinkedList {
         }
 
         else {
-            Node currentNode = rootOrNull;
+            var currentNode = rootOrNull;
             var currentIndex = 1;
-            while (currentIndex != index) {
+            while (currentIndex < index) {
                 currentNode = currentNode.getNextOrNull();
+
                 if (currentNode == null)
-                    return null;
+                    return rootOrNull;
+
                 currentIndex++;
             }
 
@@ -56,7 +58,26 @@ public final class LinkedList {
     }
 
     public static Node removeAt(final Node rootOrNull, final int index) {
-        return null;
+        if (rootOrNull == null)
+            return null;
+
+        if (index == 0) {
+            return rootOrNull.getNextOrNull();
+        }
+
+        var beforeNode = rootOrNull;
+        var currentNode = rootOrNull;
+        var currentIndex = 1;
+        while (currentIndex < index) {
+            beforeNode = currentNode;
+            currentNode = currentNode.getNextOrNull();
+            if (currentNode == null)
+                return rootOrNull;
+            currentIndex++;
+        }
+
+        beforeNode.setNext(currentNode.getNextOrNull());
+        return rootOrNull;
     }
 
     public static int getIndexOf(final Node rootOrNull, final int data) {
