@@ -5,7 +5,7 @@ import academy.pocu.comp3500.lab2.datastructure.Node;
 import javax.swing.plaf.IconUIResource;
 
 public final class LinkedList {
-    private LinkedList() {
+    public LinkedList() {
     }
 
     public static Node append(final Node rootOrNull, final int data) {
