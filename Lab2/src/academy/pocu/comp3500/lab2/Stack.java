@@ -5,7 +5,8 @@ import academy.pocu.comp3500.lab2.datastructure.Node;
 public final class Stack {
     private Node root;
 
-    Stack() {
+    public Stack() {
+        root = null;
     }
 
     public void push(final int data) {
@@ -17,7 +18,9 @@ public final class Stack {
     }
 
     public int pop() {
-        return LinkedList.removeAt(root, 0).getData();
+        var data = peek();
+        LinkedList.removeAt(root, 0).getData();
+        return data;
     }
 
     public int getSize() {

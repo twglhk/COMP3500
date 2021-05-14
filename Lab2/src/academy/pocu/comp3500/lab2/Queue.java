@@ -3,8 +3,13 @@ package academy.pocu.comp3500.lab2;
 import academy.pocu.comp3500.lab2.datastructure.Node;
 
 public final class Queue {
-    public void enqueue(final int data) {
+    private Node root;
 
+    public Queue() {
+    }
+
+    public void enqueue(final int data) {
+        root = LinkedList.append(root, data);
     }
 
     public int peek() {
