@@ -6,6 +6,7 @@ public final class Queue {
     private Node root;
 
     public Queue() {
+        root = null;
     }
 
     public void enqueue(final int data) {
@@ -13,14 +14,22 @@ public final class Queue {
     }
 
     public int peek() {
-        return -1;
+        return root.getData();
     }
 
     public int dequeue() {
-        return -1;
+        var data = root.getData();
+        root = LinkedList.removeAt(root, 0);
+        return data;
     }
 
     public int getSize() {
-        return -1;
+        var stackSize = 0;
+        var currentNode = root;
+        while (currentNode != null) {
+            currentNode = currentNode.getNextOrNull();
+            stackSize++;
+        }
+        return stackSize;
     }
 }

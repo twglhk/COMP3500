@@ -19,7 +19,7 @@ public final class Stack {
 
     public int pop() {
         var data = peek();
-        LinkedList.removeAt(root, 0).getData();
+        root = LinkedList.removeAt(root, 0);
         return data;
     }
 
