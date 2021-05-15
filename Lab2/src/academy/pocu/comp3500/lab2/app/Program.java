@@ -189,47 +189,47 @@ public class Program {
 //            assert (next.getData() == 10);
 //        }
 
-        {
-            Stack stack = new Stack();
-
-            stack.push(20);
-            stack.push(21); // stack: 21
-            //        20
-
-            int data = stack.pop();
-            assert (data == 21);
-
-            data = stack.pop();
-            assert (data == 20);
-        }
-
-        {
-            Stack stack = new Stack();
-
-            stack.push(20); // stack: 20
-
-            assert (stack.peek() == 20);
-
-            stack.push(21); // stack: 21
-            //        20
-
-            assert (stack.peek() == 21);
-        }
-
-        {
-            Stack stack  = new Stack();
-
-            stack.push(20);
-            stack.push(21);
-            System.out.println(stack.getSize());
-            assert (stack.getSize() == 2);
-        }
+//        {
+//            Stack stack = new Stack();
+//
+//            stack.push(20);
+//            stack.push(21); // stack: 21
+//            //        20
+//
+//            int data = stack.pop();
+//            assert (data == 21);
+//
+//            data = stack.pop();
+//            assert (data == 20);
+//        }
+//
+//        {
+//            Stack stack = new Stack();
+//
+//            stack.push(20); // stack: 20
+//
+//            assert (stack.peek() == 20);
+//
+//            stack.push(21); // stack: 21
+//            //        20
+//
+//            assert (stack.peek() == 21);
+//        }
+//
+//        {
+//            Stack stack  = new Stack();
+//
+//            stack.push(20);
+//            stack.push(21);
+//            System.out.println(stack.getSize());
+//            assert (stack.getSize() == 2);
+//        }
 
         {
             Queue queue = new Queue();
 
             queue.enqueue(20);
-
+            System.out.println(queue.peek());
             assert (queue.peek() == 20);
 
             queue.enqueue(21);

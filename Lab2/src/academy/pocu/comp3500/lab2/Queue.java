@@ -14,9 +14,12 @@ public final class Queue {
     }
 
     public void enqueue(final int data) {
-        backNode = LinkedList.append(backNode, data).getNextOrNull();
-        if (frontNode == null)
+        backNode = LinkedList.append(backNode, data);
+        if (frontNode == null) {
             frontNode = backNode;
+        }
+        if (backNode.getNextOrNull() != null)
+            backNode = backNode.getNextOrNull();
         queueSize++;
     }
 
@@ -28,6 +31,8 @@ public final class Queue {
         var data = frontNode.getData();
         frontNode = LinkedList.removeAt(frontNode, 0);
         queueSize--;
+        if (queueSize == 0)
+            backNode = null;
         return data;
     }
 
