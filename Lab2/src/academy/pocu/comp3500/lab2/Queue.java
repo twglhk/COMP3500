@@ -3,33 +3,35 @@ package academy.pocu.comp3500.lab2;
 import academy.pocu.comp3500.lab2.datastructure.Node;
 
 public final class Queue {
-    private Node root;
+    private Node frontNode;
+    private Node backNode;
+    private int queueSize;
 
     public Queue() {
-        root = null;
+        frontNode = null;
+        backNode = null;
+        queueSize = 0;
     }
 
     public void enqueue(final int data) {
-        root = LinkedList.append(root, data);
+        backNode = LinkedList.append(backNode, data).getNextOrNull();
+        if (frontNode == null)
+            frontNode = backNode;
+        queueSize++;
     }
 
     public int peek() {
-        return root.getData();
+        return frontNode.getData();
     }
 
     public int dequeue() {
-        var data = root.getData();
-        root = LinkedList.removeAt(root, 0);
+        var data = frontNode.getData();
+        frontNode = LinkedList.removeAt(frontNode, 0);
+        queueSize--;
         return data;
     }
 
     public int getSize() {
-        var stackSize = 0;
-        var currentNode = root;
-        while (currentNode != null) {
-            currentNode = currentNode.getNextOrNull();
-            stackSize++;
-        }
-        return stackSize;
+        return queueSize;
     }
 }
