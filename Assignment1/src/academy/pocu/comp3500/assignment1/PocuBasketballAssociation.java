@@ -16,8 +16,29 @@ public final class PocuBasketballAssociation {
      * 5. 슛 성공률, 슛 성공률 = 100 * [총 슛 성공 수] / [총 슛 시도 수], 계산 후에 소수점 버림
      * */
     public static void processGameStats(final GameStat[] gameStats, final Player[] outPlayers) {
-        for (int playerIndex = 0; playerIndex < outPlayers.length; ++playerIndex) {
-            Player updateTargetPlayer = outPlayers[playerIndex];
+        gameStatQuickSort(gameStats);
+        int currentGameNumber = 1;
+        Player updateTargetPlayer = null;
+
+        for (int i = 0; i < gameStats.length; ++i) {
+            for (int j = 0; j <outPlayers.length; ++j){
+                if (outPlayers[j].getName() == null){
+                    outPlayers[j].setName(gameStats[j].getPlayerName());
+                    updateTargetPlayer = outPlayers[j];
+                    break;
+                } else {
+                    if (outPlayers[j].getName() == gameStats[i].getPlayerName()) {
+                        updateTargetPlayer = outPlayers[j];
+                        break;
+                    }
+                }
+            }
+
+            updateTargetPlayer.setPointsPerGame(
+                    (updateTargetPlayer.getPointsPerGame() + gameStats[i].getPoints()) / currentGameNumber);
+        }
+
+        for (int i = 0; i < outPlayers.length; ++i) {
             int totalGames = 0;
             int totalPoints = 0;
             int totalAssists = 0;
@@ -25,43 +46,75 @@ public final class PocuBasketballAssociation {
             int totalGoals = 0;
             int totalGoalAttempts = 0;
 
-            for (int gameStatIndex = 0; gameStatIndex < gameStats.length; ++gameStatIndex) {
-                if (gameStats[gameStatIndex] == null)
-                    continue;
 
-                if (updateTargetPlayer.getName() != null) {
-                    if (updateTargetPlayer.getName() != gameStats[gameStatIndex].getPlayerName())
+            for (int j = 0; j < gameStats.length; ++j) {
+                if (outPlayers[i].getName() != null) {
+                    if (!outPlayers[i].getName().equals(gameStats[j].getPlayerName()))
                         continue;
                 } else
-                    updateTargetPlayer.setName(gameStats[gameStatIndex].getPlayerName());
+                    outPlayers[i].setName(gameStats[j].getPlayerName());
 
                 // Data 세팅
                 totalGames++;
-                totalPoints += gameStats[gameStatIndex].getPoints();
-                totalAssists += gameStats[gameStatIndex].getAssists();
-                totalPasses += gameStats[gameStatIndex].getNumPasses();
-                totalGoals += gameStats[gameStatIndex].getGoals();
-                totalGoalAttempts += gameStats[gameStatIndex].getGoalAttempts();
-
-                gameStats[gameStatIndex] = null;
+                totalPoints += gameStats[j].getPoints();
+                totalAssists += gameStats[j].getAssists();
+                totalPasses += gameStats[j].getNumPasses();
+                totalGoals += gameStats[j].getGoals();
+                totalGoalAttempts += gameStats[j].getGoalAttempts();
             }
 
-            updateTargetPlayer.setPointsPerGame((int) ((float) totalPoints / (float) totalGames));
-            updateTargetPlayer.setAssistsPerGame((int) ((float) totalAssists / (float) totalGames));
-            updateTargetPlayer.setPassesPerGame((int) ((float) totalPasses / (float) totalGames));
-            updateTargetPlayer.setShootingPercentage((int) (100f * (float) totalGoals / (float) totalGoalAttempts));
+            outPlayers[i].setPointsPerGame((int) ((float) totalPoints / (float) totalGames));
+            outPlayers[i].setAssistsPerGame((int) ((float) totalAssists / (float) totalGames));
+            outPlayers[i].setPassesPerGame((int) ((float) totalPasses / (float) totalGames));
+            outPlayers[i].setShootingPercentage((int) (100f * (float) totalGoals / (float) totalGoalAttempts));
 
             // Test Print
-//            System.out.println("게임 스탯 배열 사이즈 > " + gameStats.length);
-//            System.out.println("PlayerName > " + updateTargetPlayer.getName());
-//            System.out.println(" 평균 득점 > " + updateTargetPlayer.getPointsPerGame());
-//            System.out.println(" 평균 도움 > " + updateTargetPlayer.getAssistsPerGame());
-//            System.out.println(" 평균 패스 > " + updateTargetPlayer.getPassesPerGame());
-//            System.out.println(" 평균 성공률 > " + updateTargetPlayer.getShootingPercentage() + "%");
+            System.out.println("PlayerName > " + outPlayers[i].getName());
+            System.out.println(" 평균 득점 > " + outPlayers[i].getPointsPerGame());
+            System.out.println(" 평균 도움 > " + outPlayers[i].getAssistsPerGame());
+            System.out.println(" 평균 패스 > " + outPlayers[i].getPassesPerGame());
+            System.out.println(" 평균 성공률 > " + outPlayers[i].getShootingPercentage() + "%");
         }
     }
 
-    public static Player PointsPerGameBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right) {
+    private static void gameStatQuickSort(final GameStat[] gameStats) {
+        gameStatQuickSortRecursive(gameStats, 0, gameStats.length - 1);
+    }
+
+    private static void gameStatQuickSortRecursive(final GameStat[] gameStats, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int pivotPos = gameStatPartition(gameStats, left, right);
+
+        gameStatQuickSortRecursive(gameStats, left, pivotPos - 1);
+        gameStatQuickSortRecursive(gameStats, pivotPos + 1, right);
+    }
+
+    private static int gameStatPartition(final GameStat[] gameStats, int left, int right) {
+        int pivot = gameStats[right].getGame();
+        int i = (left - 1);
+        for (int j = left; j < right; ++j) {
+            if (gameStats[j].getGame() < pivot) {
+                ++i;
+                gameStatSwap(gameStats, i, j);
+            }
+        }
+
+        int pivotPos = i + 1;
+        gameStatSwap(gameStats, pivotPos, right);
+
+        return pivotPos;
+    }
+
+    private static void gameStatSwap(final GameStat[] gameStats, int pos1, int pos2) {
+        GameStat temp = gameStats[pos1];
+        gameStats[pos1] = gameStats[pos2];
+        gameStats[pos2] = temp;
+    }
+
+    public static Player pointsPerGameBinarySearchRecursive(final Player[] players, Player targetPlayer, int targetPoints, int left, int right) {
         if (left > right)
             return targetPlayer;
 
@@ -84,9 +137,9 @@ public final class PocuBasketballAssociation {
         // 이외의 경우에는 타깃 플레이어 유지
         // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
         if (players[mid].getPointsPerGame() > targetPoints) {
-            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, left, mid - 1);
+            return pointsPerGameBinarySearchRecursive(players, targetPlayer, targetPoints, left, mid - 1);
         } else {
-            return PointsPerGameBinarySearchRecurcive(players, targetPlayer, targetPoints, mid + 1, right);
+            return pointsPerGameBinarySearchRecursive(players, targetPlayer, targetPoints, mid + 1, right);
         }
     }
 
@@ -95,7 +148,7 @@ public final class PocuBasketballAssociation {
         // 이진 탐색을 사용해서 가장 가까운 사람을 탐색할 것 (선수들이 경기당 득점 포인트의 오름 차순으로 정렬되어 있음)
         // 선형탐색 반복문에서 => 재귀로 작성할 것
 
-        return PointsPerGameBinarySearchRecurcive(players, players[(players.length - 1) / 2], targetPoints, 0, players.length - 1);
+        return pointsPerGameBinarySearchRecursive(players, players[(players.length - 1) / 2], targetPoints, 0, players.length - 1);
 
 
         // 초기값 업데이트
@@ -133,7 +186,7 @@ public final class PocuBasketballAssociation {
 //        return resultPlayer;
     }
 
-    public static Player ShootingPercentageBinarySearchRecurcive(final Player[] players, Player targetPlayer, int targetSP, int left, int right) {
+    public static Player shootingPercentageBinarySearchRecursive(final Player[] players, Player targetPlayer, int targetSP, int left, int right) {
         if (left > right)
             return targetPlayer;
 
@@ -156,14 +209,14 @@ public final class PocuBasketballAssociation {
         // 이외의 경우에는 타깃 플레이어 유지
         // 이진 탐색 재귀 시작. 동점인 플레이어가 있을 수 있기 때문에 targetPoints와 일치해도 모두 탐색 진행
         if (players[mid].getShootingPercentage() > targetSP) {
-            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, left, mid - 1);
+            return shootingPercentageBinarySearchRecursive(players, targetPlayer, targetSP, left, mid - 1);
         } else {
-            return ShootingPercentageBinarySearchRecurcive(players, targetPlayer, targetSP, mid + 1, right);
+            return shootingPercentageBinarySearchRecursive(players, targetPlayer, targetSP, mid + 1, right);
         }
     }
 
     public static Player findPlayerShootingPercentage(final Player[] players, int targetShootingPercentage) {
-        return ShootingPercentageBinarySearchRecurcive(players, players[(players.length - 1) / 2], targetShootingPercentage, 0, players.length - 1);
+        return shootingPercentageBinarySearchRecursive(players, players[(players.length - 1) / 2], targetShootingPercentage, 0, players.length - 1);
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
