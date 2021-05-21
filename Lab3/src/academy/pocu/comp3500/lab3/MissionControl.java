@@ -16,10 +16,23 @@ public final class MissionControl {
             return left;
 
         int mid = (left + right) / 2;
-        if (altitudes[mid] > altitudes[mid - 1] && altitudes[mid] > altitudes[mid + 1])
+        int midLeft;
+        int midRight;
+
+        if (mid != 0)
+            midLeft = mid - 1;
+        else
+            midLeft = mid;
+
+        if (mid != altitudes.length -1)
+            midRight = mid + 1;
+        else
+            midRight = mid;
+
+        if (altitudes[mid] > altitudes[midLeft] && altitudes[mid] > altitudes[midRight])
             return mid;
 
-        if (altitudes[mid] < altitudes[mid - 1])
+        if (altitudes[mid] < altitudes[midLeft])
             return findMaxAltitudeRecursiveBinarySearch(altitudes, left, mid);
         else
             return findMaxAltitudeRecursiveBinarySearch(altitudes, mid + 1, right);
