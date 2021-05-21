@@ -24,7 +24,7 @@ public final class MissionControl {
         else
             midLeft = mid;
 
-        if (mid != altitudes.length -1)
+        if (mid != altitudes.length - 1)
             midRight = mid + 1;
         else
             midRight = mid;
@@ -37,17 +37,40 @@ public final class MissionControl {
         else if (altitudes[mid] < altitudes[midRight])
             return findMaxAltitudeRecursiveBinarySearch(altitudes, mid + 1, right);
         else
-            return  -1;
+            return -1;
     }
 
     public static ArrayList<Integer> findAltitudeTimes(final int[] altitudes, final int targetAltitude) {
         ArrayList<Integer> bounds = new ArrayList<>();
         int maxAltitudeTime = findMaxAltitudeRecursiveBinarySearch(altitudes, 0, altitudes.length - 1);
-        recursiveFindTargetTimeBounds(bounds, altitudes, maxAltitudeTime);
+        recursiveFindTargetTimeLeftBounds(bounds, altitudes, targetAltitude, 0, maxAltitudeTime);
+        recursiveFindTargetTimeRightBounds(bounds, altitudes, targetAltitude, maxAltitudeTime, altitudes.length - 1);
         return bounds;
     }
 
-    public static void recursiveFindTargetTimeBounds(ArrayList<Integer> bounds, final int[] altitudes, int maxAltitudeTime) {
+    public static void recursiveFindTargetTimeLeftBounds(final ArrayList<Integer> bounds, final int[] altitudes, int targetAltitude, int left, int right) {
+        if (left > right)
+            return;
 
+        int mid = (left + right) / 2;
+        if (altitudes[mid] < targetAltitude)
+            recursiveFindTargetTimeLeftBounds(bounds, altitudes, targetAltitude, mid + 1, right);
+        else if (altitudes[mid] > targetAltitude)
+            recursiveFindTargetTimeLeftBounds(bounds, altitudes, targetAltitude, left, mid - 1);
+        else
+            bounds.add(mid);
+    }
+
+    public static void recursiveFindTargetTimeRightBounds(final ArrayList<Integer> bounds, final int[] altitudes, int targetAltitude, int left, int right) {
+        if (left > right)
+            return;
+
+        int mid = (left + right) / 2;
+        if (altitudes[mid] < targetAltitude)
+            recursiveFindTargetTimeRightBounds(bounds, altitudes, targetAltitude, left, mid - 1);
+        else if (altitudes[mid] > targetAltitude)
+            recursiveFindTargetTimeRightBounds(bounds, altitudes, targetAltitude, mid + 1, right);
+        else
+            bounds.add(mid);
     }
 }
