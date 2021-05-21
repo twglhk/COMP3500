@@ -16,7 +16,7 @@ public final class MissionControl {
             return left;
 
         int mid = (left + right) / 2;
-        if (altitudes[mid] >= altitudes[mid - 1] && altitudes[mid] >= altitudes[mid + 1])
+        if (altitudes[mid] > altitudes[mid - 1] && altitudes[mid] > altitudes[mid + 1])
             return mid;
 
         if (altitudes[mid] < altitudes[mid - 1])
@@ -26,6 +26,7 @@ public final class MissionControl {
     }
 
     public static ArrayList<Integer> findAltitudeTimes(final int[] altitudes, final int targetAltitude) {
+        ArrayList<Integer> bounds = new ArrayList<>();
 
         return null;
     }
