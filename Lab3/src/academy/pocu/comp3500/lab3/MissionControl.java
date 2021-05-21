@@ -12,8 +12,8 @@ public final class MissionControl {
     }
 
     public static int findMaxAltitudeRecursiveBinarySearch(final int[] altitudes, int left, int right) {
-        if (left == right)
-            return left;
+        if (left > right)
+            return -1;
 
         int mid = (left + right) / 2;
         int midLeft;
@@ -31,18 +31,19 @@ public final class MissionControl {
 
         if (altitudes[mid] >= altitudes[midLeft] && altitudes[mid] >= altitudes[midRight])
             return mid;
-
-        if (altitudes[mid] < altitudes[midLeft])
-            return findMaxAltitudeRecursiveBinarySearch(altitudes, left, mid);
-        else if (altitudes[mid] < altitudes[midRight])
+        else if (altitudes[mid] < altitudes[midLeft])
+            return findMaxAltitudeRecursiveBinarySearch(altitudes, left, mid -1);
+        else //if (altitudes[mid] < altitudes[midRight])
             return findMaxAltitudeRecursiveBinarySearch(altitudes, mid + 1, right);
-        else
-            return -1;
     }
 
     public static ArrayList<Integer> findAltitudeTimes(final int[] altitudes, final int targetAltitude) {
         ArrayList<Integer> bounds = new ArrayList<>();
         int maxAltitudeTime = findMaxAltitudeRecursiveBinarySearch(altitudes, 0, altitudes.length - 1);
+        if (altitudes[maxAltitudeTime] == targetAltitude) {
+            bounds.add(maxAltitudeTime);
+            return bounds;
+        }
         recursiveFindTargetTimeLeftBounds(bounds, altitudes, targetAltitude, 0, maxAltitudeTime);
         recursiveFindTargetTimeRightBounds(bounds, altitudes, targetAltitude, maxAltitudeTime, altitudes.length - 1);
         return bounds;
