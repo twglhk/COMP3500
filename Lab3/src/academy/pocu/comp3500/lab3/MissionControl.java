@@ -29,18 +29,25 @@ public final class MissionControl {
         else
             midRight = mid;
 
-        if (altitudes[mid] > altitudes[midLeft] && altitudes[mid] > altitudes[midRight])
+        if (altitudes[mid] >= altitudes[midLeft] && altitudes[mid] >= altitudes[midRight])
             return mid;
 
-        if (altitudes[mid] <= altitudes[midLeft])
+        if (altitudes[mid] < altitudes[midLeft])
             return findMaxAltitudeRecursiveBinarySearch(altitudes, left, mid);
-        else
+        else if (altitudes[mid] < altitudes[midRight])
             return findMaxAltitudeRecursiveBinarySearch(altitudes, mid + 1, right);
+        else
+            return  -1;
     }
 
     public static ArrayList<Integer> findAltitudeTimes(final int[] altitudes, final int targetAltitude) {
         ArrayList<Integer> bounds = new ArrayList<>();
+        int maxAltitudeTime = findMaxAltitudeRecursiveBinarySearch(altitudes, 0, altitudes.length - 1);
+        recursiveFindTargetTimeBounds(bounds, altitudes, maxAltitudeTime);
+        return bounds;
+    }
 
-        return null;
+    public static void recursiveFindTargetTimeBounds(ArrayList<Integer> bounds, final int[] altitudes, int maxAltitudeTime) {
+
     }
 }
