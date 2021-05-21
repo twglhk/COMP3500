@@ -37,7 +37,7 @@ public class Program {
 //            assert (maxAltitudeTime9 == 0);
 //        }
         {
-            final int[] altitudes = new int[] { 2 };
+            final int[] altitudes = new int[] { 2, 5, 6, 18, 2, 1 };
 
             ArrayList<Integer> bounds = MissionControl.findAltitudeTimes(altitudes, 2);
 

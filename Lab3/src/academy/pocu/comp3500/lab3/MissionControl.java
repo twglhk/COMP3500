@@ -32,7 +32,7 @@ public final class MissionControl {
         if (altitudes[mid] >= altitudes[midLeft] && altitudes[mid] >= altitudes[midRight])
             return mid;
         else if (altitudes[mid] < altitudes[midLeft])
-            return findMaxAltitudeRecursiveBinarySearch(altitudes, left, mid -1);
+            return findMaxAltitudeRecursiveBinarySearch(altitudes, left, mid - 1);
         else //if (altitudes[mid] < altitudes[midRight])
             return findMaxAltitudeRecursiveBinarySearch(altitudes, mid + 1, right);
     }
