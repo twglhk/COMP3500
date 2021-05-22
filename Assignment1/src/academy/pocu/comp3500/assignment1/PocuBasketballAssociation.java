@@ -77,6 +77,26 @@ public final class PocuBasketballAssociation {
         }
     }
 
+    private static void gameStateSort(final GameStat[] gameStats) {
+        String currentPlayerName = gameStats[0].getPlayerName();
+        int leftCursor = 1;
+        int rightCursor = 1;
+
+        while (leftCursor < gameStats.length) {
+            rightCursor++;
+
+            if (currentPlayerName == gameStats[rightCursor].getPlayerName()) {
+                gameStatSwap(gameStats, leftCursor, rightCursor);
+                leftCursor++;
+            }
+            if (rightCursor == gameStats.length - 1) {
+                currentPlayerName = gameStats[leftCursor].getPlayerName();
+                leftCursor++;
+                rightCursor = leftCursor;
+            }
+        }
+    }
+
     private static void gameStatQuickSort(final GameStat[] gameStats) {
         gameStatQuickSortRecursive(gameStats, 0, gameStats.length - 1);
     }
