@@ -277,7 +277,7 @@ public final class PocuBasketballAssociation {
 
         while (left < heapSize - 1) {
             if (right < heapSize - 1) {
-                if (scratch[left].getPassesPerGame() < scratch[right].getPassesPerGame()) {
+                if (scratch[left].getPassesPerGame() > scratch[right].getPassesPerGame()) {
                     if (scratch[right].getPassesPerGame() > scratch[index].getPassesPerGame())
                         break;
                     playerSwap(scratch, index, right);

@@ -8,8 +8,7 @@ import java.util.Random;
 public class Program {
 
     public static void main(String[] args) {
-
-        TestG02();
+        //TestG02();
         myTest();
     }
 
@@ -26,26 +25,27 @@ public class Program {
     public static void TestG02() {
         // Duplicated Assist
         Player[] players = new Player[]{
-                new Player("Player 1", 2, 0, 100, 78),
-                new Player("Player 2", 0, 4, 40, 62),
-                new Player("Player 3", 10, 4, 0, 66),
-                new Player("Player 4", 3, 4, 50, 22),
-                new Player("Player 5", 1, 6, 7, 12),
-                new Player("Player 6", 11, 6, 24, 26),
-                new Player("Player 7", 7, 6, 4, 15),
-                new Player("Player 8", 8, 8, 2, 11),
-                new Player("Player 9", 5, 8, 10, 5),
-                new Player("Player 10", 8, 8, 5, 67)
+                new Player("Player 7", 3, 29, 27, 8),
+                new Player("Player 6", 1, 20, 12, 29),
+                new Player("Player 1", 28, 15, 7, 9),
+                new Player("Player 4", 11, 6, 9, 13),
+                new Player("Player 5", 12, 6, 8, 0),
+                new Player("Player 2", 28, 5, 15, 18),
+                new Player("Player 3", 27, 5, 15, 16),
         };
-        final int TEAM_SIZE = 4;
+        final int TEAM_SIZE = 5;
         Player[] outPlayers = new Player[TEAM_SIZE];
         Player[] scratch = new Player[TEAM_SIZE];
         long maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, TEAM_SIZE, outPlayers, scratch);
-        assert (maxTeamwork == 124 * 4);
-        assert (getPlayerOrNull(outPlayers, "Player 2") != null);
-        assert (getPlayerOrNull(outPlayers, "Player 4") != null);
-        assert (getPlayerOrNull(outPlayers, "Player 6") != null);
-        assert (getPlayerOrNull(outPlayers, "Player 9") != null);
+        System.out.println(maxTeamwork);
+//        for (int i = 0; i < outPlayers.length; ++i) {
+//            System.out.println(outPlayers[i].getName());
+//        }
+//        assert (maxTeamwork == 3000);
+//        assert (getPlayerOrNull(outPlayers, "Player 2") != null);
+//        assert (getPlayerOrNull(outPlayers, "Player 4") != null);
+//        assert (getPlayerOrNull(outPlayers, "Player 6") != null);
+//        assert (getPlayerOrNull(outPlayers, "Player 9") != null);
     }
 
     public static void myTest() {
