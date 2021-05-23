@@ -27,12 +27,12 @@ public final class PocuBasketballAssociation {
         int totalPasses = 0;
 
         for (int i = 0; i < gameStats.length; ++i) {
-            if (gameStats[i].getPlayerName() != playerName) {
+            if (!gameStats[i].getPlayerName().equals(playerName)) {
                 outPlayers[playersCursor].setName(playerName);
                 outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
                 outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
                 outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
-                outPlayers[playersCursor].setShootingPercentage(100 * totalGoals / totalGoalAttempts);
+                outPlayers[playersCursor].setShootingPercentage((int)Math.floor((100 * totalGoals) / totalGoalAttempts));
 
                 playerName = gameStats[i].getPlayerName();
                 playersCursor++;
@@ -41,7 +41,7 @@ public final class PocuBasketballAssociation {
                 totalGoalAttempts = 0;
                 totalPoints = 0;
                 totalAssist = 0;
-                totalPasses= 0;
+                totalPasses = 0;
             }
 
             totalGames++;
@@ -57,7 +57,7 @@ public final class PocuBasketballAssociation {
         outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
         outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
         outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
-        outPlayers[playersCursor].setShootingPercentage(100 * totalGoals / totalGoalAttempts);
+        outPlayers[playersCursor].setShootingPercentage((100 * totalGoals) / totalGoalAttempts);
     }
 
     private static void gameStatQuickSort(final GameStat[] gameStats) {
