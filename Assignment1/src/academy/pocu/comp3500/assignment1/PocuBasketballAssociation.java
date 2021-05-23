@@ -3,6 +3,8 @@ package academy.pocu.comp3500.assignment1;
 import academy.pocu.comp3500.assignment1.pba.Player;
 import academy.pocu.comp3500.assignment1.pba.GameStat;
 
+import java.util.Random;
+
 public final class PocuBasketballAssociation {
     private PocuBasketballAssociation() {
     }
@@ -336,13 +338,22 @@ public final class PocuBasketballAssociation {
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
+        if (k == 1) {
+            var max = players[0].getPassesPerGame() * players[0].getAssistsPerGame();
+            outPlayers[0] = players[0];
+
+            for (int i = 1; i < players.length; ++i) {
+                var temp = players[i].getPassesPerGame() * players[i].getAssistsPerGame();
+                if (temp > max) {
+                    max = temp;
+                    outPlayers[0] = players[i];
+                }
+            }
+            return max;
+        }
+
         // 정렬
         playerTeamworkPointQuickSort(players);
-
-        if (k == 1) {
-            outPlayers[0] = players[0];
-            return players[0].getPassesPerGame() * players[0].getAssistsPerGame();
-        }
 
         // 값 초기화
         int maxSumPassesPerGame = 0;
@@ -397,7 +408,7 @@ public final class PocuBasketballAssociation {
             currentSumPassesPerGame += players[j].getPassesPerGame();
         }
 
-        k = players.length;
+        k = 1;
         maxTeamworkPoint = currentSumPassesPerGame * players[players.length - 1].getAssistsPerGame();
 
         for (int i = players.length - 2; i >= 0; --i) {
