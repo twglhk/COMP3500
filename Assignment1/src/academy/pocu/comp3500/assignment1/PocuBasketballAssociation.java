@@ -275,7 +275,7 @@ public final class PocuBasketballAssociation {
         scratch[index] = scratch[heapSize - 1];
         scratch[heapSize - 1] = null;
 
-        while (left < heapSize- 1) {
+        while (left < heapSize - 1) {
             if (right < heapSize - 1) {
                 if (scratch[left].getPassesPerGame() < scratch[right].getPassesPerGame()) {
                     if (scratch[right].getPassesPerGame() > scratch[index].getPassesPerGame())
@@ -400,6 +400,9 @@ public final class PocuBasketballAssociation {
     }
 
     public static int findDreamTeamSize(final Player[] players, final Player[] scratch) {
+        if (players.length == 0)
+            return 0;
+
         // 정렬
         playerTeamworkPointQuickSort(players);
 
@@ -408,15 +411,15 @@ public final class PocuBasketballAssociation {
         int currentSumPassesPerGame = 0;
         int currentTeamworkPoint = 0;
 
-        for (int j = players.length - 1; j >= 0; --j) {
-            currentSumPassesPerGame += players[j].getPassesPerGame();
+        for (int i = 0; i < players.length; ++i) {
+            currentSumPassesPerGame += players[i].getPassesPerGame();
         }
 
         k = players.length;
         maxTeamworkPoint = currentSumPassesPerGame * players[players.length - 1].getAssistsPerGame();
 
         for (int i = players.length - 2; i >= 0; --i) {
-            currentSumPassesPerGame -= players[i].getPassesPerGame();
+            currentSumPassesPerGame -= players[i + 1].getPassesPerGame();
             currentTeamworkPoint = currentSumPassesPerGame * players[i].getAssistsPerGame();
 
             if (maxTeamworkPoint < currentTeamworkPoint) {
