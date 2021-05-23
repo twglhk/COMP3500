@@ -147,7 +147,7 @@ public class Program {
                     new Player("Player 8", 33, 11, 3, 72),
             };
 
-            final int TEAM_SIZE = 4;
+            final int TEAM_SIZE = 1;
 
             Player[] outPlayers = new Player[TEAM_SIZE];
             Player[] scratch = new Player[TEAM_SIZE];

@@ -339,24 +339,29 @@ public final class PocuBasketballAssociation {
         // 정렬
         playerTeamworkPointQuickSort(players);
 
+        if (k == 1) {
+            outPlayers[0] = players[0];
+            return players[0].getPassesPerGame() * players[0].getAssistsPerGame();
+        }
+
         // 값 초기화
         int maxSumPassesPerGame = 0;
         int cursor = 1;
         for (int i = 0; i < k; ++i) {
             outPlayers[i] = players[i];
             maxSumPassesPerGame += players[i].getPassesPerGame();
-            
-            if (i != k-1) {
+
+            if (i != k - 1) {
                 cursor = heapInsert(scratch, players[i], cursor);
             }
         }
-        int maxTeamWorkPoint = maxSumPassesPerGame * players[k-1].getAssistsPerGame();
+        int maxTeamWorkPoint = maxSumPassesPerGame * players[k - 1].getAssistsPerGame();
         int currentPassesSum = 0;
 
         for (int i = k; i < players.length; ++i) {
             // 새 요소 삽입
             cursor = heapInsert(scratch, players[i - 1], cursor);
-            
+
             // 패스 합 계산 (시간 오버되면 힙 내에서 패스합 유지할 것)
             for (int j = 1; j < scratch.length; ++j) {
                 currentPassesSum += scratch[j].getPassesPerGame();
@@ -369,7 +374,7 @@ public final class PocuBasketballAssociation {
                     maxSumPassesPerGame = currentPassesSum;
 
                     for (int j = 0; j < outPlayers.length - 1; ++j) {
-                        outPlayers[j] = scratch[j+1];
+                        outPlayers[j] = scratch[j + 1];
                     }
                     outPlayers[outPlayers.length - 1] = players[i];
                 }
