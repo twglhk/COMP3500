@@ -393,24 +393,23 @@ public final class PocuBasketballAssociation {
         int currentSumPassesPerGame = 0;
         int currentTeamworkPoint = 0;
 
-        for (int i = players.length - 1; i >= 0; --i) {
+        for (int j = players.length - 1; j >= 0; --j) {
+            currentSumPassesPerGame += players[j].getPassesPerGame();
+        }
 
-            for (int j = i; j >= 0; --j) {
-                currentSumPassesPerGame += players[j].getPassesPerGame();
-            }
+        k = players.length;
+        maxTeamworkPoint = currentSumPassesPerGame * players[players.length - 1].getAssistsPerGame();
+
+        for (int i = players.length - 2; i >= 0; --i) {
+            currentSumPassesPerGame -= players[i].getPassesPerGame();
             currentTeamworkPoint = currentSumPassesPerGame * players[i].getAssistsPerGame();
 
             if (maxTeamworkPoint < currentTeamworkPoint) {
                 k = i + 1;
                 maxTeamworkPoint = currentTeamworkPoint;
             }
-            currentSumPassesPerGame = 0;
         }
 
-        for (int i = 0; i < players.length; ++i) {
-            System.out.println(players[i].getName());
-        }
-        System.out.println(k);
         return k;
     }
 }
