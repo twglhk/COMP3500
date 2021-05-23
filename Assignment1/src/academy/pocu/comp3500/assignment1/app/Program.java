@@ -104,19 +104,24 @@ public class Program {
 
         {
             Player[] players = new Player[]{
-                    new Player("Player 2", 5, 12, 14, 50),
-                    new Player("Player 6", 15, 2, 5, 40),
-                    new Player("Player 5", 11, 1, 11, 54),
-                    new Player("Player 4", 10, 3, 51, 88),
-                    new Player("Player 7", 16, 8, 5, 77),
-                    new Player("Player 1", 1, 15, 2, 22),
+                    new Player("Player 2", 5, 1, 100, 50),
+                    new Player("Player 6", 15, 1, 100, 40),
+                    new Player("Player 5", 11, 1, 100, 54),
+                    new Player("Player 4", 10, 3, 80, 88),
+                    new Player("Player 7", 16, 1, 3, 77),
+                    new Player("Player 1", 1, 1, 3, 22),
                     new Player("Player 3", 7, 5, 8, 66)
             };
 
             Player[] outPlayers = new Player[3];
             Player[] scratch = new Player[3];
 
+
             long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch); // maxTeamwork: 219, outPlayers: [ Player 4, Player 2, Player 3 ]
+
+            System.out.println(outPlayers[0].getName());
+            System.out.println(outPlayers[1].getName());
+            System.out.println(outPlayers[2].getName());
         }
     }
 }

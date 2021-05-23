@@ -218,7 +218,7 @@ public final class PocuBasketballAssociation {
         scratchHeapInsertAndDelete(scratch, players[0]);
         scratchHeapInsertAndDelete(scratch, players[1]);
 
-        for (int i = 3; i < players.length; ++i) {
+        for (int i = 3; i < players.length - 1; ++i) {
             // 새 요소 삽입
             scratchHeapInsertAndDelete(scratch, players[i - 1]);
             currentPassesSum = scratch[1].getPassesPerGame() + scratch[2].getPassesPerGame() + players[i].getPassesPerGame();
@@ -233,16 +233,6 @@ public final class PocuBasketballAssociation {
             }
         }
         return maxTeamWorkPoint;
-    }
-
-    private static int FindPassesMinIndex(final Player[] scratch) {
-        var minIndex = 0;
-        for (int i = 1; i < scratch.length; ++i) {
-            if (scratch[i].getPassesPerGame() < scratch[minIndex].getPassesPerGame()) {
-                minIndex = i;
-            }
-        }
-        return minIndex;
     }
 
     private static void scratchHeapInsertAndDelete(final Player[] scratch, Player player) {
