@@ -203,7 +203,6 @@ public final class PocuBasketballAssociation {
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
-
         playerTeamworkPointQuickSort(players);
 
         outPlayers[0] = players[0];
@@ -235,28 +234,6 @@ public final class PocuBasketballAssociation {
             }
         }
         return maxTeamWorkPoint;
-    }
-
-    private static void scratchHeapInsertAndDelete(final Player[] scratch, Player player) {
-        // 자리 찾아가기
-        if (scratch[1] == null) {
-            scratch[1] = player;
-            return;
-        }
-
-        if (scratch[2] == null) {
-            scratch[2] = player;
-            return;
-        }
-
-        if (player.getPassesPerGame() > scratch[1].getPassesPerGame()) {
-            if (player.getPassesPerGame() > scratch[2].getPassesPerGame()) {
-                scratch[1] = scratch[2];
-                scratch[2] = player;
-            } else {
-                scratch[1] = player;
-            }
-        }
     }
 
     private static int heapInsert(final Player[] scratch, Player player, int cursor) {
@@ -299,18 +276,18 @@ public final class PocuBasketballAssociation {
         while (left < scratch.length - 1) {
             if (right < scratch.length - 1) {
                 if (scratch[left].getPassesPerGame() < scratch[right].getPassesPerGame()) {
-                    if (scratch[right].getPassesPerGame() < scratch[index].getPassesPerGame())
+                    if (scratch[right].getPassesPerGame() > scratch[index].getPassesPerGame())
                         break;
                     playerSwap(scratch, index, right);
                     index = right;
                 } else {
-                    if (scratch[left].getPassesPerGame() < scratch[index].getPassesPerGame())
+                    if (scratch[left].getPassesPerGame() > scratch[index].getPassesPerGame())
                         break;
                     playerSwap(scratch, index, left);
                     index = left;
                 }
             } else {
-                if (scratch[left].getPassesPerGame() < scratch[index].getPassesPerGame()) {
+                if (scratch[left].getPassesPerGame() > scratch[index].getPassesPerGame()) {
                     break;
                 }
                 playerSwap(scratch, index, left);
@@ -359,7 +336,47 @@ public final class PocuBasketballAssociation {
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
-        return -1;
+        // 정렬
+        playerTeamworkPointQuickSort(players);
+
+        // 값 초기화
+        int maxSumPassesPerGame = 0;
+        int cursor = 1;
+        for (int i = 0; i < k; ++i) {
+            outPlayers[i] = players[i];
+            maxSumPassesPerGame += players[i].getPassesPerGame();
+            
+            if (i != k-1) {
+                cursor = heapInsert(scratch, players[i], cursor);
+            }
+        }
+        int maxTeamWorkPoint = maxSumPassesPerGame * players[k-1].getAssistsPerGame();
+        int currentPassesSum = 0;
+
+        for (int i = k; i < players.length; ++i) {
+            // 새 요소 삽입
+            cursor = heapInsert(scratch, players[i - 1], cursor);
+            
+            // 패스 합 계산 (시간 오버되면 힙 내에서 패스합 유지할 것)
+            for (int j = 1; j < scratch.length; ++j) {
+                currentPassesSum += scratch[j].getPassesPerGame();
+            }
+            currentPassesSum += players[i].getPassesPerGame();
+
+            if (currentPassesSum > maxSumPassesPerGame) {
+                if (maxTeamWorkPoint < currentPassesSum * players[i].getAssistsPerGame()) {
+                    maxTeamWorkPoint = currentPassesSum * players[i].getAssistsPerGame();
+                    maxSumPassesPerGame = currentPassesSum;
+
+                    for (int j = 0; j < outPlayers.length - 1; ++j) {
+                        outPlayers[j] = scratch[j+1];
+                    }
+                    outPlayers[outPlayers.length - 1] = players[i];
+                }
+            }
+            currentPassesSum = 0;
+        }
+        return maxTeamWorkPoint;
     }
 
     public static int findDreamTeamSize(final Player[] players, final Player[] scratch) {
