@@ -217,12 +217,12 @@ public final class PocuBasketballAssociation {
         int currentPassesSum;
         int cursor = 1;
 
-        cursor = heapInsert(scratch, players[0], cursor);
-        cursor = heapInsert(scratch, players[1], cursor);
+        cursor = heapInsert(scratch, players[0], cursor, 3);
+        cursor = heapInsert(scratch, players[1], cursor, 3);
 
         for (int i = 3; i < players.length; ++i) {
             // 새 요소 삽입
-            cursor = heapInsert(scratch, players[i - 1], cursor);
+            cursor = heapInsert(scratch, players[i - 1], cursor, 3);
             currentPassesSum = scratch[1].getPassesPerGame() + scratch[2].getPassesPerGame() + players[i].getPassesPerGame();
 
             if (currentPassesSum > maxPassesSum) {
@@ -238,8 +238,8 @@ public final class PocuBasketballAssociation {
         return maxTeamWorkPoint;
     }
 
-    private static int heapInsert(final Player[] scratch, Player player, int cursor) {
-        if (cursor < scratch.length) {
+    private static int heapInsert(final Player[] scratch, Player player, int cursor, int heapSize) {
+        if (cursor < heapSize) {
             // 배열에 빈 자리가 있을 경우 바로 삽입
             scratch[cursor] = player;
         } else {
@@ -247,7 +247,7 @@ public final class PocuBasketballAssociation {
             if (scratch[1].getPassesPerGame() > player.getPassesPerGame())
                 return cursor;
             else { // root보다 패스 값이 큰 경우
-                heapDelete(scratch); // root 제거
+                heapDelete(scratch, heapSize); // root 제거
                 cursor--;
                 scratch[cursor] = player;
             }
@@ -268,15 +268,15 @@ public final class PocuBasketballAssociation {
         return ++cursor;
     }
 
-    private static void heapDelete(final Player[] scratch) {
+    private static void heapDelete(final Player[] scratch, int heapSize) {
         int index = 1;
         int left = index * 2;
         int right = index * 2 + 1;
-        scratch[index] = scratch[scratch.length - 1];
-        scratch[scratch.length - 1] = null;
+        scratch[index] = scratch[heapSize - 1];
+        scratch[heapSize - 1] = null;
 
-        while (left < scratch.length - 1) {
-            if (right < scratch.length - 1) {
+        while (left < heapSize- 1) {
+            if (right < heapSize - 1) {
                 if (scratch[left].getPassesPerGame() < scratch[right].getPassesPerGame()) {
                     if (scratch[right].getPassesPerGame() > scratch[index].getPassesPerGame())
                         break;
@@ -338,6 +338,10 @@ public final class PocuBasketballAssociation {
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
+        if (k == 0) {
+            return 0;
+        }
+
         if (k == 1) {
             var max = players[0].getPassesPerGame() * players[0].getAssistsPerGame();
             outPlayers[0] = players[0];
@@ -363,7 +367,7 @@ public final class PocuBasketballAssociation {
             maxSumPassesPerGame += players[i].getPassesPerGame();
 
             if (i != k - 1) {
-                cursor = heapInsert(scratch, players[i], cursor);
+                cursor = heapInsert(scratch, players[i], cursor, k);
             }
         }
         int maxTeamWorkPoint = maxSumPassesPerGame * players[k - 1].getAssistsPerGame();
@@ -371,10 +375,10 @@ public final class PocuBasketballAssociation {
 
         for (int i = k; i < players.length; ++i) {
             // 새 요소 삽입
-            cursor = heapInsert(scratch, players[i - 1], cursor);
+            cursor = heapInsert(scratch, players[i - 1], cursor, k);
 
             // 패스 합 계산 (시간 오버되면 힙 내에서 패스합 유지할 것)
-            for (int j = 1; j < scratch.length; ++j) {
+            for (int j = 1; j < cursor; ++j) {
                 currentPassesSum += scratch[j].getPassesPerGame();
             }
             currentPassesSum += players[i].getPassesPerGame();
