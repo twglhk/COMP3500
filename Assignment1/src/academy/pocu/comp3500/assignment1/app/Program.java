@@ -39,27 +39,27 @@ public class Program {
 //            }
 //        }
 
-        {
-            GameStat[] gameStats = new GameStat[]{
-                    new GameStat("Player 2", 2, 5, 2, 5, 0, 10),
-                    new GameStat("Player 2", 1, 2, 1, 3, 12, 2),
-                    new GameStat("Player 2", 3, 9, 3, 3, 1, 11),
-                    new GameStat("Player 2", 4, 5, 1, 3, 1, 9),
-            };
-            Player[] players = new Player[]{
-                    new Player()
-            };
-
-            PocuBasketballAssociation.processGameStats(gameStats, players);
-
-            for (int i = 0; i < players.length; ++i) {
-                System.out.println("PlayerName > " + players[i].getName());
-                System.out.println(" 평균 득점 > " + players[i].getPointsPerGame());
-                System.out.println(" 평균 도움 > " + players[i].getAssistsPerGame());
-                System.out.println(" 평균 패스 > " + players[i].getPassesPerGame());
-                System.out.println(" 평균 성공률 > " + players[i].getShootingPercentage() + "%");
-            }
-        }
+//        {
+//            GameStat[] gameStats = new GameStat[]{
+//                    new GameStat("Player 2", 2, 5, 2, 5, 0, 10),
+//                    //new GameStat("Player 2", 1, 2, 1, 10, 12, 2),
+//                    //new GameStat("Player 2", 3, 9, 3, 3, 1, 11),
+//                    //new GameStat("Player 2", 4, 5, 1, 3, 1, 9),
+//            };
+//            Player[] players = new Player[]{
+//                    new Player()
+//            };
+//
+//            PocuBasketballAssociation.processGameStats(gameStats, players);
+//
+//            for (int i = 0; i < players.length; ++i) {
+//                System.out.println("PlayerName > " + players[i].getName());
+//                System.out.println(" 평균 득점 > " + players[i].getPointsPerGame());
+//                System.out.println(" 평균 도움 > " + players[i].getAssistsPerGame());
+//                System.out.println(" 평균 패스 > " + players[i].getPassesPerGame());
+//                System.out.println(" 평균 성공률 > " + players[i].getShootingPercentage() + "%");
+//            }
+//        }
 //        {
 //            Player[] players = new Player[] {
 //                    new Player("Player 1", 1, 5, 1, 60),
@@ -101,5 +101,22 @@ public class Program {
 //            player = PocuBasketballAssociation.findPlayerShootingPercentage(players, 72); // player: Player 7
 //            System.out.println(player.getName());
 //        }
+
+        {
+            Player[] players = new Player[]{
+                    new Player("Player 2", 5, 12, 14, 50),
+                    new Player("Player 6", 15, 2, 5, 40),
+                    new Player("Player 5", 11, 1, 11, 54),
+                    new Player("Player 4", 10, 3, 51, 88),
+                    new Player("Player 7", 16, 8, 5, 77),
+                    new Player("Player 1", 1, 15, 2, 22),
+                    new Player("Player 3", 7, 5, 8, 66)
+            };
+
+            Player[] outPlayers = new Player[3];
+            Player[] scratch = new Player[3];
+
+            long maxTeamwork = PocuBasketballAssociation.find3ManDreamTeam(players, outPlayers, scratch); // maxTeamwork: 219, outPlayers: [ Player 4, Player 2, Player 3 ]
+        }
     }
 }

@@ -32,7 +32,7 @@ public final class PocuBasketballAssociation {
                 outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
                 outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
                 outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
-                outPlayers[playersCursor].setShootingPercentage((int)Math.floor((100 * totalGoals) / totalGoalAttempts));
+                outPlayers[playersCursor].setShootingPercentage((int) ((float) 100 * (float) totalGoals / (float) totalGoalAttempts));
 
                 playerName = gameStats[i].getPlayerName();
                 playersCursor++;
@@ -57,7 +57,7 @@ public final class PocuBasketballAssociation {
         outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
         outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
         outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
-        outPlayers[playersCursor].setShootingPercentage((100 * totalGoals) / totalGoalAttempts);
+        outPlayers[playersCursor].setShootingPercentage((int) ((float) 100 * (float) totalGoals / (float) totalGoalAttempts));
     }
 
     private static void gameStatQuickSort(final GameStat[] gameStats) {
@@ -203,7 +203,105 @@ public final class PocuBasketballAssociation {
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
-        return -1;
+
+        playerTeamworkPointQuickSort(players);
+
+        outPlayers[0] = players[0];
+        outPlayers[1] = players[1];
+        outPlayers[2] = players[2];
+
+        int maxTeamWorkPoint = (players[0].getPassesPerGame() + players[1].getPassesPerGame() + players[2].getPassesPerGame())
+                * players[2].getAssistsPerGame();
+        int maxPassesSum = players[0].getPassesPerGame() + players[1].getPassesPerGame() + players[2].getPassesPerGame();
+        int currentPassesSum;
+
+        scratchHeapInsertAndDelete(scratch, players[0]);
+        scratchHeapInsertAndDelete(scratch, players[1]);
+
+        for (int i = 3; i < players.length; ++i) {
+            // 새 요소 삽입
+            scratchHeapInsertAndDelete(scratch, players[i - 1]);
+            currentPassesSum = scratch[1].getPassesPerGame() + scratch[2].getPassesPerGame() + players[i].getPassesPerGame();
+
+            if (currentPassesSum > maxPassesSum) {
+                if (maxTeamWorkPoint < currentPassesSum * players[i].getAssistsPerGame()) {
+                    maxTeamWorkPoint = currentPassesSum * players[i].getAssistsPerGame();
+                    outPlayers[0] = scratch[1];
+                    outPlayers[1] = scratch[2];
+                    outPlayers[2] = players[i];
+                }
+            }
+        }
+        return maxTeamWorkPoint;
+    }
+
+    private static int FindPassesMinIndex(final Player[] scratch) {
+        var minIndex = 0;
+        for (int i = 1; i < scratch.length; ++i) {
+            if (scratch[i].getPassesPerGame() < scratch[minIndex].getPassesPerGame()) {
+                minIndex = i;
+            }
+        }
+        return minIndex;
+    }
+
+    private static void scratchHeapInsertAndDelete(final Player[] scratch, Player player) {
+        // 자리 찾아가기
+        if (scratch[1] == null) {
+            scratch[1] = player;
+            return;
+        }
+
+        if (scratch[2] == null) {
+            scratch[2] = player;
+            return;
+        }
+
+        if (player.getPassesPerGame() > scratch[1].getPassesPerGame()) {
+            if (player.getPassesPerGame() > scratch[2].getPassesPerGame()) {
+                scratch[1] = scratch[2];
+                scratch[2] = player;
+            } else {
+                scratch[1] = player;
+            }
+        }
+    }
+
+    private static void playerTeamworkPointQuickSort(final Player[] players) {
+        playerTeamworkPointSortRecursive(players, 0, players.length - 1);
+    }
+
+    private static void playerTeamworkPointSortRecursive(final Player[] players, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int pivotPos = playerTeamworkPointPartition(players, left, right);
+
+        playerTeamworkPointSortRecursive(players, left, pivotPos - 1);
+        playerTeamworkPointSortRecursive(players, pivotPos + 1, right);
+    }
+
+    private static int playerTeamworkPointPartition(final Player[] players, int left, int right) {
+        int pivot = players[right].getAssistsPerGame();
+        int i = (left - 1);
+        for (int j = left; j < right; ++j) {
+            if (players[j].getAssistsPerGame() > pivot) {
+                ++i;
+                playerSwap(players, i, j);
+            }
+        }
+
+        int pivotPos = i + 1;
+        playerSwap(players, pivotPos, right);
+
+        return pivotPos;
+    }
+
+    private static void playerSwap(final Player[] players, int pos1, int pos2) {
+        Player temp = players[pos1];
+        players[pos1] = players[pos2];
+        players[pos2] = temp;
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
