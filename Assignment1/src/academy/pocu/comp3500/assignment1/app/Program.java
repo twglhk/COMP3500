@@ -135,66 +135,66 @@ public class Program {
 //            assert (player != null);
 //        }
 
-        {
-            Player[] players = new Player[] {
-                    new Player("Player 2", 5, 5, 17, 50),
-                    new Player("Player 6", 15, 4, 10, 40),
-                    new Player("Player 5", 11, 3, 25, 54),
-                    new Player("Player 4", 10, 9, 1, 88),
-                    new Player("Player 7", 16, 7, 5, 77),
-                    new Player("Player 1", 1, 2, 8, 22),
-                    new Player("Player 9", 42, 15, 4, 56),
-                    new Player("Player 8", 33, 11, 3, 72),
-            };
-
-            final int TEAM_SIZE = 1;
-
-            Player[] outPlayers = new Player[TEAM_SIZE];
-            Player[] scratch = new Player[TEAM_SIZE];
-
-            long maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, TEAM_SIZE, outPlayers, scratch);
-
-            for (int i = 0; i < outPlayers.length; ++i) {
-                System.out.println(outPlayers[i].getName());
-            }
-            System.out.println(maxTeamwork);
-
-            assert (maxTeamwork == 171);
-
-            Player player = getPlayerOrNull(players, "Player 5");
-            assert (player != null);
-
-            player = getPlayerOrNull(players, "Player 6");
-            assert (player != null);
-
-            player = getPlayerOrNull(players, "Player 2");
-            assert (player != null);
-
-            player = getPlayerOrNull(players, "Player 7");
-            assert (player != null);
-        }
-
 //        {
 //            Player[] players = new Player[] {
-//                    new Player("Player 1", 2, 5, 10, 78),
-//                    new Player("Player 2", 10, 4, 5, 66),
-//                    new Player("Player 3", 3, 3, 2, 22),
-//                    new Player("Player 4", 1, 9, 8, 12),
-//                    new Player("Player 5", 11, 1, 12, 26),
-//                    new Player("Player 6", 7, 2, 10, 15),
-//                    new Player("Player 7", 8, 15, 3, 11),
-//                    new Player("Player 8", 5, 7, 13, 5),
-//                    new Player("Player 9", 8, 2, 7, 67),
-//                    new Player("Player 10", 1, 11, 0, 29),
-//                    new Player("Player 11", 2, 6, 9, 88)
+//                    new Player("Player 2", 5, 5, 17, 50),
+//                    new Player("Player 6", 15, 4, 10, 40),
+//                    new Player("Player 5", 11, 3, 25, 54),
+//                    new Player("Player 4", 10, 9, 1, 88),
+//                    new Player("Player 7", 16, 7, 5, 77),
+//                    new Player("Player 1", 1, 2, 8, 22),
+//                    new Player("Player 9", 42, 15, 4, 56),
+//                    new Player("Player 8", 33, 11, 3, 72),
 //            };
 //
-//            Player[] tempPlayers = new Player[players.length];
+//            final int TEAM_SIZE = 1;
 //
-//            int k = PocuBasketballAssociation.findDreamTeamSize(players, tempPlayers);
+//            Player[] outPlayers = new Player[TEAM_SIZE];
+//            Player[] scratch = new Player[TEAM_SIZE];
 //
-//            assert (k == 6);
+//            long maxTeamwork = PocuBasketballAssociation.findDreamTeam(players, TEAM_SIZE, outPlayers, scratch);
+//
+//            for (int i = 0; i < outPlayers.length; ++i) {
+//                System.out.println(outPlayers[i].getName());
+//            }
+//            System.out.println(maxTeamwork);
+//
+//            assert (maxTeamwork == 171);
+//
+//            Player player = getPlayerOrNull(players, "Player 5");
+//            assert (player != null);
+//
+//            player = getPlayerOrNull(players, "Player 6");
+//            assert (player != null);
+//
+//            player = getPlayerOrNull(players, "Player 2");
+//            assert (player != null);
+//
+//            player = getPlayerOrNull(players, "Player 7");
+//            assert (player != null);
 //        }
+
+        {
+            Player[] players = new Player[] {
+                    new Player("Player 1", 2, 5, 10, 78),
+                    new Player("Player 2", 10, 4, 5, 66),
+                    new Player("Player 3", 3, 3, 2, 22),
+                    new Player("Player 4", 1, 9, 8, 12),
+                    new Player("Player 5", 11, 1, 12, 26),
+                    new Player("Player 6", 7, 2, 10, 15),
+                    new Player("Player 7", 8, 15, 3, 11),
+                    new Player("Player 8", 5, 7, 13, 5),
+                    new Player("Player 9", 8, 2, 7, 67),
+                    new Player("Player 10", 1, 11, 0, 29),
+                    new Player("Player 11", 2, 6, 9, 88)
+            };
+
+            Player[] tempPlayers = new Player[players.length];
+
+            int k = PocuBasketballAssociation.findDreamTeamSize(players, tempPlayers);
+
+            assert (k == 6);
+        }
     }
 
     private static Player getPlayerOrNull(final Player[] players, final String id) {

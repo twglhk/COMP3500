@@ -385,6 +385,32 @@ public final class PocuBasketballAssociation {
     }
 
     public static int findDreamTeamSize(final Player[] players, final Player[] scratch) {
-        return -1;
+        // 정렬
+        playerTeamworkPointQuickSort(players);
+
+        int k = 0;
+        int maxTeamworkPoint = 0;
+        int currentSumPassesPerGame = 0;
+        int currentTeamworkPoint = 0;
+
+        for (int i = players.length - 1; i >= 0; --i) {
+
+            for (int j = i; j >= 0; --j) {
+                currentSumPassesPerGame += players[j].getPassesPerGame();
+            }
+            currentTeamworkPoint = currentSumPassesPerGame * players[i].getAssistsPerGame();
+
+            if (maxTeamworkPoint < currentTeamworkPoint) {
+                k = i + 1;
+                maxTeamworkPoint = currentTeamworkPoint;
+            }
+            currentSumPassesPerGame = 0;
+        }
+
+        for (int i = 0; i < players.length; ++i) {
+            System.out.println(players[i].getName());
+        }
+        System.out.println(k);
+        return k;
     }
 }
