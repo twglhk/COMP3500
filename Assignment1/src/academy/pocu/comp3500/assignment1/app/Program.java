@@ -1,4 +1,5 @@
 package academy.pocu.comp3500.assignment1.app;
+
 import academy.pocu.comp3500.assignment1.PocuBasketballAssociation;
 import academy.pocu.comp3500.assignment1.pba.Player;
 import academy.pocu.comp3500.assignment1.pba.GameStat;
@@ -104,13 +105,28 @@ public class Program {
 
         {
             Player[] players = new Player[]{
-                    new Player("Player 2", 5, 1, 100, 50),
-                    new Player("Player 6", 15, 1, 100, 40),
-                    new Player("Player 5", 11, 1, 100, 54),
-                    new Player("Player 4", 10, 3, 80, 88),
-                    new Player("Player 7", 16, 1, 3, 77),
-                    new Player("Player 1", 1, 1, 3, 22),
-                    new Player("Player 3", 7, 5, 8, 66)
+                    /*
+                    new Player("Player 1", 5, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 50),
+                    new Player("Player 2", 15, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 40),
+                    new Player("Player 3", 11, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 54),
+                    new Player("Player 4", 10, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 88),
+                    new Player("Player 5", 16, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 77),
+                    new Player("Player 6", 1, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 22),
+                    new Player("Player 7", 42, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 56),
+                    new Player("Player 8", 33, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 72),
+                    new Player("Player 9", 33, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 72),
+                    new Player("Player 10", 33, (int)(Math.random()*100%50), (int)(Math.random()*100%50), 72),
+                     */
+                    new Player("Player 1", 5, 49, 28, 50),
+                    new Player("Player 2", 15, 32, 19, 40),
+                    new Player("Player 3", 11, 0, 22, 54),
+                    new Player("Player 4", 10, 30, 5, 88),
+                    new Player("Player 5", 16, 47, 22, 77),
+                    new Player("Player 6", 1, 22, 35, 22),
+                    new Player("Player 7", 42, 10, 48, 56),
+                    new Player("Player 8", 33, 43, 30, 72),
+                    new Player("Player 9", 33, 44, 12, 72),
+                    new Player("Player 10", 33, 38, 34, 72),
             };
 
             Player[] outPlayers = new Player[3];
