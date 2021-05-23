@@ -383,9 +383,10 @@ public final class PocuBasketballAssociation {
             }
             currentPassesSum += players[i].getPassesPerGame();
 
-            if (currentPassesSum > maxSumPassesPerGame) {
-                if (maxTeamWorkPoint < currentPassesSum * players[i].getAssistsPerGame()) {
-                    maxTeamWorkPoint = currentPassesSum * players[i].getAssistsPerGame();
+            if (currentPassesSum >= maxSumPassesPerGame) {
+                var newTeamWorkPoint = currentPassesSum * players[i].getAssistsPerGame();
+                if (maxTeamWorkPoint <= newTeamWorkPoint) {
+                    maxTeamWorkPoint = newTeamWorkPoint;
                     maxSumPassesPerGame = currentPassesSum;
 
                     for (int j = 0; j < outPlayers.length - 1; ++j) {
