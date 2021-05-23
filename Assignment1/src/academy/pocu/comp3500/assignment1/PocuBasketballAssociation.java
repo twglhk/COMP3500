@@ -214,13 +214,14 @@ public final class PocuBasketballAssociation {
                 * players[2].getAssistsPerGame();
         int maxPassesSum = players[0].getPassesPerGame() + players[1].getPassesPerGame() + players[2].getPassesPerGame();
         int currentPassesSum;
+        int cursor = 1;
 
-        scratchHeapInsertAndDelete(scratch, players[0]);
-        scratchHeapInsertAndDelete(scratch, players[1]);
+        cursor = heapInsert(scratch, players[0], cursor);
+        cursor = heapInsert(scratch, players[1], cursor);
 
         for (int i = 3; i < players.length; ++i) {
             // 새 요소 삽입
-            scratchHeapInsertAndDelete(scratch, players[i - 1]);
+            cursor = heapInsert(scratch, players[i - 1], cursor);
             currentPassesSum = scratch[1].getPassesPerGame() + scratch[2].getPassesPerGame() + players[i].getPassesPerGame();
 
             if (currentPassesSum > maxPassesSum) {
@@ -255,6 +256,68 @@ public final class PocuBasketballAssociation {
             } else {
                 scratch[1] = player;
             }
+        }
+    }
+
+    private static int heapInsert(final Player[] scratch, Player player, int cursor) {
+        if (cursor < scratch.length) {
+            // 배열에 빈 자리가 있을 경우 바로 삽입
+            scratch[cursor] = player;
+        } else {
+            // root의 패스값과 비교 후 삽입. root보다 패스값이 작으면 삽입이 발생하지 않음
+            if (scratch[1].getPassesPerGame() > player.getPassesPerGame())
+                return cursor;
+            else { // root보다 패스 값이 큰 경우
+                heapDelete(scratch); // root 제거
+                cursor--;
+                scratch[cursor] = player;
+            }
+        }
+
+        int index = cursor;
+        int parent = index / 2;
+
+        while (parent > 0) {
+            if (scratch[parent].getPassesPerGame() > scratch[index].getPassesPerGame()) {
+                playerSwap(scratch, parent, index);
+                index = parent;
+                parent = index / 2;
+            } else
+                break;
+        }
+
+        return ++cursor;
+    }
+
+    private static void heapDelete(final Player[] scratch) {
+        int index = 1;
+        int left = index * 2;
+        int right = index * 2 + 1;
+        scratch[index] = scratch[scratch.length - 1];
+        scratch[scratch.length - 1] = null;
+
+        while (left < scratch.length - 1) {
+            if (right < scratch.length - 1) {
+                if (scratch[left].getPassesPerGame() < scratch[right].getPassesPerGame()) {
+                    if (scratch[right].getPassesPerGame() < scratch[index].getPassesPerGame())
+                        break;
+                    playerSwap(scratch, index, right);
+                    index = right;
+                } else {
+                    if (scratch[left].getPassesPerGame() < scratch[index].getPassesPerGame())
+                        break;
+                    playerSwap(scratch, index, left);
+                    index = left;
+                }
+            } else {
+                if (scratch[left].getPassesPerGame() < scratch[index].getPassesPerGame()) {
+                    break;
+                }
+                playerSwap(scratch, index, left);
+                index = left;
+            }
+            left = index * 2;
+            right = index * 2 + 1;
         }
     }
 
