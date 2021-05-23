@@ -408,7 +408,7 @@ public final class PocuBasketballAssociation {
             currentSumPassesPerGame += players[j].getPassesPerGame();
         }
 
-        k = 1;
+        k = players.length;
         maxTeamworkPoint = currentSumPassesPerGame * players[players.length - 1].getAssistsPerGame();
 
         for (int i = players.length - 2; i >= 0; --i) {
