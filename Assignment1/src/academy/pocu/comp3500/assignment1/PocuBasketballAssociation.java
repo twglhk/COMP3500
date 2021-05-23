@@ -17,84 +17,47 @@ public final class PocuBasketballAssociation {
      * */
     public static void processGameStats(final GameStat[] gameStats, final Player[] outPlayers) {
         gameStatQuickSort(gameStats);
-        int currentGameNumber = 1;
-        Player updateTargetPlayer = null;
+        var playersCursor = 0;
+        var playerName = gameStats[0].getPlayerName();
+        var totalGames = 0;
+        int totalGoals = 0;
+        int totalGoalAttempts = 0;
+        int totalPoints = 0;
+        int totalAssist = 0;
+        int totalPasses = 0;
 
         for (int i = 0; i < gameStats.length; ++i) {
-            for (int j = 0; j <outPlayers.length; ++j){
-                if (outPlayers[j].getName() == null){
-                    outPlayers[j].setName(gameStats[j].getPlayerName());
-                    updateTargetPlayer = outPlayers[j];
-                    break;
-                } else {
-                    if (outPlayers[j].getName() == gameStats[i].getPlayerName()) {
-                        updateTargetPlayer = outPlayers[j];
-                        break;
-                    }
-                }
+            if (gameStats[i].getPlayerName() != playerName) {
+                outPlayers[playersCursor].setName(playerName);
+                outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
+                outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
+                outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
+                outPlayers[playersCursor].setShootingPercentage(100 * totalGoals / totalGoalAttempts);
+
+                playerName = gameStats[i].getPlayerName();
+                playersCursor++;
+                totalGames = 0;
+                totalGoals = 0;
+                totalGoalAttempts = 0;
+                totalPoints = 0;
+                totalAssist = 0;
+                totalPasses= 0;
             }
 
-            updateTargetPlayer.setPointsPerGame(
-                    (updateTargetPlayer.getPointsPerGame() + gameStats[i].getPoints()) / currentGameNumber);
+            totalGames++;
+            totalGoals += gameStats[i].getGoals();
+            totalGoalAttempts += gameStats[i].getGoalAttempts();
+            totalPoints += gameStats[i].getPoints();
+            totalAssist += gameStats[i].getAssists();
+            totalPasses += gameStats[i].getNumPasses();
         }
 
-        for (int i = 0; i < outPlayers.length; ++i) {
-            int totalGames = 0;
-            int totalPoints = 0;
-            int totalAssists = 0;
-            int totalPasses = 0;
-            int totalGoals = 0;
-            int totalGoalAttempts = 0;
-
-
-            for (int j = 0; j < gameStats.length; ++j) {
-                if (outPlayers[i].getName() != null) {
-                    if (!outPlayers[i].getName().equals(gameStats[j].getPlayerName()))
-                        continue;
-                } else
-                    outPlayers[i].setName(gameStats[j].getPlayerName());
-
-                // Data 세팅
-                totalGames++;
-                totalPoints += gameStats[j].getPoints();
-                totalAssists += gameStats[j].getAssists();
-                totalPasses += gameStats[j].getNumPasses();
-                totalGoals += gameStats[j].getGoals();
-                totalGoalAttempts += gameStats[j].getGoalAttempts();
-            }
-
-            outPlayers[i].setPointsPerGame((int) ((float) totalPoints / (float) totalGames));
-            outPlayers[i].setAssistsPerGame((int) ((float) totalAssists / (float) totalGames));
-            outPlayers[i].setPassesPerGame((int) ((float) totalPasses / (float) totalGames));
-            outPlayers[i].setShootingPercentage((int) (100f * (float) totalGoals / (float) totalGoalAttempts));
-
-            // Test Print
-            System.out.println("PlayerName > " + outPlayers[i].getName());
-            System.out.println(" 평균 득점 > " + outPlayers[i].getPointsPerGame());
-            System.out.println(" 평균 도움 > " + outPlayers[i].getAssistsPerGame());
-            System.out.println(" 평균 패스 > " + outPlayers[i].getPassesPerGame());
-            System.out.println(" 평균 성공률 > " + outPlayers[i].getShootingPercentage() + "%");
-        }
-    }
-
-    private static void gameStateSort(final GameStat[] gameStats) {
-        String currentPlayerName = gameStats[0].getPlayerName();
-        int leftCursor = 1;
-        int rightCursor = 1;
-
-        while (leftCursor < gameStats.length) {
-            rightCursor++;
-
-            if (currentPlayerName == gameStats[rightCursor].getPlayerName()) {
-                gameStatSwap(gameStats, leftCursor, rightCursor);
-                leftCursor++;
-            }
-            if (rightCursor == gameStats.length - 1) {
-                currentPlayerName = gameStats[leftCursor].getPlayerName();
-                leftCursor++;
-                rightCursor = leftCursor;
-            }
-        }
+        // 마지막 선수 저장
+        outPlayers[playersCursor].setName(playerName);
+        outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
+        outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
+        outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
+        outPlayers[playersCursor].setShootingPercentage(100 * totalGoals / totalGoalAttempts);
     }
 
     private static void gameStatQuickSort(final GameStat[] gameStats) {
@@ -113,10 +76,10 @@ public final class PocuBasketballAssociation {
     }
 
     private static int gameStatPartition(final GameStat[] gameStats, int left, int right) {
-        int pivot = gameStats[right].getGame();
+        int pivot = gameStats[right].getPlayerName().hashCode();
         int i = (left - 1);
         for (int j = left; j < right; ++j) {
-            if (gameStats[j].getGame() < pivot) {
+            if (gameStats[j].getPlayerName().hashCode() < pivot) {
                 ++i;
                 gameStatSwap(gameStats, i, j);
             }
