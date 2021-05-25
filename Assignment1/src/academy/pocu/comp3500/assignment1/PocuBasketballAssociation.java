@@ -3,6 +3,8 @@ package academy.pocu.comp3500.assignment1;
 import academy.pocu.comp3500.assignment1.pba.Player;
 import academy.pocu.comp3500.assignment1.pba.GameStat;
 
+import java.util.Random;
+
 public final class PocuBasketballAssociation {
     private PocuBasketballAssociation() {
     }
@@ -17,84 +19,47 @@ public final class PocuBasketballAssociation {
      * */
     public static void processGameStats(final GameStat[] gameStats, final Player[] outPlayers) {
         gameStatQuickSort(gameStats);
-        int currentGameNumber = 1;
-        Player updateTargetPlayer = null;
+        var playersCursor = 0;
+        var playerName = gameStats[0].getPlayerName();
+        var totalGames = 0;
+        int totalGoals = 0;
+        int totalGoalAttempts = 0;
+        int totalPoints = 0;
+        int totalAssist = 0;
+        int totalPasses = 0;
 
         for (int i = 0; i < gameStats.length; ++i) {
-            for (int j = 0; j <outPlayers.length; ++j){
-                if (outPlayers[j].getName() == null){
-                    outPlayers[j].setName(gameStats[j].getPlayerName());
-                    updateTargetPlayer = outPlayers[j];
-                    break;
-                } else {
-                    if (outPlayers[j].getName() == gameStats[i].getPlayerName()) {
-                        updateTargetPlayer = outPlayers[j];
-                        break;
-                    }
-                }
+            if (!gameStats[i].getPlayerName().equals(playerName)) {
+                outPlayers[playersCursor].setName(playerName);
+                outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
+                outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
+                outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
+                outPlayers[playersCursor].setShootingPercentage((int) ((float) 100 * (float) totalGoals / (float) totalGoalAttempts));
+
+                playerName = gameStats[i].getPlayerName();
+                playersCursor++;
+                totalGames = 0;
+                totalGoals = 0;
+                totalGoalAttempts = 0;
+                totalPoints = 0;
+                totalAssist = 0;
+                totalPasses = 0;
             }
 
-            updateTargetPlayer.setPointsPerGame(
-                    (updateTargetPlayer.getPointsPerGame() + gameStats[i].getPoints()) / currentGameNumber);
+            totalGames++;
+            totalGoals += gameStats[i].getGoals();
+            totalGoalAttempts += gameStats[i].getGoalAttempts();
+            totalPoints += gameStats[i].getPoints();
+            totalAssist += gameStats[i].getAssists();
+            totalPasses += gameStats[i].getNumPasses();
         }
 
-        for (int i = 0; i < outPlayers.length; ++i) {
-            int totalGames = 0;
-            int totalPoints = 0;
-            int totalAssists = 0;
-            int totalPasses = 0;
-            int totalGoals = 0;
-            int totalGoalAttempts = 0;
-
-
-            for (int j = 0; j < gameStats.length; ++j) {
-                if (outPlayers[i].getName() != null) {
-                    if (!outPlayers[i].getName().equals(gameStats[j].getPlayerName()))
-                        continue;
-                } else
-                    outPlayers[i].setName(gameStats[j].getPlayerName());
-
-                // Data 세팅
-                totalGames++;
-                totalPoints += gameStats[j].getPoints();
-                totalAssists += gameStats[j].getAssists();
-                totalPasses += gameStats[j].getNumPasses();
-                totalGoals += gameStats[j].getGoals();
-                totalGoalAttempts += gameStats[j].getGoalAttempts();
-            }
-
-            outPlayers[i].setPointsPerGame((int) ((float) totalPoints / (float) totalGames));
-            outPlayers[i].setAssistsPerGame((int) ((float) totalAssists / (float) totalGames));
-            outPlayers[i].setPassesPerGame((int) ((float) totalPasses / (float) totalGames));
-            outPlayers[i].setShootingPercentage((int) (100f * (float) totalGoals / (float) totalGoalAttempts));
-
-            // Test Print
-            System.out.println("PlayerName > " + outPlayers[i].getName());
-            System.out.println(" 평균 득점 > " + outPlayers[i].getPointsPerGame());
-            System.out.println(" 평균 도움 > " + outPlayers[i].getAssistsPerGame());
-            System.out.println(" 평균 패스 > " + outPlayers[i].getPassesPerGame());
-            System.out.println(" 평균 성공률 > " + outPlayers[i].getShootingPercentage() + "%");
-        }
-    }
-
-    private static void gameStateSort(final GameStat[] gameStats) {
-        String currentPlayerName = gameStats[0].getPlayerName();
-        int leftCursor = 1;
-        int rightCursor = 1;
-
-        while (leftCursor < gameStats.length) {
-            rightCursor++;
-
-            if (currentPlayerName == gameStats[rightCursor].getPlayerName()) {
-                gameStatSwap(gameStats, leftCursor, rightCursor);
-                leftCursor++;
-            }
-            if (rightCursor == gameStats.length - 1) {
-                currentPlayerName = gameStats[leftCursor].getPlayerName();
-                leftCursor++;
-                rightCursor = leftCursor;
-            }
-        }
+        // 마지막 선수 저장
+        outPlayers[playersCursor].setName(playerName);
+        outPlayers[playersCursor].setPointsPerGame(totalPoints / totalGames);
+        outPlayers[playersCursor].setAssistsPerGame(totalAssist / totalGames);
+        outPlayers[playersCursor].setPassesPerGame(totalPasses / totalGames);
+        outPlayers[playersCursor].setShootingPercentage((int) ((float) 100 * (float) totalGoals / (float) totalGoalAttempts));
     }
 
     private static void gameStatQuickSort(final GameStat[] gameStats) {
@@ -113,10 +78,10 @@ public final class PocuBasketballAssociation {
     }
 
     private static int gameStatPartition(final GameStat[] gameStats, int left, int right) {
-        int pivot = gameStats[right].getGame();
+        int pivot = gameStats[right].getPlayerName().hashCode();
         int i = (left - 1);
         for (int j = left; j < right; ++j) {
-            if (gameStats[j].getGame() < pivot) {
+            if (gameStats[j].getPlayerName().hashCode() < pivot) {
                 ++i;
                 gameStatSwap(gameStats, i, j);
             }
@@ -240,14 +205,230 @@ public final class PocuBasketballAssociation {
     }
 
     public static long find3ManDreamTeam(final Player[] players, final Player[] outPlayers, final Player[] scratch) {
-        return -1;
+        playerTeamworkPointQuickSort(players);
+
+        outPlayers[0] = players[0];
+        outPlayers[1] = players[1];
+        outPlayers[2] = players[2];
+
+        int maxTeamWorkPoint = (players[0].getPassesPerGame() + players[1].getPassesPerGame() + players[2].getPassesPerGame())
+                * players[2].getAssistsPerGame();
+        int maxPassesSum = players[0].getPassesPerGame() + players[1].getPassesPerGame() + players[2].getPassesPerGame();
+        int currentPassesSum;
+        int cursor = 1;
+
+        cursor = heapInsert(scratch, players[0], cursor, 3);
+        cursor = heapInsert(scratch, players[1], cursor, 3);
+
+        for (int i = 3; i < players.length; ++i) {
+            // 새 요소 삽입
+            cursor = heapInsert(scratch, players[i - 1], cursor, 3);
+            currentPassesSum = scratch[1].getPassesPerGame() + scratch[2].getPassesPerGame() + players[i].getPassesPerGame();
+
+            if (currentPassesSum > maxPassesSum) {
+                if (maxTeamWorkPoint < currentPassesSum * players[i].getAssistsPerGame()) {
+                    maxTeamWorkPoint = currentPassesSum * players[i].getAssistsPerGame();
+                    maxPassesSum = currentPassesSum;
+                    outPlayers[0] = scratch[1];
+                    outPlayers[1] = scratch[2];
+                    outPlayers[2] = players[i];
+                }
+            }
+        }
+        return maxTeamWorkPoint;
+    }
+
+    private static int heapInsert(final Player[] scratch, Player player, int cursor, int heapSize) {
+        if (cursor < heapSize) {
+            // 배열에 빈 자리가 있을 경우 바로 삽입
+            scratch[cursor] = player;
+        } else {
+            // root의 패스값과 비교 후 삽입. root보다 패스값이 작으면 삽입이 발생하지 않음
+            if (scratch[1].getPassesPerGame() > player.getPassesPerGame())
+                return cursor;
+            else { // root보다 패스 값이 큰 경우
+                heapDelete(scratch, heapSize); // root 제거
+                cursor--;
+                scratch[cursor] = player;
+            }
+        }
+
+        int index = cursor;
+        int parent = index / 2;
+
+        while (parent > 0) {
+            if (scratch[parent].getPassesPerGame() > scratch[index].getPassesPerGame()) {
+                playerSwap(scratch, parent, index);
+                index = parent;
+                parent = index / 2;
+            } else
+                break;
+        }
+
+        return ++cursor;
+    }
+
+    private static void heapDelete(final Player[] scratch, int heapSize) {
+        int index = 1;
+        int left = index * 2;
+        int right = index * 2 + 1;
+        scratch[index] = scratch[heapSize - 1];
+        scratch[heapSize - 1] = null;
+
+        while (left < heapSize - 1) {
+            if (right < heapSize - 1) {
+                if (scratch[left].getPassesPerGame() > scratch[right].getPassesPerGame()) {
+                    if (scratch[right].getPassesPerGame() > scratch[index].getPassesPerGame())
+                        break;
+                    playerSwap(scratch, index, right);
+                    index = right;
+                } else {
+                    if (scratch[left].getPassesPerGame() > scratch[index].getPassesPerGame())
+                        break;
+                    playerSwap(scratch, index, left);
+                    index = left;
+                }
+            } else {
+                if (scratch[left].getPassesPerGame() > scratch[index].getPassesPerGame()) {
+                    break;
+                }
+                playerSwap(scratch, index, left);
+                index = left;
+            }
+            left = index * 2;
+            right = index * 2 + 1;
+        }
+    }
+
+    private static void playerTeamworkPointQuickSort(final Player[] players) {
+        playerTeamworkPointSortRecursive(players, 0, players.length - 1);
+    }
+
+    private static void playerTeamworkPointSortRecursive(final Player[] players, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int pivotPos = playerTeamworkPointPartition(players, left, right);
+
+        playerTeamworkPointSortRecursive(players, left, pivotPos - 1);
+        playerTeamworkPointSortRecursive(players, pivotPos + 1, right);
+    }
+
+    private static int playerTeamworkPointPartition(final Player[] players, int left, int right) {
+        int pivot = players[right].getAssistsPerGame();
+        int i = (left - 1);
+        for (int j = left; j < right; ++j) {
+            if (players[j].getAssistsPerGame() > pivot) {
+                ++i;
+                playerSwap(players, i, j);
+            }
+        }
+
+        int pivotPos = i + 1;
+        playerSwap(players, pivotPos, right);
+
+        return pivotPos;
+    }
+
+    private static void playerSwap(final Player[] players, int pos1, int pos2) {
+        Player temp = players[pos1];
+        players[pos1] = players[pos2];
+        players[pos2] = temp;
     }
 
     public static long findDreamTeam(final Player[] players, int k, final Player[] outPlayers, final Player[] scratch) {
-        return -1;
+        if (k == 0) {
+            return 0;
+        }
+
+        if (k == 1) {
+            var max = players[0].getPassesPerGame() * players[0].getAssistsPerGame();
+            outPlayers[0] = players[0];
+
+            for (int i = 1; i < players.length; ++i) {
+                var temp = players[i].getPassesPerGame() * players[i].getAssistsPerGame();
+                if (temp > max) {
+                    max = temp;
+                    outPlayers[0] = players[i];
+                }
+            }
+            return max;
+        }
+
+        // 정렬
+        playerTeamworkPointQuickSort(players);
+
+        // 값 초기화
+        int maxSumPassesPerGame = 0;
+        int cursor = 1;
+        for (int i = 0; i < k; ++i) {
+            outPlayers[i] = players[i];
+            maxSumPassesPerGame += players[i].getPassesPerGame();
+
+            if (i != k - 1) {
+                cursor = heapInsert(scratch, players[i], cursor, k);
+            }
+        }
+        int maxTeamWorkPoint = maxSumPassesPerGame * players[k - 1].getAssistsPerGame();
+        int currentPassesSum = 0;
+
+        for (int i = k; i < players.length; ++i) {
+            // 새 요소 삽입
+            cursor = heapInsert(scratch, players[i - 1], cursor, k);
+
+            // 패스 합 계산 (시간 오버되면 힙 내에서 패스합 유지할 것)
+            for (int j = 1; j < cursor; ++j) {
+                currentPassesSum += scratch[j].getPassesPerGame();
+            }
+            currentPassesSum += players[i].getPassesPerGame();
+
+            if (currentPassesSum >= maxSumPassesPerGame) {
+                var newTeamWorkPoint = currentPassesSum * players[i].getAssistsPerGame();
+                if (maxTeamWorkPoint <= newTeamWorkPoint) {
+                    maxTeamWorkPoint = newTeamWorkPoint;
+                    maxSumPassesPerGame = currentPassesSum;
+
+                    for (int j = 0; j < outPlayers.length - 1; ++j) {
+                        outPlayers[j] = scratch[j + 1];
+                    }
+                    outPlayers[outPlayers.length - 1] = players[i];
+                }
+            }
+            currentPassesSum = 0;
+        }
+        return maxTeamWorkPoint;
     }
 
     public static int findDreamTeamSize(final Player[] players, final Player[] scratch) {
-        return -1;
+        if (players.length == 0)
+            return 0;
+
+        // 정렬
+        playerTeamworkPointQuickSort(players);
+
+        int k = 0;
+        int maxTeamworkPoint = 0;
+        int currentSumPassesPerGame = 0;
+        int currentTeamworkPoint = 0;
+
+        for (int i = 0; i < players.length; ++i) {
+            currentSumPassesPerGame += players[i].getPassesPerGame();
+        }
+
+        k = players.length;
+        maxTeamworkPoint = currentSumPassesPerGame * players[players.length - 1].getAssistsPerGame();
+
+        for (int i = players.length - 2; i >= 0; --i) {
+            currentSumPassesPerGame -= players[i + 1].getPassesPerGame();
+            currentTeamworkPoint = currentSumPassesPerGame * players[i].getAssistsPerGame();
+
+            if (maxTeamworkPoint < currentTeamworkPoint) {
+                k = i + 1;
+                maxTeamworkPoint = currentTeamworkPoint;
+            }
+        }
+
+        return k;
     }
 }
