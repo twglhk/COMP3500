@@ -21,7 +21,7 @@ public final class Cracker {
         var passwordBytes = password.getBytes(StandardCharsets.UTF_8);
 
         for (int i = 0; i < userTable.length; ++i) {
-            if (userTable[i].getEmail() == email) {
+            if (userTable[i].getEmail().equals(email)) {
                 myHash = userTable[i].getPasswordHash();
                 break;
             }
