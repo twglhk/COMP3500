@@ -3,20 +3,44 @@ package academy.pocu.comp3500.lab4;
 import academy.pocu.comp3500.lab4.pocuhacker.RainbowTable;
 import academy.pocu.comp3500.lab4.pocuhacker.User;
 
+import javax.xml.crypto.AlgorithmMethod;
+import javax.xml.crypto.dsig.DigestMethod;
 import java.nio.charset.StandardCharsets;
+import java.security.AlgorithmParameterGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.zip.CRC32;
+import java.lang.String;
+import java.lang.Object;
 
 public final class Cracker {
     private User[] userTable;
-    private RainbowTableSet rainbowTableSet = RainbowTableSet.NULL;
+    private String password;
+    private String email;
+    private MessageDigest md;
 
     public Cracker(User[] userTable, String email, String password) {
         this.userTable = userTable;
+        this.email = email;
+        this.password = password;
+
+        try {
+            if (md == null)
+                md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+        }
+    }
+
+    public String[] run(final RainbowTable[] rainbowTables) {
+        String[] result = new String[userTable.length];
+
+        if (rainbowTables == null)
+            return result;
+
         String myHash = null;
         var passwordBytes = password.getBytes(StandardCharsets.UTF_8);
 
@@ -27,38 +51,21 @@ public final class Cracker {
             }
         }
 
-        // MD2
+        long startTime = System.nanoTime();
+        long estimatedTime;
+
+        // SHA256
         try {
-            MessageDigest md = MessageDigest.getInstance("MD2");
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            //System.out.println(System.nanoTime() - startTime);
             md.update(passwordBytes);
             var byteData = md.digest();
             var encodedData = Base64.getEncoder().encodeToString(byteData);
             if (myHash.equals(encodedData)) {
-                rainbowTableSet = RainbowTableSet.MD2;
-                return;
-            }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        // CRC32
-        CRC32 crc32 = new CRC32();
-        crc32.update(passwordBytes);
-        var crcHash = crc32.getValue();
-        if (myHash.equals(String.valueOf(crcHash))) {
-            rainbowTableSet = RainbowTableSet.CRC32;
-            return;
-        }
-
-        // MD5
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(passwordBytes);
-            var byteData = md.digest();
-            var encodedData = Base64.getEncoder().encodeToString(byteData);
-            if (myHash.equals(encodedData)) {
-                rainbowTableSet = RainbowTableSet.MD5;
-                return;
+                if (rainbowTables[4] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[4]);
+                    return result;
+                }
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -71,62 +78,58 @@ public final class Cracker {
             var byteData = md.digest();
             var encodedData = Base64.getEncoder().encodeToString(byteData);
             if (myHash.equals(encodedData)) {
-                rainbowTableSet = RainbowTableSet.SHA1;
-                return;
+                if (rainbowTables[3] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[3]);
+                    return result;
+                }
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
-        // SHA256
+        // MD5
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance("MD5");
             md.update(passwordBytes);
             var byteData = md.digest();
             var encodedData = Base64.getEncoder().encodeToString(byteData);
             if (myHash.equals(encodedData)) {
-                rainbowTableSet = RainbowTableSet.SHA256;
-                return;
+                if (rainbowTables[2] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[2]);
+                    return result;
+                }
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-    }
 
-    public String[] run(final RainbowTable[] rainbowTables) {
-        String[] result = new String[userTable.length];
-
-        if (rainbowTables == null)
-            return result;
-
-        if (rainbowTableSet == RainbowTableSet.NULL)
-            return result;
-
-        switch (rainbowTableSet) {
-            case CRC32:
-                if (rainbowTables[0] != null) {
-                    setStringFromRainbowTable(result, rainbowTables[0]);
-                }
-                break;
-            case MD2:
+        // MD2
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD2");
+            md.update(passwordBytes);
+            var byteData = md.digest();
+            var encodedData = Base64.getEncoder().encodeToString(byteData);
+            if (myHash.equals(encodedData)) {
                 if (rainbowTables[1] != null) {
                     setStringFromRainbowTable(result, rainbowTables[1]);
+                    return result;
                 }
-            case MD5:
-                if (rainbowTables[2] != null) {
-                    setStringFromRainbowTable(result, rainbowTables[2]);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        {
+            // CRC32
+            CRC32 crc32 = new CRC32();
+            crc32.update(passwordBytes);
+            var crcHash = crc32.getValue();
+            if (myHash.equals(String.valueOf(crcHash))) {
+                if (rainbowTables[0] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[0]);
+                    return result;
                 }
-                break;
-            case SHA1:
-                if (rainbowTables[3] != null) {
-                    setStringFromRainbowTable(result, rainbowTables[3]);
-                }
-                break;
-            case SHA256:
-                if (rainbowTables[4] != null) {
-                    setStringFromRainbowTable(result, rainbowTables[4]);
-                }
-                break;
+            }
         }
 
         return result;
@@ -138,14 +141,5 @@ public final class Cracker {
             if (rainbowTable.contains(userPasswordHash))
                 result[i] = rainbowTable.get(userPasswordHash);
         }
-    }
-
-    public enum RainbowTableSet {
-        NULL,
-        CRC32,
-        MD2,
-        MD5,
-        SHA1,
-        SHA256
     }
 }
