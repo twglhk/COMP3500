@@ -22,10 +22,10 @@ public final class Cracker {
             }
         }
 
-        var hastUTF8text = myHash.getBytes(StandardCharsets.UTF_8);
-        if (hastUTF8text.length == 9) {
+        if (myHash.length() == 9) {
             rainbowTableSet = RainbowTableSet.CRC32;
         } else {
+            var hastUTF8text = myHash.getBytes(StandardCharsets.UTF_8);
             Base64.Decoder decoder = Base64.getDecoder();
             var decodedBytes = decoder.decode(hastUTF8text);
             switch (decodedBytes.length) {
@@ -45,25 +45,38 @@ public final class Cracker {
     public String[] run(final RainbowTable[] rainbowTables) {
         String[] result = new String[userTable.length];
 
+        if (rainbowTables == null)
+            return result;
+
         for (int i = 0; i < userTable.length; ++i) {
             switch (rainbowTableSet) {
                 case CRC32:
-                    if (rainbowTables[0].contains(userTable[i].getPasswordHash()))
-                        result[i] = rainbowTables[0].get(userTable[i].getPasswordHash());
+                    if (rainbowTables[0] != null) {
+                        if (rainbowTables[0].contains(userTable[i].getPasswordHash()))
+                            result[i] = rainbowTables[0].get(userTable[i].getPasswordHash());
+                    }
                     break;
                 case MD:
-                    if (rainbowTables[1].contains(userTable[i].getPasswordHash()))
-                        result[i] = rainbowTables[1].get(userTable[i].getPasswordHash());
-                    if (rainbowTables[2].contains(userTable[i].getPasswordHash()))
-                        result[i] = rainbowTables[2].get(userTable[i].getPasswordHash());
+                    if (rainbowTables[1] != null) {
+                        if (rainbowTables[1].contains(userTable[i].getPasswordHash()))
+                            result[i] = rainbowTables[1].get(userTable[i].getPasswordHash());
+                    }
+                    if (rainbowTables[2] != null) {
+                        if (rainbowTables[2].contains(userTable[i].getPasswordHash()))
+                            result[i] = rainbowTables[2].get(userTable[i].getPasswordHash());
+                    }
                     break;
                 case SHA1:
-                    if (rainbowTables[3].contains(userTable[i].getPasswordHash()))
-                        result[i] = rainbowTables[3].get(userTable[i].getPasswordHash());
+                    if (rainbowTables[3] != null) {
+                        if (rainbowTables[3].contains(userTable[i].getPasswordHash()))
+                            result[i] = rainbowTables[3].get(userTable[i].getPasswordHash());
+                    }
                     break;
                 case SHA256:
-                    if (rainbowTables[4].contains(userTable[i].getPasswordHash()))
-                        result[i] = rainbowTables[4].get(userTable[i].getPasswordHash());
+                    if (rainbowTables[4] != null) {
+                        if (rainbowTables[4].contains(userTable[i].getPasswordHash()))
+                            result[i] = rainbowTables[4].get(userTable[i].getPasswordHash());
+                    }
                     break;
             }
         }
