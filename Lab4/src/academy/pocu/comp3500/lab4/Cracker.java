@@ -27,15 +27,6 @@ public final class Cracker {
             }
         }
 
-        // CRC32
-        CRC32 crc32 = new CRC32();
-        crc32.update(passwordBytes);
-        var crcHash = crc32.getValue();
-        if (myHash.equals(String.valueOf(crcHash))) {
-            rainbowTableSet = RainbowTableSet.CRC32;
-            return;
-        }
-
         // MD2
         try {
             MessageDigest md = MessageDigest.getInstance("MD2");
@@ -48,6 +39,15 @@ public final class Cracker {
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+        }
+
+        // CRC32
+        CRC32 crc32 = new CRC32();
+        crc32.update(passwordBytes);
+        var crcHash = crc32.getValue();
+        if (myHash.equals(String.valueOf(crcHash))) {
+            rainbowTableSet = RainbowTableSet.CRC32;
+            return;
         }
 
         // MD5
