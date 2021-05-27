@@ -13,7 +13,7 @@ import java.util.zip.CRC32;
 
 public final class Cracker {
     private User[] userTable;
-    private RainbowTableSet rainbowTableSet;
+    private RainbowTableSet rainbowTableSet = RainbowTableSet.NULL;
 
     public Cracker(User[] userTable, String email, String password) {
         this.userTable = userTable;
@@ -91,14 +91,15 @@ public final class Cracker {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public String[] run(final RainbowTable[] rainbowTables) {
         String[] result = new String[userTable.length];
 
         if (rainbowTables == null)
+            return result;
+
+        if (rainbowTableSet == RainbowTableSet.NULL)
             return result;
 
         switch (rainbowTableSet) {
@@ -133,12 +134,14 @@ public final class Cracker {
 
     private void setStringFromRainbowTable(final String[] result, final RainbowTable rainbowTable) {
         for (int i = 0; i < userTable.length; ++i) {
-            if (rainbowTable.contains(userTable[i].getPasswordHash()))
-                result[i] = rainbowTable.get(userTable[i].getPasswordHash());
+            var userPasswordHash = userTable[i].getPasswordHash();
+            if (rainbowTable.contains(userPasswordHash))
+                result[i] = rainbowTable.get(userPasswordHash);
         }
     }
 
     public enum RainbowTableSet {
+        NULL,
         CRC32,
         MD2,
         MD5,
