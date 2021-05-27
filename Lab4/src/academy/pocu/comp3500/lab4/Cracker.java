@@ -9,10 +9,12 @@ import java.util.Base64;
 
 public final class Cracker {
     private User[] userTable;
+    private String myPassword;
     private RainbowTableSet rainbowTableSet;
 
     public Cracker(User[] userTable, String email, String password) {
         this.userTable = userTable;
+        this.myPassword = password;
         String myHash = null;
 
         for (int i = 0; i < userTable.length; ++i) {
@@ -48,40 +50,41 @@ public final class Cracker {
         if (rainbowTables == null)
             return result;
 
-        for (int i = 0; i < userTable.length; ++i) {
-            switch (rainbowTableSet) {
-                case CRC32:
-                    if (rainbowTables[0] != null) {
-                        if (rainbowTables[0].contains(userTable[i].getPasswordHash()))
-                            result[i] = rainbowTables[0].get(userTable[i].getPasswordHash());
-                    }
-                    break;
-                case MD:
-                    if (rainbowTables[1] != null) {
-                        if (rainbowTables[1].contains(userTable[i].getPasswordHash()))
-                            result[i] = rainbowTables[1].get(userTable[i].getPasswordHash());
-                    }
-                    if (rainbowTables[2] != null) {
-                        if (rainbowTables[2].contains(userTable[i].getPasswordHash()))
-                            result[i] = rainbowTables[2].get(userTable[i].getPasswordHash());
-                    }
-                    break;
-                case SHA1:
-                    if (rainbowTables[3] != null) {
-                        if (rainbowTables[3].contains(userTable[i].getPasswordHash()))
-                            result[i] = rainbowTables[3].get(userTable[i].getPasswordHash());
-                    }
-                    break;
-                case SHA256:
-                    if (rainbowTables[4] != null) {
-                        if (rainbowTables[4].contains(userTable[i].getPasswordHash()))
-                            result[i] = rainbowTables[4].get(userTable[i].getPasswordHash());
-                    }
-                    break;
-            }
+        int rainbowTableNum = -1;
+        switch (rainbowTableSet) {
+            case CRC32:
+                if (rainbowTables[0] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[0]);
+                }
+                break;
+            case MD:
+                if (rainbowTables[1] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[1]);
+                }
+                if (rainbowTables[2] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[2]);
+                }
+                break;
+            case SHA1:
+                if (rainbowTables[3] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[3]);
+                }
+                break;
+            case SHA256:
+                if (rainbowTables[4] != null) {
+                    setStringFromRainbowTable(result, rainbowTables[4]);
+                }
+                break;
         }
 
         return result;
+    }
+
+    private void setStringFromRainbowTable(final String[] result, final RainbowTable rainbowTable) {
+        for (int i = 0; i < userTable.length; ++i) {
+            if (rainbowTable.contains(userTable[i].getPasswordHash()))
+                result[i] = rainbowTable.get(userTable[i].getPasswordHash());
+        }
     }
 
     public enum RainbowTableSet {
