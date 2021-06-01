@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 
 public final class Logger {
     public static void log(final String text) {
-        
+
     }
 
     public static void printTo(final BufferedWriter writer) {
