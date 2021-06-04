@@ -38,25 +38,21 @@ public class Bank {
             PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
             cipher.init(Cipher.DECRYPT_MODE, publicKey);
-            byte[] extractedFromToAmount = cipher.update(signature);   // SHA-256 해시 추출
-            System.out.println("Extracted : " + extractedFromToAmount);
-            System.out.println("Extracted encoded : " + Base64.getEncoder().encodeToString(extractedFromToAmount));
+            byte[] extractedFromToAmount = cipher.doFinal(signature);   // SHA-256 해시 추출
 
             // [from, to, amount] 해시값 변환
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             var fromToAmount = new byte[from.length + to.length + Long.BYTES];
-            var amountBytes =  longToBytes(amount);
+            var amountBytes = longToBytes(amount);
 
             System.arraycopy(from, 0, fromToAmount, 0, from.length);
             System.arraycopy(to, 0, fromToAmount, from.length, to.length);
             System.arraycopy(amountBytes, 0, fromToAmount, from.length + to.length, Long.BYTES);
             md.update(fromToAmount);
             var receivedFromToAmount = md.digest(); // SHA-256 해시 추출
-            System.out.println("Received encoded : " + receivedFromToAmount);
-            System.out.println("Received encoded : " + Base64.getEncoder().encodeToString(receivedFromToAmount));
 
             // 두 해시 값이 일치하는지 비교
-            if (extractedFromToAmount.equals(receivedFromToAmount)) {
+            if (encodeToHexString(extractedFromToAmount).equals(encodeToHexString(receivedFromToAmount))) {
                 var fromBalance = getBalance(from);
                 var toBalance = getBalance(to);
 
@@ -88,5 +84,13 @@ public class Bank {
         buffer.put(bytes);
         buffer.flip();//need flip
         return buffer.getLong();
+    }
+
+    private static String encodeToHexString(byte[] bytes) {
+        StringBuilder result = new StringBuilder();
+        for (byte oneByte : bytes) {
+            result.append(String.format("%02x", oneByte));
+        }
+        return result.toString();
     }
 }
