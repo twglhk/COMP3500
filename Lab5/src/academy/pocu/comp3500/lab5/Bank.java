@@ -1,5 +1,6 @@
 package academy.pocu.comp3500.lab5;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import java.nio.ByteBuffer;
 import java.security.*;
@@ -26,7 +27,7 @@ public class Bank {
     }
 
     public boolean transfer(final byte[] from, byte[] to, final long amount, final byte[] signature) {
-        if (!userAccount.containsKey(from) || !userAccount.containsKey(to))
+        if (!userAccount.containsKey(from))
             return false;
 
         try {
@@ -65,7 +66,8 @@ public class Bank {
                 userAccount.put(to, toBalance + amount);
                 return true;
             }
-
+        } catch (BadPaddingException e) {
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

@@ -3,11 +3,12 @@ package academy.pocu.comp3500.lab5.app;
 import academy.pocu.comp3500.lab5.Bank;
 import academy.pocu.comp3500.lab5.KeyGenerator;
 
+import javax.crypto.BadPaddingException;
 import java.math.BigInteger;
 
 public class Program {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BadPaddingException {
         // KeyGenerator
 //        assert (!KeyGenerator.isPrime(BigInteger.ZERO));
 //        assert (!KeyGenerator.isPrime(BigInteger.ONE));
