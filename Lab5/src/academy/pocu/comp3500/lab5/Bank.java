@@ -23,6 +23,9 @@ public class Bank {
     }
 
     public long getBalance(final byte[] pubKey) {
+        if (!userAccount.containsKey(pubKey))
+            return 0;
+
         return userAccount.get(pubKey);
     }
 
