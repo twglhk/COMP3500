@@ -64,6 +64,14 @@ public class Bank {
                 if (fromBalance - amount < 0)
                     return false;
 
+                // 0원 이하 송금 시 거래 X
+                if (amount <= 0)
+                    return false;
+
+                // 입금 계좌의 잔액이 데이터 한도를 초과할 경우 거래 X
+                if (toBalance > Long.MAX_VALUE - amount)
+                    return false;
+
                 // 거래 진행
                 userAccount.put(from, fromBalance - amount);
                 userAccount.put(to, toBalance + amount);
