@@ -17,7 +17,7 @@ public class Bank {
     private HashMap<byte[], Long> userAccount;
 
     public Bank(byte[][] pubKeys, final long[] amounts) {
-        userAccount = new HashMap();
+        userAccount = new HashMap<byte[], Long>();
 
         for (int i = 0; i < pubKeys.length; ++i) {
             userAccount.put(pubKeys[i], amounts[i]);
