@@ -14,12 +14,15 @@ public class Program {
     public static void main(String[] args) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
         log("hello");
-        Logger.indent();
-        log("world");
+        Indent indent = Logger.indent();
+        {
+            log("world");
+            indent.discard();
+        }
         Logger.unindent();
         log("this is logging at the top level");
         //Logger.printTo(writer);
-        Logger.clear();
+        //Logger.clear();
         Logger.printTo(writer);
     }
 }

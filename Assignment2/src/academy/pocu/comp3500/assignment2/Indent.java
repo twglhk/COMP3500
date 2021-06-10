@@ -31,6 +31,6 @@ public final class Indent {
     }
 
     public void discard() {
-
+        logList.clear();
     }
 }

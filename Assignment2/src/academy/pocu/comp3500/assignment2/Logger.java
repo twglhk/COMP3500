@@ -11,15 +11,13 @@ import java.nio.charset.StandardCharsets;
 
 public final class Logger {
     private static LinkedList<Indent> indentList = new LinkedList<Indent>();
-    private static int indentCursor;
 
     public static void log(final String text) {
         if (indentList.getSize() == 0) {
             Indent indent = new Indent(0);
             indentList.add(indent);
-            indentCursor = 0;
         }
-        indentList.get(indentCursor).addLog(text);
+        indentList.getLast().addLog(text);
     }
 
     public static void printTo(final BufferedWriter writer) {
@@ -46,13 +44,14 @@ public final class Logger {
     }
 
     public static Indent indent() {
-        if (indentList.getSize() == indentCursor + 1) {
-            Indent indent = new Indent(indentList.get(indentCursor).getLevel() + 1);
-            indentList.addLast(indent);
-            indentCursor++;
+        if (indentList.getSize() == 0) {
+            Indent indent = new Indent(1);
+            indentList.add(indent);
             return indent;
         } else {
-            return indentList.get(++indentCursor);
+            Indent indent = new Indent(indentList.getLast().getLevel() + 1);
+            indentList.addLast(indent);
+            return indent;
         }
     }
 
@@ -60,8 +59,7 @@ public final class Logger {
         if (indentList.getSize() == 0)
             return;
 
-        Indent indent = new Indent(indentList.get(indentCursor).getLevel() - 1);
+        Indent indent = new Indent(indentList.getLast().getLevel() - 1);
         indentList.addLast(indent);
-        indentCursor++;
     }
 }
