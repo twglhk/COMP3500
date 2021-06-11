@@ -15,40 +15,83 @@ public class Program {
     public static void main(String[] args) throws IOException {
         {
             BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
+
             log("hello");
-            Indent indent = Logger.indent();
+            log("world");
+            log("this is logging at the top level");
+
+            Logger.indent();
             {
-                log("world");
-                indent.discard();
+                log("using indent, you can indent to organize your logs");
+                log("call unindent() to decrease the indentation level");
             }
             Logger.unindent();
-            log("this is logging at the top level");
-            //Logger.printTo(writer);
-            //Logger.clear();
+
+            Indent indent = Logger.indent();
+            {
+                log("whatever I say here");
+                log("is discarded!");
+                log("too bad!");
+
+                Logger.indent();
+
+                log("CHILD DISCARD!!!!!!!!!!");
+
+                indent.discard();
+
+                log("CHILD DISCARD!!!!!!!!!!");
+            }
+            Logger.unindent();
+
+            Logger.indent();
+            {
+                log("this won't be discarded");
+                log("it's true!");
+
+                doMagic();
+            }
+            Logger.unindent();
+
+            log("back to the top level!");
+            log("and let's print the logs");
+
             Logger.printTo(writer);
+
+            Logger.clear();
+
+            log("log was just cleared");
+            log("so you start logging from the top level again");
+
+            Logger.printTo(writer);
+
+            writer.close();
         }
+
+        Logger.clear();
 
         {
             final BufferedWriter writer1 = new BufferedWriter(new FileWriter("quicksort1.log"));
+            final BufferedWriter writer2 = new BufferedWriter(new FileWriter("quicksort2.log"));
+
             int[] nums = new int[]{30, 10, 80, 90, 50, 70, 40};
+
             Sort.quickSort(nums);
+
             Logger.printTo(writer1);
-            // quicksort1.log
-            /*
-            30 10 80 90 50 70 40
-              L: 30 10 40
-                L: 10
-                R: 30
-                X: 10 30
-              R: 90 50 70 80
-                L: 50 70 80
-                  L: 50 70
-                  R:
-                  X: 50 70
-                R: 90
-                X: 50 70 80 90
-              X: 10 30 40 50 70 80 90
-            */
+
+            Logger.printTo(writer2, "90");
+
+            writer1.close();
+            writer2.close();
         }
+    }
+
+    private static void doMagic() {
+        Indent indent = Logger.indent();
+        {
+            log("you can also nest an indent");
+            log("like this!");
+        }
+        Logger.unindent();
     }
 }

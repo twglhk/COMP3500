@@ -5,7 +5,7 @@ import academy.pocu.comp3500.assignment2.datastructure.Stack;
 
 public final class Indent {
     private LinkedList<String> logList;
-    private Indent nextIndent;
+    private Indent childIndent;
     private int level;
 
     public Indent(int level) {
@@ -30,7 +30,14 @@ public final class Indent {
         return level;
     }
 
+    public void setChildIndent(Indent childIndent) {
+        this.childIndent = childIndent;
+    }
+
     public void discard() {
         logList.clear();
+        if (childIndent != null) {
+            childIndent.discard();
+        }
     }
 }

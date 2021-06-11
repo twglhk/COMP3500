@@ -14,8 +14,7 @@ public final class Logger {
 
     public static void log(final String text) {
         if (indentList.getSize() == 0) {
-            Indent indent = new Indent(0);
-            indentList.add(indent);
+            InitIndent();
         }
         indentList.getLast().addLog(text);
     }
@@ -45,11 +44,10 @@ public final class Logger {
 
     public static Indent indent() {
         if (indentList.getSize() == 0) {
-            Indent indent = new Indent(1);
-            indentList.add(indent);
-            return indent;
+            return InitIndent();
         } else {
             Indent indent = new Indent(indentList.getLast().getLevel() + 1);
+            indentList.getLast().setChildIndent(indent);
             indentList.addLast(indent);
             return indent;
         }
@@ -61,5 +59,11 @@ public final class Logger {
 
         Indent indent = new Indent(indentList.getLast().getLevel() - 1);
         indentList.addLast(indent);
+    }
+
+    private static Indent InitIndent() {
+        Indent indent = new Indent(0);
+        indentList.add(indent);
+        return indent;
     }
 }
