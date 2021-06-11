@@ -53,9 +53,9 @@ public class Program {
             //kkrTest();
             //rokTest();
             //sehyTest();
-            testD();
+            //testD();
             //testF();
-            //testG();
+            testG();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -54,7 +54,31 @@ public final class Logger {
     }
 
     public static void printTo(final BufferedWriter writer, final String filter) {
+        try {
+            for (var logBox : logBoxList) {
+                var indent = logBox.getIndent();
+                if (indent.getDiscarded()) {
+                    indent.executeDiscard();
+                    continue;
+                }
 
+                if (!logBox.getLog().contains(filter))
+                    continue;
+
+                var indentLevel = indent.getLevel();
+                String indentedString = "";
+                for (int i = 0; i < indentLevel; ++i) {
+                    indentedString += "  ";
+                }
+                indentedString += logBox.getLog();
+                writer.write(indentedString);
+                writer.newLine();
+            }
+            writer.flush();
+            clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void clear() {
