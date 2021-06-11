@@ -38,19 +38,19 @@ public class Program {
             e.printStackTrace();
         }
 
-        try {
-            //exampleCodes();
-            //mainTest();
-            //kkrTest();
-            //dorasimaTest();
-            //rokTest();
-            //sehyTest();
-            //testD();
-            //testF();
-            //testG();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //exampleCodes();
+//            //mainTest();
+//            //kkrTest();
+//            //dorasimaTest();
+//            //rokTest();
+//            //sehyTest();
+//            //testD();
+//            //testF();
+//            //testG();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

@@ -1,4 +1,4 @@
-package academy.pocu.comp3500.assignment2.app;
+package academy.pocu.comp3500.assignment2;
 
 import academy.pocu.comp3500.assignment2.Indent;
 

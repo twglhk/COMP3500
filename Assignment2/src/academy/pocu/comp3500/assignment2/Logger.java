@@ -1,6 +1,6 @@
 package academy.pocu.comp3500.assignment2;
 
-import academy.pocu.comp3500.assignment2.app.LogBox;
+import academy.pocu.comp3500.assignment2.LogBox;
 import academy.pocu.comp3500.assignment2.datastructure.LinkedList;
 import academy.pocu.comp3500.assignment2.datastructure.Queue;
 import academy.pocu.comp3500.assignment2.datastructure.Stack;
