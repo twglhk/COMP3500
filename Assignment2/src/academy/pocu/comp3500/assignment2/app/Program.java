@@ -20,23 +20,19 @@ public class Program {
 
     public static void main(String[] args) {
         // write your code here
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
-            Indent indent = Logger.indent();
-            Logger.log("b");
-            Logger.indent();
-            Logger.log("c");
-            Logger.unindent();
-            Logger.log("d");
-            Logger.unindent();
-            Logger.log("e");
-            indent.discard();
-            Logger.printTo(writer);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
+//            Indent indent = Logger.indent();
+//            Logger.log("b");
+//            Logger.log("c");
+//            Logger.clear();
+//            Logger.log("d");
+//            Logger.printTo(writer);
+//            writer.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 //        try {
 //            //exampleCodes();

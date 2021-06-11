@@ -25,7 +25,9 @@ public final class Logger {
         var indent = indentList.get(indentLevel);
         logBox.setLog(text);
         logBox.setIndent(indent);
-        Indent.DiscardInterface discardFunc = () -> { logBoxList.remove(logBox); };
+        Indent.DiscardInterface discardFunc = () -> {
+            logBoxList.remove(logBox);
+        };
         indent.setDiscardTarget(discardFunc);
         logBoxList.addLast(logBox);
     }
@@ -55,6 +57,7 @@ public final class Logger {
 
     public static void clear() {
         logBoxList.clear();
+        indentLevel = 0;
     }
 
     public static Indent indent() {
