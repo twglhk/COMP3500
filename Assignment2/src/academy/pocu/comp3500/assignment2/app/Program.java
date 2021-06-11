@@ -33,13 +33,7 @@ public class Program {
                 log("is discarded!");
                 log("too bad!");
 
-                Logger.indent();
-
-                log("CHILD DISCARD!!!!!!!!!!");
-
                 indent.discard();
-
-                log("CHILD DISCARD!!!!!!!!!!");
             }
             Logger.unindent();
 
