@@ -20,33 +20,45 @@ public class Program {
 
     public static void main(String[] args) {
         // write your code here
-//        try {
-//            BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
-//            Indent indent = Logger.indent();
-//            Logger.log("b");
-//            Logger.log("c");
-//            Logger.clear();
-//            Logger.log("d");
-//            Logger.printTo(writer);
-//            writer.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
+            Logger.log("this");
+            Indent indent = Logger.indent();
+                Logger.log("will");
+                Logger.indent();
+                    Logger.log("be");
+                    indent.discard();
+                    Logger.unindent();
+                Logger.log("to");
+                Logger.indent();
+                    Logger.log("good");
+                    Logger.unindent();
+                 Logger.log("1");
+                 Logger.unindent();
+            Logger.log("is me");
+            Logger.printTo(writer);
+            writer.close();
 
-//        try {
-//            //exampleCodes();
-//            //mainTest();
-//            //kkrTest();
-//            //dorasimaTest();
-//            //rokTest();
-//            //sehyTest();
-//            //testD();
-//            //testF();
-//            //testG();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        {
+            dorasimaTest();
+        }
+
+        try {
+            //exampleCodes();
+            //mainTest();
+            //kkrTest();
+            //rokTest();
+            //sehyTest();
+            testD();
+            //testF();
+            //testG();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

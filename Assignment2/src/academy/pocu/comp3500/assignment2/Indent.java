@@ -8,37 +8,36 @@ import java.util.function.Function;
 
 public final class Indent {
     private int level;
-    private Indent childIndent;
-    private LinkedList<DiscardInterface> logBoxDiscardFuncList;
+    private LinkedList<Indent> childIndents;
+    private boolean isDiscarded;
 
     public Indent(int level) {
         this.level = level;
-        logBoxDiscardFuncList = new LinkedList<DiscardInterface>();
+        childIndents = new LinkedList<Indent>();
     }
 
     public int getLevel() {
         return level;
     }
 
-    public void setChildIndent(Indent indent) {
-        childIndent = indent;
+    public boolean getDiscarded() {
+        return isDiscarded;
     }
 
-    public void setDiscardTarget(DiscardInterface func) {
-        logBoxDiscardFuncList.add(func);
+    public void addChildIndent(Indent indent) {
+        childIndents.add(indent);
     }
 
     public void discard() {
-        for (var func : logBoxDiscardFuncList) {
-            func.discardLogBox();
+        if (level == 0) {
+            return;
         }
-
-        if (childIndent != null) {
-            childIndent.discard();
-        }
+        isDiscarded = true;
     }
 
-    public interface DiscardInterface {
-        void discardLogBox();
+    public void executeDiscard() {
+        for (var childIndent : childIndents) {
+            childIndent.discard();
+        }
     }
 }

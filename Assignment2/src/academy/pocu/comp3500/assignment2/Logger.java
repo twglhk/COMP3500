@@ -11,31 +11,33 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public final class Logger {
-    private static LinkedList<Indent> indentList = new LinkedList<Indent>();
+    private static Stack<Indent> indentStack = new Stack<Indent>();
     private static LinkedList<LogBox> logBoxList = new LinkedList<LogBox>();
     private static int indentLevel = 0;
 
     public static void log(final String text) {
-        if (indentList.getSize() == 0) {
+        if (indentStack.getSize() == 0) {
             Indent indent = new Indent(0);
-            indentList.add(indent);
+            indentStack.push(indent);
         }
 
         var logBox = new LogBox();
-        var indent = indentList.get(indentLevel);
+        var indent = indentStack.peek();
         logBox.setLog(text);
         logBox.setIndent(indent);
-        Indent.DiscardInterface discardFunc = () -> {
-            logBoxList.remove(logBox);
-        };
-        indent.setDiscardTarget(discardFunc);
         logBoxList.addLast(logBox);
     }
 
     public static void printTo(final BufferedWriter writer) {
         try {
             for (var logBox : logBoxList) {
-                var indentLevel = logBox.getIndent().getLevel();
+                var indent = logBox.getIndent();
+                if (indent.getDiscarded()) {
+                    indent.executeDiscard();
+                    continue;
+                }
+
+                var indentLevel = indent.getLevel();
                 String indentedString = "";
                 for (int i = 0; i < indentLevel; ++i) {
                     indentedString += "  ";
@@ -58,30 +60,31 @@ public final class Logger {
     public static void clear() {
         logBoxList.clear();
         indentLevel = 0;
+        while (indentStack.getSize() != 0) {
+            indentStack.pop();
+        }
     }
 
     public static Indent indent() {
-        if (indentList.getSize() == 0) {
+        if (indentStack.getSize() == 0) {
             Indent indent = new Indent(0);
-            indentList.add(indent);
+            indentStack.push(indent);
         }
 
         indentLevel++;
-        if (indentLevel == indentList.getSize()) {
-            var indent = new Indent(indentLevel);
-            indentList.getLast().setChildIndent(indent);
-            indentList.addLast(indent);
-            return indent;
-        } else {
-            return indentList.get(indentLevel);
-        }
+        var indent = new Indent(indentLevel);
+        indentStack.peek().addChildIndent(indent);
+        indentStack.push(indent);
+
+        return indent;
     }
 
     public static void unindent() {
-        if (indentList.getSize() == 0)
+        if (indentStack.getSize() == 0)
             return;
         if (indentLevel == 0)
             return;
         indentLevel--;
+        indentStack.pop();
     }
 }
