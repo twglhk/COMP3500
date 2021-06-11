@@ -21,18 +21,37 @@ public class Program {
     public static void main(String[] args) {
         // write your code here
         try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
+            Indent indent = Logger.indent();
+            Logger.log("b");
+            Logger.indent();
+            Logger.log("c");
+            Logger.unindent();
+            Logger.log("d");
+            Logger.unindent();
+            Logger.log("e");
+            indent.discard();
+            Logger.printTo(writer);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
             //exampleCodes();
             //mainTest();
             //kkrTest();
             //dorasimaTest();
             //rokTest();
             //sehyTest();
-            testD();
+            //testD();
             //testF();
             //testG();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private static void testD() throws IOException {
@@ -682,10 +701,10 @@ public class Program {
             Indent indent1 = Logger.indent();
             {
                 log("second level 1");
-                Indent indent2 =Logger.indent();
+                Indent indent2 = Logger.indent();
                 {
                     log("third level 1");
-                    Indent indent3 =Logger.indent();
+                    Indent indent3 = Logger.indent();
                     {
                         log("fourth level 1");
                     }

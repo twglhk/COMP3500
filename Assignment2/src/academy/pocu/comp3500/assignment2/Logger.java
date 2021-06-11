@@ -1,5 +1,6 @@
 package academy.pocu.comp3500.assignment2;
 
+import academy.pocu.comp3500.assignment2.app.LogBox;
 import academy.pocu.comp3500.assignment2.datastructure.LinkedList;
 import academy.pocu.comp3500.assignment2.datastructure.Queue;
 import academy.pocu.comp3500.assignment2.datastructure.Stack;
@@ -11,23 +12,35 @@ import java.nio.charset.StandardCharsets;
 
 public final class Logger {
     private static LinkedList<Indent> indentList = new LinkedList<Indent>();
+    private static LinkedList<LogBox> logBoxList = new LinkedList<LogBox>();
+    private static int indentLevel = 0;
 
     public static void log(final String text) {
         if (indentList.getSize() == 0) {
             Indent indent = new Indent(0);
             indentList.add(indent);
         }
-        indentList.getLast().addLog(text);
+
+        var logBox = new LogBox();
+        var indent = indentList.get(indentLevel);
+        logBox.setLog(text);
+        logBox.setIndent(indent);
+        Indent.DiscardInterface discardFunc = () -> { logBoxList.remove(logBox); };
+        indent.setDiscardTarget(discardFunc);
+        logBoxList.addLast(logBox);
     }
 
     public static void printTo(final BufferedWriter writer) {
         try {
-            for (var indent : indentList) {
-                var logList = indent.getLogList();
-                for (var log : logList) {
-                    writer.write(log);
-                    writer.newLine();
+            for (var logBox : logBoxList) {
+                var indentLevel = logBox.getIndent().getLevel();
+                String indentedString = "";
+                for (int i = 0; i < indentLevel; ++i) {
+                    indentedString += "  ";
                 }
+                indentedString += logBox.getLog();
+                writer.write(indentedString);
+                writer.newLine();
             }
             writer.flush();
             clear();
@@ -41,31 +54,31 @@ public final class Logger {
     }
 
     public static void clear() {
-        indentList.clear();
+        logBoxList.clear();
     }
 
     public static Indent indent() {
         if (indentList.getSize() == 0) {
-            Indent indent = new Indent(1);
+            Indent indent = new Indent(0);
             indentList.add(indent);
-            return indent;
-        } else {
-            Indent indent = new Indent(indentList.getLast().getLevel() + 1);
+        }
+
+        indentLevel++;
+        if (indentLevel == indentList.getSize()) {
+            var indent = new Indent(indentLevel);
             indentList.getLast().setChildIndent(indent);
             indentList.addLast(indent);
             return indent;
+        } else {
+            return indentList.get(indentLevel);
         }
     }
 
     public static void unindent() {
         if (indentList.getSize() == 0)
             return;
-
-        Indent indent = new Indent(indentList.getLast().getLevel() - 1);
-        indentList.addLast(indent);
-    }
-
-    public static void discardIndent(Indent indent) {
-        indentList.remove(indent);
+        if (indentLevel == 0)
+            return;
+        indentLevel--;
     }
 }

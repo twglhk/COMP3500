@@ -1,43 +1,44 @@
 package academy.pocu.comp3500.assignment2;
 
+import academy.pocu.comp3500.assignment2.app.LogBox;
 import academy.pocu.comp3500.assignment2.datastructure.LinkedList;
 import academy.pocu.comp3500.assignment2.datastructure.Stack;
 
+import java.util.function.Function;
+
 public final class Indent {
-    private LinkedList<String> logList;
-    private Indent childIndent;
     private int level;
+    private Indent childIndent;
+    private LinkedList<DiscardInterface> logBoxDiscardFuncList;
 
     public Indent(int level) {
         this.level = level;
-        logList = new LinkedList<String>();
-    }
-
-    public void addLog(String str) {
-        String indentedString = "";
-        for (int i = 0; i < level; ++i) {
-            indentedString += "  ";
-        }
-        indentedString += str;
-        logList.addLast(indentedString);
-    }
-
-    public LinkedList<String> getLogList() {
-        return logList;
+        logBoxDiscardFuncList = new LinkedList<DiscardInterface>();
     }
 
     public int getLevel() {
         return level;
     }
 
-    public void setChildIndent(Indent childIndent) {
-        this.childIndent = childIndent;
+    public void setChildIndent(Indent indent) {
+        childIndent = indent;
+    }
+
+    public void setDiscardTarget(DiscardInterface func) {
+        logBoxDiscardFuncList.add(func);
     }
 
     public void discard() {
-        logList.clear();
+        for (var func : logBoxDiscardFuncList) {
+            func.discardLogBox();
+        }
+
         if (childIndent != null) {
             childIndent.discard();
         }
+    }
+
+    public interface DiscardInterface {
+        void discardLogBox();
     }
 }
