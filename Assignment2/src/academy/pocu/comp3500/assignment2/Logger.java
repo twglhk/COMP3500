@@ -30,6 +30,7 @@ public final class Logger {
                 }
             }
             writer.flush();
+            clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
