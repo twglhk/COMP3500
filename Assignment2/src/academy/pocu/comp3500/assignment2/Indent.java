@@ -16,7 +16,7 @@ public final class Indent {
     public void addLog(String str) {
         String indentedString = "";
         for (int i = 0; i < level; ++i) {
-            indentedString += "   ";
+            indentedString += "  ";
         }
         indentedString += str;
         logList.addLast(indentedString);
