@@ -1,6 +1,4 @@
 package academy.pocu.comp3500.lab6;
-
-import academy.pocu.comp3500.lab2.datastructure.Node;
 import academy.pocu.comp3500.lab6.leagueofpocu.Player;
 
 public class BSTNode {
