@@ -25,6 +25,11 @@ public class Program {
         //League league2 = new League(new Player[]{player6, player4, player1, player2, player5, player3}, false);
 
         // findMatchOrNull()
+        Player onePlayer = new Player(1, "HUMBA", 1000);
+        League oneLeague = new League(new Player[]{onePlayer}, true);
+        Player matchingPlayer = oneLeague.findMatchOrNull(onePlayer);
+        assert (matchingPlayer == null);
+
         Player empthmatch = emptyLeague.findMatchOrNull(player2);
         Player match = league1.findMatchOrNull(player2);
         assert (match.getId() == player3.getId());

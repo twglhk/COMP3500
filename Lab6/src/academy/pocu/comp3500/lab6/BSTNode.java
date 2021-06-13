@@ -28,22 +28,24 @@ public class BSTNode {
             return bestMatchingPlayerNode;
         }
 
-        if (node.player == player) {
+        if (node.player.getId() == player.getId()) {
             var leftMatchingPlayerNode = getMatchingPlayerOrNull(node.left, player, bestMatchingPlayerNode);
             var rightMatchingPlayerNode = getMatchingPlayerOrNull(node.right, player, bestMatchingPlayerNode);
-
-            if (player.getRating() == leftMatchingPlayerNode.player.getRating())
+            if (leftMatchingPlayerNode == null && rightMatchingPlayerNode == null) {
+                return bestMatchingPlayerNode;
+            } else if (rightMatchingPlayerNode == null) {
                 return leftMatchingPlayerNode;
-            if (player.getRating() == rightMatchingPlayerNode.player.getRating())
+            } else if (leftMatchingPlayerNode == null) {
                 return rightMatchingPlayerNode;
-
-            var ratingGapFromLeftPlayerNode = Math.abs(leftMatchingPlayerNode.player.getRating() - player.getRating());
-            var ratingGapFromRightPlayerNode = Math.abs(rightMatchingPlayerNode.player.getRating() - player.getRating());
-
-            if (ratingGapFromLeftPlayerNode < ratingGapFromRightPlayerNode) {
-                return leftMatchingPlayerNode;
             } else {
-                return rightMatchingPlayerNode;
+                var ratingGapFromLeftPlayerNode = Math.abs(leftMatchingPlayerNode.player.getRating() - player.getRating());
+                var ratingGapFromRightPlayerNode = Math.abs(rightMatchingPlayerNode.player.getRating() - player.getRating());
+
+                if (ratingGapFromLeftPlayerNode < ratingGapFromRightPlayerNode) {
+                    return leftMatchingPlayerNode;
+                } else {
+                    return rightMatchingPlayerNode;
+                }
             }
         } else {
             if (player.getRating() == node.player.getRating()) {
