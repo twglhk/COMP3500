@@ -18,13 +18,7 @@ public class League {
 
         this.playerCount = players.length;
         if (isSorted) {
-            bstRoot = new BSTNode(players[players.length / 2]);
-            for (int i = 0; i < players.length / 2; ++i) {
-                BSTNode.insertRecursive(bstRoot, players[i]);
-            }
-            for (int i = (players.length / 2) + 1; i < players.length; ++i) {
-                BSTNode.insertRecursive(bstRoot, players[i]);
-            }
+            bstRoot = BSTNode.insertSortedRecursive(bstRoot, players, 0, playerCount - 1);
         } else {
             bstRoot = new BSTNode(players[0]);
             for (int i = 1; i < players.length; ++i) {

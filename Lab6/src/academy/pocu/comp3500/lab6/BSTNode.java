@@ -148,6 +148,21 @@ public class BSTNode {
         return node;
     }
 
+    public static BSTNode insertSortedRecursive(BSTNode root, final Player[] players, int left, int right) {
+        if (players == null)
+            return null;
+
+        int mid = (left + right) / 2;
+        root = new BSTNode(players[mid]);
+        if (left != mid) {
+            root.left = insertSortedRecursive(root.left, players, left, mid - 1);
+        }
+        if (right != mid) {
+            root.right = insertSortedRecursive(root.right, players, mid + 1, right);
+        }
+        return root;
+    }
+
     public static BSTNode joinRecursive(final BSTNode node, Player player, Result success) {
         if (node == null) {
             success.isSuccess = true;

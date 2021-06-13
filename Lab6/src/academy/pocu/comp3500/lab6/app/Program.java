@@ -59,9 +59,9 @@ public class Program {
 
         // leave()
         boolean leaveSuccess = emptyLeague.leave(new Player(5, "player5", 10));
-        assert (leaveSuccess);
+        assert (!leaveSuccess);
 
         leaveSuccess = league1.leave(new Player(5, "player5", 10));
-        assert (!leaveSuccess);
+        assert (leaveSuccess);
     }
 }
