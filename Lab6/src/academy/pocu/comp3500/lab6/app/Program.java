@@ -52,13 +52,12 @@ public class Program {
 //                || (bottomPlayers[1].getId() == player3.getId() && bottomPlayers[2].getId() == player2.getId()));
 
         // join()
-        Player onePlayer = new Player(1, "HUMBA", 1000);
-        League oneLeague = new League();
-        boolean joinSuccess = emptyLeague.join(onePlayer);
-        assert (joinSuccess);
-
-        joinSuccess = league1.join(new Player(1, "player1", 4));
-        assert (!joinSuccess);
+        Player onePlayer = null;
+        League MultipleJoinLeague = new League();
+        boolean joinSuccess1 = MultipleJoinLeague.join(player1);
+        boolean joinSuccess11 = MultipleJoinLeague.join(player1);
+        assert (joinSuccess1);
+        assert (joinSuccess11);
 
         // leave()
         boolean leaveSuccess = league1.leave(new Player(5, "player5", 10));

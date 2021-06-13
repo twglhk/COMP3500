@@ -73,8 +73,12 @@ public class League {
     }
 
     public boolean join(final Player player) {
+        if (player == null) {
+            return false;
+        }
+
         Result success = new Result();
-        BSTNode.joinRecursive(bstRoot, player, success);
+        bstRoot = BSTNode.joinRecursive(bstRoot, player, success);
         if (success.isSuccess)
             playerCount++;
 
