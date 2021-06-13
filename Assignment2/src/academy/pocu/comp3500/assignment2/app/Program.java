@@ -22,12 +22,12 @@ public class Program {
         // write your code here
 
         {
-            final BufferedWriter writer1;
+
             try {
-                writer1 = new BufferedWriter(new FileWriter("quicksort1.log"));
+                final BufferedWriter writer1 = new BufferedWriter(new FileWriter("quicksort1.log"));
                 final BufferedWriter writer2 = new BufferedWriter(new FileWriter("quicksort2.log"));
 
-                int[] nums = new int[]{30, 10, 80, 90, 50, 70, 40};
+                int[] nums = new int[]{30, 90, 10, 40};
 
                 Sort.quickSort(nums);
 
@@ -42,18 +42,18 @@ public class Program {
             }
         }
 
-        try {
-            exampleCodes();
-            //mainTest();
-            //kkrTest();
-            //rokTest();
-            //sehyTest();
-            //testD();
-            //testF();
-            //testG();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //exampleCodes();
+//            //mainTest();
+//            //kkrTest();
+//            //rokTest();
+//            //sehyTest();
+//            //testD();
+//            //testF();
+//            //();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

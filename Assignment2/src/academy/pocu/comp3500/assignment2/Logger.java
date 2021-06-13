@@ -47,7 +47,7 @@ public final class Logger {
                 writer.newLine();
             }
             writer.flush();
-            clear();
+            //clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,14 +57,13 @@ public final class Logger {
         try {
             for (var logBox : logBoxList) {
                 var indent = logBox.getIndent();
-
-                if (!logBox.getLog().contains(filter))
-                    continue;
-
                 if (indent.getDiscarded()) {
                     indent.executeDiscard();
                     continue;
                 }
+
+                if (!logBox.getLog().contains(filter))
+                    continue;
 
                 var indentLevel = indent.getLevel();
                 String indentedString = "";
@@ -76,7 +75,7 @@ public final class Logger {
                 writer.newLine();
             }
             writer.flush();
-            clear();
+            //clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
