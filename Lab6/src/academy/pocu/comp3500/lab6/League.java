@@ -9,7 +9,7 @@ public class League {
     private int playerCount = 0;
 
     public League() {
-        bstRoot = new BSTNode(null);
+
     }
 
     public League(Player[] players, boolean isSorted) {

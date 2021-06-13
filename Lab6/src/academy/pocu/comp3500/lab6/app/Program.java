@@ -7,11 +7,12 @@ public class Program {
 
     public static void main(String[] args) {
         // Constructors
-//        League emptyLeague = new League();
-//
-//        Player[] emptyLeaguePlayers = emptyLeague.getTop(10);
-//
-//        assert (emptyLeaguePlayers.length == 0);
+        League emptyLeague = new League();
+
+        Player[] emptyLeaguePlayers = emptyLeague.getTop(10);
+
+        assert (emptyLeaguePlayers.length == 0);
+
 
         Player player1 = new Player(1, "player1", 4);
         Player player2 = new Player(2, "player2", 6);
@@ -24,6 +25,7 @@ public class Program {
         //League league2 = new League(new Player[]{player6, player4, player1, player2, player5, player3}, false);
 
         // findMatchOrNull()
+        Player empthmatch = emptyLeague.findMatchOrNull(player2);
         Player match = league1.findMatchOrNull(player2);
         assert (match.getId() == player3.getId());
 
