@@ -1,4 +1,5 @@
 package academy.pocu.comp3500.lab6;
+
 import academy.pocu.comp3500.lab6.leagueofpocu.Player;
 
 public class BSTNode {
@@ -166,8 +167,7 @@ public class BSTNode {
     }
 
     public static BSTNode deleteRecursive(BSTNode node, Player player, Result deleteSuccess) {
-        if (node == null)
-        {
+        if (node == null) {
             deleteSuccess.isSuccess = false;
             return null;
         }

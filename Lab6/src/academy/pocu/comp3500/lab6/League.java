@@ -2,7 +2,6 @@ package academy.pocu.comp3500.lab6;
 
 import academy.pocu.comp3500.lab6.leagueofpocu.Player;
 
-import java.util.Arrays;
 
 public class League {
     private BSTNode bstRoot;
