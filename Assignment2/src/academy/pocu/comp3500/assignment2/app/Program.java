@@ -20,42 +20,37 @@ public class Program {
 
     public static void main(String[] args) {
         // write your code here
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("mylog1.log"));
-            Logger.log("this");
-            Indent indent = Logger.indent();
-                Logger.log("will");
-                Logger.indent();
-                    Logger.log("be");
-                    indent.discard();
-                    Logger.unindent();
-                Logger.log("to");
-                Logger.indent();
-                    Logger.log("good");
-                    Logger.unindent();
-                 Logger.log("1");
-                 Logger.unindent();
-            Logger.log("is me");
-            Logger.printTo(writer);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         {
-            dorasimaTest();
+            final BufferedWriter writer1;
+            try {
+                writer1 = new BufferedWriter(new FileWriter("quicksort1.log"));
+                final BufferedWriter writer2 = new BufferedWriter(new FileWriter("quicksort2.log"));
+
+                int[] nums = new int[]{30, 10, 80, 90, 50, 70, 40};
+
+                Sort.quickSort(nums);
+
+                Logger.printTo(writer1);
+
+                Logger.printTo(writer2, "90");
+
+                writer1.close();
+                writer2.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         try {
-            //exampleCodes();
+            exampleCodes();
             //mainTest();
             //kkrTest();
             //rokTest();
             //sehyTest();
             //testD();
             //testF();
-            testG();
+            //testG();
         } catch (IOException e) {
             e.printStackTrace();
         }

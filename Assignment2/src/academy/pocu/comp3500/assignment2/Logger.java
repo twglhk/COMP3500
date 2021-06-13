@@ -57,13 +57,14 @@ public final class Logger {
         try {
             for (var logBox : logBoxList) {
                 var indent = logBox.getIndent();
+
+                if (!logBox.getLog().contains(filter))
+                    continue;
+
                 if (indent.getDiscarded()) {
                     indent.executeDiscard();
                     continue;
                 }
-
-                if (!logBox.getLog().contains(filter))
-                    continue;
 
                 var indentLevel = indent.getLevel();
                 String indentedString = "";
