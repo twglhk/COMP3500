@@ -62,8 +62,15 @@ public class League {
     public Player[] getBottom(final int count) {
         if (count == 0)
             return null;
+        if (playerCount == 0)
+            return null;
 
-        var result = new Player[count];
+        Player[] result;
+        if (playerCount < count) {
+            result = new Player[playerCount];
+        } else {
+            result = new Player[count];
+        }
         Integer cursor = 0;
         BSTNode.getBottomRecursive(bstRoot, result, cursor, count);
 
@@ -72,13 +79,19 @@ public class League {
 
     public boolean join(final Player player) {
         Result success = new Result();
-        var result = BSTNode.joinRecursive(bstRoot, player, success);
+        BSTNode.joinRecursive(bstRoot, player, success);
+        if (success.isSuccess)
+            playerCount++;
+
         return success.isSuccess;
     }
 
     public boolean leave(final Player player) {
         Result deleteSuccess = new Result();
         BSTNode.deleteRecursive(bstRoot, player, deleteSuccess);
+        if (deleteSuccess.isSuccess) {
+            playerCount--;
+        }
         return deleteSuccess.isSuccess;
     }
 }

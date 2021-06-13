@@ -25,10 +25,6 @@ public class Program {
         //League league2 = new League(new Player[]{player6, player4, player1, player2, player5, player3}, false);
 
         // findMatchOrNull()
-        Player onePlayer = new Player(1, "HUMBA", 1000);
-        League oneLeague = new League(new Player[]{onePlayer}, true);
-        Player matchingPlayer = oneLeague.findMatchOrNull(onePlayer);
-        assert (matchingPlayer == null);
 
         Player empthmatch = emptyLeague.findMatchOrNull(player2);
         Player match = league1.findMatchOrNull(player2);
@@ -47,14 +43,20 @@ public class Program {
 //        assert (topPlayers[1].getId() == player5.getId());
 //        assert (topPlayers[2].getId() == player4.getId());
 //
-//        Player[] bottomPlayers = league2.getBottom(3);
+
+        Player oneBotPlayer = new Player(1, "HUMBA", 1000);
+        League oneBottomLeague = new League(new Player[]{oneBotPlayer}, true);
+        Player[] bottomPlayers = oneBottomLeague.getBottom(3);
+        assert (bottomPlayers.length == 1);
 //
 //        assert (bottomPlayers[0].getId() == player1.getId());
 //        assert ((bottomPlayers[1].getId() == player2.getId() && bottomPlayers[2].getId() == player3.getId())
 //                || (bottomPlayers[1].getId() == player3.getId() && bottomPlayers[2].getId() == player2.getId()));
 
         // join()
-        boolean joinSuccess = league1.join(new Player(7, "player7", 9));
+        Player onePlayer = new Player(1, "HUMBA", 1000);
+        League oneLeague = new League(new Player[]{onePlayer}, true);
+        boolean joinSuccess = oneLeague.join(onePlayer);
         assert (joinSuccess);
 
         joinSuccess = league1.join(new Player(1, "player1", 4));
