@@ -195,6 +195,9 @@ public class BSTNode {
         } else {
             if (node.player.getId() != player.getId()) {
                 node.right = deleteRecursive(node.right, player, deleteSuccess);
+                if (!deleteSuccess.isSuccess) {
+                    node.left = deleteRecursive(node.left, player, deleteSuccess);
+                }
             } else {
                 if (node.left == null && node.right == null) {
                     deleteSuccess.isSuccess = true;

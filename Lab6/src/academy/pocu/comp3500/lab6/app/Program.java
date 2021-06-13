@@ -22,7 +22,7 @@ public class Program {
         Player player6 = new Player(6, "player6", 12);
 
         League league1 = new League(new Player[]{player1, player2, player3, player4, player5, player6}, true);
-        //League league2 = new League(new Player[]{player6, player4, player1, player2, player5, player3}, false);
+        League league2 = new League(new Player[]{player6, player4, player1, player2, player5, player3}, false);
 
         // findMatchOrNull()
 
@@ -37,11 +37,11 @@ public class Program {
         assert (match.getId() == player6.getId());
 
         // getTop(), getBottom()
-//        Player[] topPlayers = league2.getTop(3);
-//
-//        assert (topPlayers[0].getId() == player6.getId());
-//        assert (topPlayers[1].getId() == player5.getId());
-//        assert (topPlayers[2].getId() == player4.getId());
+        Player[] topPlayers = league2.getTop(3);
+
+        assert (topPlayers[0].getId() == player6.getId());
+        assert (topPlayers[1].getId() == player5.getId());
+        assert (topPlayers[2].getId() == player4.getId());
 //
 
         Player[] bottomPlayers = emptyLeague.getBottom(3);
@@ -61,7 +61,9 @@ public class Program {
         boolean leaveSuccess = emptyLeague.leave(new Player(5, "player5", 10));
         assert (!leaveSuccess);
 
-        leaveSuccess = league1.leave(new Player(5, "player5", 10));
-        assert (leaveSuccess);
+        boolean leaveSuccess1 = league1.leave(new Player(2, "player5", 6));
+        boolean leaveSuccess2 = league1.leave(new Player(3, "player5", 6));
+        assert (leaveSuccess1);
+        assert (leaveSuccess2);
     }
 }
