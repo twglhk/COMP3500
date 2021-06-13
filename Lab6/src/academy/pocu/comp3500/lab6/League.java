@@ -60,11 +60,6 @@ public class League {
     }
 
     public Player[] getBottom(final int count) {
-        if (count == 0)
-            return null;
-        if (playerCount == 0)
-            return null;
-
         Player[] result;
         if (playerCount < count) {
             result = new Player[playerCount];

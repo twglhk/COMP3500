@@ -44,10 +44,8 @@ public class Program {
 //        assert (topPlayers[2].getId() == player4.getId());
 //
 
-        Player oneBotPlayer = new Player(1, "HUMBA", 1000);
-        League oneBottomLeague = new League(new Player[]{oneBotPlayer}, true);
-        Player[] bottomPlayers = oneBottomLeague.getBottom(3);
-        assert (bottomPlayers.length == 1);
+        Player[] bottomPlayers = emptyLeague.getBottom(3);
+        assert (bottomPlayers.length == 0);
 //
 //        assert (bottomPlayers[0].getId() == player1.getId());
 //        assert ((bottomPlayers[1].getId() == player2.getId() && bottomPlayers[2].getId() == player3.getId())
@@ -55,8 +53,8 @@ public class Program {
 
         // join()
         Player onePlayer = new Player(1, "HUMBA", 1000);
-        League oneLeague = new League(new Player[]{onePlayer}, true);
-        boolean joinSuccess = oneLeague.join(onePlayer);
+        League oneLeague = new League();
+        boolean joinSuccess = emptyLeague.join(onePlayer);
         assert (joinSuccess);
 
         joinSuccess = league1.join(new Player(1, "player1", 4));
