@@ -86,8 +86,12 @@ public class League {
     }
 
     public boolean leave(final Player player) {
+        if (player == null) {
+            return false;
+        }
+
         Result deleteSuccess = new Result();
-        BSTNode.deleteRecursive(bstRoot, player, deleteSuccess);
+        bstRoot = BSTNode.deleteRecursive(bstRoot, player, deleteSuccess);
         if (deleteSuccess.isSuccess) {
             playerCount--;
         }

@@ -55,12 +55,10 @@ public class Program {
         Player onePlayer = null;
         League MultipleJoinLeague = new League();
         boolean joinSuccess1 = MultipleJoinLeague.join(player1);
-        boolean joinSuccess11 = MultipleJoinLeague.join(player1);
         assert (joinSuccess1);
-        assert (joinSuccess11);
 
         // leave()
-        boolean leaveSuccess = league1.leave(new Player(5, "player5", 10));
+        boolean leaveSuccess = emptyLeague.leave(new Player(5, "player5", 10));
         assert (leaveSuccess);
 
         leaveSuccess = league1.leave(new Player(5, "player5", 10));
