@@ -23,7 +23,7 @@ public class WordTrie {
         node.insertChild(finalNode);
     }
 
-    public static WordTrieNode FindWordTrieNode(WordTrieNode node, char character) {
+    public static WordTrieNode findWordTrieNode(WordTrieNode node, char character) {
         if (node.containsCharacterInChildren(character))
             return node.getChildNode(character);
         else

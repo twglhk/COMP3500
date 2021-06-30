@@ -35,7 +35,7 @@ public class Decryptor {
             if (nextNode == null)
                 break;
 
-            nextNode = WordTrie.FindWordTrieNode(nextNode, priorityQueue.poll());
+            nextNode = WordTrie.findWordTrieNode(nextNode, priorityQueue.poll());
         }
 
         if (nextNode == null) {
