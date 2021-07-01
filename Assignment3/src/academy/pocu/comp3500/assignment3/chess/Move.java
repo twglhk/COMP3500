@@ -6,7 +6,8 @@ public final class Move {
     public int toX;
     public int toY;
 
-    public Move() { }
+    public Move() {
+    }
 
     public Move(final int fromX, final int fromY, final int toX, final int toY) {
         this.fromX = fromX;
