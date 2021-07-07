@@ -17,9 +17,9 @@ public final class MazeSolver {
         Stack<Point> pathStack = new Stack<Point>();
         LinkedList<Point> resultList = new LinkedList<>();
         boolean[][] visit = new boolean[maze.length][maze[0].length];
-        FindPathRecursive(maze, visit, start, pathStack, resultList);
+        findPathRecursive(maze, visit, start, pathStack, resultList);
 
-        for(var point : resultList) {
+        for (var point : resultList) {
             System.out.print("[" + point.getX() + " , " + point.getY() + "]");
         }
 
@@ -27,7 +27,7 @@ public final class MazeSolver {
         return resultList;
     }
 
-    public static void FindPathRecursive(final char[][] maze, final boolean[][] visit, final Point currentPoint, final Stack<Point> pathStack, final LinkedList<Point> resultList) {
+    public static void findPathRecursive(final char[][] maze, final boolean[][] visit, final Point currentPoint, final Stack<Point> pathStack, final LinkedList<Point> resultList) {
         var xPoint = currentPoint.getX();
         var yPoint = currentPoint.getY();
         if (visit[yPoint][xPoint])
@@ -44,19 +44,19 @@ public final class MazeSolver {
         } else if (mazePointInfo == path) {
             // Left
             if (xPoint != 0) {
-                FindPathRecursive(maze, visit, new Point(xPoint - 1, yPoint), pathStack, resultList);
+                findPathRecursive(maze, visit, new Point(xPoint - 1, yPoint), pathStack, resultList);
             }
             // Right
             if (xPoint != maze[0].length - 1) {
-                FindPathRecursive(maze, visit, new Point(xPoint + 1, yPoint), pathStack, resultList);
+                findPathRecursive(maze, visit, new Point(xPoint + 1, yPoint), pathStack, resultList);
             }
             // Up
             if (yPoint != 0) {
-                FindPathRecursive(maze, visit, new Point(xPoint, yPoint - 1), pathStack, resultList);
+                findPathRecursive(maze, visit, new Point(xPoint, yPoint - 1), pathStack, resultList);
             }
             // Down
             if (yPoint != maze.length - 1) {
-                FindPathRecursive(maze, visit, new Point(xPoint, yPoint + 1), pathStack, resultList);
+                findPathRecursive(maze, visit, new Point(xPoint, yPoint + 1), pathStack, resultList);
             }
             pathStack.pop();
         }
