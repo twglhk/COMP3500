@@ -208,8 +208,7 @@ public class Player extends PlayerBase {
                         if (bestMovablePiece.importance == movablePiece.importance) {
                             if (Math.abs(bestMovablePiece.xPos - 4) > Math.abs(movablePiece.xPos - 4))
                                 bestMovablePiece = movablePiece;
-                        }
-                        else if (bestMovablePiece.importance > movablePiece.importance) {
+                        } else if (bestMovablePiece.importance > movablePiece.importance) {
                             bestMovablePiece = movablePiece;
                         }
                     }
