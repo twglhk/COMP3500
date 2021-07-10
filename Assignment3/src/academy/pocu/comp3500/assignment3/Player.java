@@ -297,6 +297,9 @@ public class Player extends PlayerBase {
         }
 
         // 기록된 점수 중 베스트 점수 or 워스트 점수 리턴
+        if (evaluationList.size() == 0)
+            return new Evaluation(0, null);
+
         var resultEvaluation = evaluationList.get(0);
         for (int i = 1; i < evaluationList.size(); ++i) {
             if (myTurn) {
