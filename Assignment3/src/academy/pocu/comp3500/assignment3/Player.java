@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Player extends PlayerBase {
-    private int miniMaxDepth = 3;
+    private int miniMaxDepth = 4;
     private final static int BOARD_SIZE = 8;
     private LinkedList<Piece> whitePieceList;
     private LinkedList<Piece> blackPieceList;
@@ -205,7 +205,11 @@ public class Player extends PlayerBase {
                     if (bestMovablePiece == null) {
                         bestMovablePiece = movablePiece;
                     } else {
-                        if (bestMovablePiece.importance > movablePiece.importance) {
+                        if (bestMovablePiece.importance == movablePiece.importance) {
+                            if (Math.abs(bestMovablePiece.xPos - 4) > Math.abs(movablePiece.xPos - 4))
+                                bestMovablePiece = movablePiece;
+                        }
+                        else if (bestMovablePiece.importance > movablePiece.importance) {
                             bestMovablePiece = movablePiece;
                         }
                     }
@@ -226,7 +230,7 @@ public class Player extends PlayerBase {
                             if (Character.isUpperCase(newBoard[y][x])) {
                                 for (int i = 0; i < blackPieceList.size(); ++i) {
                                     if (blackPieceList.get(i).xPos == x && blackPieceList.get(i).yPos == y) {
-                                        evaluatedScore += piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
+                                        evaluatedScore += piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName)) - bestMovablePiece.importance;
                                         caughtPiece = blackPieceList.remove(i);
                                         break;
                                     }
@@ -236,7 +240,7 @@ public class Player extends PlayerBase {
                             if (Character.isLowerCase(newBoard[y][x])) {
                                 for (int i = 0; i < whitePieceList.size(); ++i) {
                                     if (whitePieceList.get(i).xPos == x && whitePieceList.get(i).yPos == y) {
-                                        evaluatedScore += piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
+                                        evaluatedScore += piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName)) - bestMovablePiece.importance;
                                         caughtPiece = whitePieceList.remove(i);
                                         break;
                                     }
@@ -248,7 +252,7 @@ public class Player extends PlayerBase {
                             if (Character.isLowerCase(newBoard[y][x])) {
                                 for (int i = 0; i < whitePieceList.size(); ++i) {
                                     if (whitePieceList.get(i).xPos == x && whitePieceList.get(i).yPos == y) {
-                                        evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
+                                        evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName)) - bestMovablePiece.importance;
                                         caughtPiece = whitePieceList.remove(i);
                                         break;
                                     }
@@ -258,7 +262,7 @@ public class Player extends PlayerBase {
                             if (Character.isUpperCase(newBoard[y][x])) {
                                 for (int i = 0; i < blackPieceList.size(); ++i) {
                                     if (blackPieceList.get(i).xPos == x && blackPieceList.get(i).yPos == y) {
-                                        evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
+                                        evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName)) - bestMovablePiece.importance;
                                         caughtPiece = blackPieceList.remove(i);
                                         break;
                                     }
