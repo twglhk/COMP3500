@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Player extends PlayerBase {
-    private int miniMaxDepth = 4;
+    private int miniMaxDepth = 3;
     private final static int BOARD_SIZE = 8;
     private LinkedList<Piece> whitePieceList;
     private LinkedList<Piece> blackPieceList;
@@ -85,7 +85,7 @@ public class Player extends PlayerBase {
 
     @Override
     public Move getNextMove(char[][] board) {
-        Move nextMove = getBestMoveRecursive(board, 0, isWhite()).move;
+        Move nextMove = getBestMoveRecursive(board, 0, true).move;
         moveUpdate(nextMove, isWhite());
         return nextMove;
     }
@@ -93,7 +93,7 @@ public class Player extends PlayerBase {
     @Override
     public Move getNextMove(char[][] board, Move opponentMove) {
         moveUpdate(opponentMove, !isWhite());
-        Move nextMove = getBestMoveRecursive(board, 0, isWhite()).move;
+        Move nextMove = getBestMoveRecursive(board, 0, true).move;
         moveUpdate(nextMove, isWhite());
         return nextMove;
     }
@@ -145,17 +145,23 @@ public class Player extends PlayerBase {
         }
     }
 
-    private Evaluation getBestMoveRecursive(char[][] board, int currentDepth, boolean isWhite) {
+    private Evaluation getBestMoveRecursive(char[][] board, int currentDepth, boolean myTurn) {
         // 깊이에 도달했을 경우 마감
         if (currentDepth == miniMaxDepth)
             return new Evaluation(0, null);
 
         // 이번에 움직일 수 있는 말 리스트 찾기
         LinkedList<Piece> movablePieceList;
-        if (isWhite) {
-            movablePieceList = whitePieceList;
+        if (myTurn) {
+            if (this.isWhite())
+                movablePieceList = whitePieceList;
+            else
+                movablePieceList = blackPieceList;
         } else {
-            movablePieceList = blackPieceList;
+            if (this.isWhite())
+                movablePieceList = blackPieceList;
+            else
+                movablePieceList = whitePieceList;
         }
 
         // 보드 순회하면서 각 말이 해당 지점에 올 수 있는지 확인하고 그 말이 해당 지점에 왔을 때 점수 체크하고 저장
@@ -189,27 +195,51 @@ public class Player extends PlayerBase {
                 // 다음 재귀를 위한 보드 복사
                 var newBoard = copyBoard(board);
 
-                // 잡은 상대 말이 있다면 다음 깊이로 진행하기 이전에 제거 처리 후 점수 기록
+                // 잡을 상대 말이 있다면 다음 깊이로 진행하기 이전에 제거 처리 후 점수 기록
                 Piece caughtPiece = null;
                 int evaluatedScore = 0;
                 if (newBoard[y][x] != 0) {
-                    if (isWhite) {
-                        if (Character.isUpperCase(newBoard[y][x])) {
-                            for (int i = 0; i < blackPieceList.size(); ++i) {
-                                if (blackPieceList.get(i).xPos == x && blackPieceList.get(i).yPos == y) {
-                                    evaluatedScore += piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
-                                    caughtPiece = blackPieceList.remove(i);
-                                    break;
+                    if (myTurn) {
+                        if (isWhite()) {
+                            if (Character.isUpperCase(newBoard[y][x])) {
+                                for (int i = 0; i < blackPieceList.size(); ++i) {
+                                    if (blackPieceList.get(i).xPos == x && blackPieceList.get(i).yPos == y) {
+                                        evaluatedScore += piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
+                                        caughtPiece = blackPieceList.remove(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (Character.isLowerCase(newBoard[y][x])) {
+                                for (int i = 0; i < whitePieceList.size(); ++i) {
+                                    if (whitePieceList.get(i).xPos == x && whitePieceList.get(i).yPos == y) {
+                                        evaluatedScore += piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
+                                        caughtPiece = whitePieceList.remove(i);
+                                        break;
+                                    }
                                 }
                             }
                         }
                     } else {
-                        if (Character.isLowerCase(newBoard[y][x])) {
-                            for (int i = 0; i < whitePieceList.size(); ++i) {
-                                if (whitePieceList.get(i).xPos == x && whitePieceList.get(i).yPos == y) {
-                                    evaluatedScore += piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
-                                    caughtPiece = whitePieceList.remove(i);
-                                    break;
+                        if (isWhite()) {
+                            if (Character.isLowerCase(newBoard[y][x])) {
+                                for (int i = 0; i < whitePieceList.size(); ++i) {
+                                    if (whitePieceList.get(i).xPos == x && whitePieceList.get(i).yPos == y) {
+                                        evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
+                                        caughtPiece = whitePieceList.remove(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (Character.isUpperCase(newBoard[y][x])) {
+                                for (int i = 0; i < blackPieceList.size(); ++i) {
+                                    if (blackPieceList.get(i).xPos == x && blackPieceList.get(i).yPos == y) {
+                                        evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
+                                        caughtPiece = blackPieceList.remove(i);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -225,7 +255,7 @@ public class Player extends PlayerBase {
                 bestMovablePiece.yPos = y;
 
                 // 다음 깊이 재귀하면서 해당 트리의 점수 겟
-                var totalScore = getBestMoveRecursive(newBoard, currentDepth + 1, !isWhite).score + evaluatedScore;
+                var totalScore = getBestMoveRecursive(newBoard, currentDepth + 1, !myTurn).score + evaluatedScore;
 
                 // 평가 저장
                 var evaluation = new Evaluation(totalScore, new Move(fromMovablePieceXPos, fromMovablePieceYPos, x, y));
@@ -233,11 +263,10 @@ public class Player extends PlayerBase {
 
                 // 잡았던 말은 다음 탐색을 위해 복구
                 if (caughtPiece != null) {
-                    if (isWhite) {
-                        blackPieceList.add(caughtPiece);
-                    } else {
+                    if (Character.isLowerCase(caughtPiece.pieceName))
                         whitePieceList.add(caughtPiece);
-                    }
+                    else
+                        blackPieceList.add(caughtPiece);
                 }
 
                 bestMovablePiece.xPos = fromMovablePieceXPos;
@@ -245,10 +274,14 @@ public class Player extends PlayerBase {
             }
         }
 
-        // 기록된 점수 중 베스트 점수를 기록한 Move 리턴
+        // 기록된 점수 중 베스트 점수 or 워스트 점수 리턴
+        if (evaluationList.size() == 0) {
+            printPieceInfo();
+        }
+
         var resultEvaluation = evaluationList.get(0);
         for (int i = 1; i < evaluationList.size(); ++i) {
-            if (isWhite) {
+            if (myTurn) {
                 if (resultEvaluation.score < evaluationList.get(i).score)
                     resultEvaluation = evaluationList.get(i);
             } else {
