@@ -41,39 +41,39 @@ public class Player extends PlayerBase {
         blackPieceList = new LinkedList<Piece>();
         piecePointHashMap = new HashMap<Character, Integer>();
 
-        // White pieces
-        int y = BOARD_SIZE - 1;
-        whitePieceList.add(new Piece('r', 0, y));
-        whitePieceList.add(new Piece('n', 1, y));
-        whitePieceList.add(new Piece('b', 2, y));
-        whitePieceList.add(new Piece('k', 3, y));
-        whitePieceList.add(new Piece('q', 4, y));
-        whitePieceList.add(new Piece('b', 5, y));
-        whitePieceList.add(new Piece('n', 6, y));
-        whitePieceList.add(new Piece('r', 7, y));
-
-        // White pawns
-        y -= 1;
-        for (int x = 0; x < BOARD_SIZE; ++x) {
-            whitePieceList.add(new Piece('p', x, y));
-        }
-
-        // Black pawns
-        y = 1;
-        for (int x = 0; x < BOARD_SIZE; ++x) {
-            blackPieceList.add(new Piece('P', x, y));
-        }
-
-        // Black pieces
-        y = 0;
-        blackPieceList.add(new Piece('R', 0, y));
-        blackPieceList.add(new Piece('N', 1, y));
-        blackPieceList.add(new Piece('B', 2, y));
-        blackPieceList.add(new Piece('K', 3, y));
-        blackPieceList.add(new Piece('Q', 4, y));
-        blackPieceList.add(new Piece('B', 5, y));
-        blackPieceList.add(new Piece('N', 6, y));
-        blackPieceList.add(new Piece('R', 7, y));
+//        // White pieces
+//        int y = BOARD_SIZE - 1;
+//        whitePieceList.add(new Piece('r', 0, y));
+//        whitePieceList.add(new Piece('n', 1, y));
+//        whitePieceList.add(new Piece('b', 2, y));
+//        whitePieceList.add(new Piece('k', 3, y));
+//        whitePieceList.add(new Piece('q', 4, y));
+//        whitePieceList.add(new Piece('b', 5, y));
+//        whitePieceList.add(new Piece('n', 6, y));
+//        whitePieceList.add(new Piece('r', 7, y));
+//
+//        // White pawns
+//        y -= 1;
+//        for (int x = 0; x < BOARD_SIZE; ++x) {
+//            whitePieceList.add(new Piece('p', x, y));
+//        }
+//
+//        // Black pawns
+//        y = 1;
+//        for (int x = 0; x < BOARD_SIZE; ++x) {
+//            blackPieceList.add(new Piece('P', x, y));
+//        }
+//
+//        // Black pieces
+//        y = 0;
+//        blackPieceList.add(new Piece('R', 0, y));
+//        blackPieceList.add(new Piece('N', 1, y));
+//        blackPieceList.add(new Piece('B', 2, y));
+//        blackPieceList.add(new Piece('K', 3, y));
+//        blackPieceList.add(new Piece('Q', 4, y));
+//        blackPieceList.add(new Piece('B', 5, y));
+//        blackPieceList.add(new Piece('N', 6, y));
+//        blackPieceList.add(new Piece('R', 7, y));
 
         piecePointHashMap.put('K', 900);
         piecePointHashMap.put('Q', 90);
@@ -85,6 +85,16 @@ public class Player extends PlayerBase {
 
     @Override
     public Move getNextMove(char[][] board) {
+        for (int y = 0; y < BOARD_SIZE; ++y)
+            for (int x = 0; x < BOARD_SIZE; ++x) {
+                if (board[y][x] == 0) continue;
+                else if (Character.isLowerCase(board[y][x])) {
+                    whitePieceList.add(new Piece(board[y][x], x, y));
+                } else {
+                    blackPieceList.add(new Piece(board[y][x], x, y));
+                }
+            }
+
         Move nextMove = getBestMoveRecursive(board, 0, true).move;
         moveUpdate(nextMove, isWhite());
         return nextMove;
@@ -92,6 +102,18 @@ public class Player extends PlayerBase {
 
     @Override
     public Move getNextMove(char[][] board, Move opponentMove) {
+        if (whitePieceList.size() == 0 || blackPieceList.size() == 0) {
+            for (int y = 0; y < BOARD_SIZE; ++y)
+                for (int x = 0; x < BOARD_SIZE; ++x) {
+                    if (board[y][x] == 0) continue;
+                    else if (Character.isLowerCase(board[y][x])) {
+                        whitePieceList.add(new Piece(board[y][x], x, y));
+                    } else {
+                        blackPieceList.add(new Piece(board[y][x], x, y));
+                    }
+                }
+        }
+
         moveUpdate(opponentMove, !isWhite());
         Move nextMove = getBestMoveRecursive(board, 0, true).move;
         moveUpdate(nextMove, isWhite());
@@ -275,10 +297,6 @@ public class Player extends PlayerBase {
         }
 
         // 기록된 점수 중 베스트 점수 or 워스트 점수 리턴
-        if (evaluationList.size() == 0) {
-            printPieceInfo();
-        }
-
         var resultEvaluation = evaluationList.get(0);
         for (int i = 1; i < evaluationList.size(); ++i) {
             if (myTurn) {
