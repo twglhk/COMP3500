@@ -3,15 +3,16 @@ package academy.pocu.comp3500.assignment3;
 import academy.pocu.comp3500.assignment3.chess.Move;
 import academy.pocu.comp3500.assignment3.chess.PlayerBase;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Player extends PlayerBase {
-    private int miniMaxDepth = 1;
+    private int miniMaxDepth = 4;
     private final static int BOARD_SIZE = 8;
-    private ArrayList<Piece> whitePieceList;
-    private ArrayList<Piece> blackPieceList;
+    private LinkedList<Piece> whitePieceList;
+    private LinkedList<Piece> blackPieceList;
     private HashMap<Character, Integer> piecePointHashMap;
-    private static final int[][] kingMoveOffsets = {
+    private static final int[][] KING_MOVE_OFFSETS = {
             {-1, 1},
             {-1, 0},
             {-1, -1},
@@ -22,7 +23,7 @@ public class Player extends PlayerBase {
             {1, -1}
     };
 
-    private static final int[][] knightMoveOffsets = {
+    private static final int[][] KNIGHT_MOVE_OFFSETS = {
             {-2, -1},
             {-2, 1},
             {-1, -2},
@@ -36,8 +37,8 @@ public class Player extends PlayerBase {
 
     public Player(boolean isWhite, int maxMoveTimeMilliseconds) {
         super(isWhite, maxMoveTimeMilliseconds);
-        whitePieceList = new ArrayList<Piece>();
-        blackPieceList = new ArrayList<Piece>();
+        whitePieceList = new LinkedList<Piece>();
+        blackPieceList = new LinkedList<Piece>();
         piecePointHashMap = new HashMap<Character, Integer>();
 
         // White pieces
@@ -86,17 +87,14 @@ public class Player extends PlayerBase {
     public Move getNextMove(char[][] board) {
         Move nextMove = getBestMoveRecursive(board, 0, isWhite()).move;
         moveUpdate(nextMove, isWhite());
-        //printPieceInfo();
         return nextMove;
     }
 
     @Override
     public Move getNextMove(char[][] board, Move opponentMove) {
         moveUpdate(opponentMove, !isWhite());
-        //printPieceInfo();
         Move nextMove = getBestMoveRecursive(board, 0, isWhite()).move;
         moveUpdate(nextMove, isWhite());
-        //printPieceInfo();
         return nextMove;
     }
 
@@ -153,7 +151,7 @@ public class Player extends PlayerBase {
             return new Evaluation(0, null);
 
         // 이번에 움직일 수 있는 말 리스트 찾기
-        ArrayList<Piece> movablePieceList;
+        LinkedList<Piece> movablePieceList;
         if (isWhite) {
             movablePieceList = whitePieceList;
         } else {
@@ -161,7 +159,7 @@ public class Player extends PlayerBase {
         }
 
         // 보드 순회하면서 각 말이 해당 지점에 올 수 있는지 확인하고 그 말이 해당 지점에 왔을 때 점수 체크하고 저장
-        var evaluationList = new ArrayList<Evaluation>();
+        var evaluationList = new LinkedList<Evaluation>();
         var tempMove = new Move();
         for (int y = 0; y < BOARD_SIZE; ++y) {
             for (int x = 0; x < BOARD_SIZE; ++x) {
@@ -172,7 +170,6 @@ public class Player extends PlayerBase {
                     tempMove.fromY = movablePiece.yPos;
                     tempMove.toX = x;
                     tempMove.toY = y;
-//                    System.out.println("Depth : " + currentDepth + ", 움직일 말 : " + movablePiece.pieceName + "["+tempMove.fromY+"]["+ tempMove.fromY + "]" + " => " + "["+tempMove.toY+"]["+ tempMove.toX + "]");
 
                     if (!isMoveValid(board, movablePiece, tempMove)) continue;
 
@@ -197,21 +194,23 @@ public class Player extends PlayerBase {
                 int evaluatedScore = 0;
                 if (newBoard[y][x] != 0) {
                     if (isWhite) {
-                        for (int i = 0; i < blackPieceList.size(); ++i) {
-                            if (blackPieceList.get(i).pieceName == newBoard[y][x]) {
-                                evaluatedScore += piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
-                                caughtPiece = blackPieceList.get(i);
-                                blackPieceList.remove(i);
-                                break;
+                        if (Character.isUpperCase(newBoard[y][x])) {
+                            for (int i = 0; i < blackPieceList.size(); ++i) {
+                                if (blackPieceList.get(i).xPos == x && blackPieceList.get(i).yPos == y) {
+                                    evaluatedScore += piecePointHashMap.get(Character.toUpperCase(blackPieceList.get(i).pieceName));
+                                    caughtPiece = blackPieceList.remove(i);
+                                    break;
+                                }
                             }
                         }
                     } else {
-                        for (int i = 0; i < whitePieceList.size(); ++i) {
-                            if (whitePieceList.get(i).pieceName == newBoard[y][x]) {
-                                evaluatedScore -= piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
-                                caughtPiece = whitePieceList.get(i);
-                                whitePieceList.remove(i);
-                                break;
+                        if (Character.isLowerCase(newBoard[y][x])) {
+                            for (int i = 0; i < whitePieceList.size(); ++i) {
+                                if (whitePieceList.get(i).xPos == x && whitePieceList.get(i).yPos == y) {
+                                    evaluatedScore += piecePointHashMap.get(Character.toUpperCase(whitePieceList.get(i).pieceName));
+                                    caughtPiece = whitePieceList.remove(i);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -241,7 +240,6 @@ public class Player extends PlayerBase {
                     }
                 }
 
-                // 이동시켰던 말의 위치 복구
                 bestMovablePiece.xPos = fromMovablePieceXPos;
                 bestMovablePiece.yPos = fromMovablePieceYPos;
             }
@@ -394,8 +392,8 @@ public class Player extends PlayerBase {
             return false;
         }
 
-        for (int i = 0; i < knightMoveOffsets.length; ++i) {
-            if (move.fromX + knightMoveOffsets[i][0] == move.toX && move.fromY + knightMoveOffsets[i][1] == move.toY) {
+        for (int i = 0; i < KNIGHT_MOVE_OFFSETS.length; ++i) {
+            if (move.fromX + KNIGHT_MOVE_OFFSETS[i][0] == move.toX && move.fromY + KNIGHT_MOVE_OFFSETS[i][1] == move.toY) {
                 return true;
             }
         }
@@ -415,8 +413,8 @@ public class Player extends PlayerBase {
             return false;
         }
 
-        for (int i = 0; i < kingMoveOffsets.length; ++i) {
-            if (move.fromX + kingMoveOffsets[i][0] == move.toX && move.fromY + kingMoveOffsets[i][1] == move.toY) {
+        for (int i = 0; i < KING_MOVE_OFFSETS.length; ++i) {
+            if (move.fromX + KING_MOVE_OFFSETS[i][0] == move.toX && move.fromY + KING_MOVE_OFFSETS[i][1] == move.toY) {
                 return true;
             }
         }
