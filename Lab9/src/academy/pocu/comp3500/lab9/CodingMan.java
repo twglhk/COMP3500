@@ -46,7 +46,7 @@ public class CodingMan {
                     }
                 }
             } else {
-                if (nextLongestClip != null){
+                if (nextLongestClip != null) {
                     lastClip = nextLongestClip;
                     nextLongestClip = null;
                     minClipCount++;
@@ -60,7 +60,7 @@ public class CodingMan {
                 return minClipCount;
         }
 
-        if (nextLongestClip != null){
+        if (nextLongestClip != null) {
             lastClip = nextLongestClip;
             minClipCount++;
         }
