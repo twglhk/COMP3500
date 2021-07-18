@@ -36,45 +36,45 @@ public class Program {
         assert (pyramidHeight == 3);
 
         // ProfitCalculator
-//        Task[] tasks = new Task[]{
-//                new Task(20, 30),
-//        };
-//        int[] skillLevels = new int[]{20};
-//
-//        int profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
-//
-//        assert (profit == 30);
-//
-//        tasks = new Task[]{
-//                new Task(20, 30),
-//        };
-//        skillLevels = new int[]{10};
-//
-//        profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
-//
-//        assert (profit == 0);
-//
-//        tasks = new Task[]{
-//                new Task(20, 50),
-//                new Task(20, 40)
-//        };
-//        skillLevels = new int[]{25};
-//
-//        profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
-//
-//        assert (profit == 50);
-//
-//        tasks = new Task[]{
-//                new Task(20, 40),
-//                new Task(30, 40),
-//                new Task(50, 25),
-//                new Task(60, 45)
-//        };
-//        skillLevels = new int[]{10, 20, 35, 70, 45};
-//
-//        profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
-//
-//        assert (profit == 165);
+        Task[] tasks = new Task[]{
+                new Task(20, 30),
+        };
+        int[] skillLevels = new int[]{20};
+
+        int profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
+
+        assert (profit == 30);
+
+        tasks = new Task[]{
+                new Task(20, 30),
+        };
+        skillLevels = new int[]{10};
+
+        profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
+
+        assert (profit == 0);
+
+        tasks = new Task[]{
+                new Task(20, 50),
+                new Task(20, 40)
+        };
+        skillLevels = new int[]{25};
+
+        profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
+
+        assert (profit == 50);
+
+        tasks = new Task[]{
+                new Task(20, 40),
+                new Task(30, 40),
+                new Task(50, 25),
+                new Task(60, 45)
+        };
+        skillLevels = new int[]{10, 20, 35, 70, 45};
+
+        profit = ProfitCalculator.findMaxProfit(tasks, skillLevels);
+
+        assert (profit == 165);
 
         // CodingMan
 //        VideoClip[] clips = new VideoClip[]{
