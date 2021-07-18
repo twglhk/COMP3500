@@ -68,7 +68,7 @@ public class CodingMan {
             clipHashMap.put(i, clips[i]);
             beforeClipStartTime = clips[i].getStartTime();
             beforeClipEndTime = clips[i].getEndTime();
-            i = 0;
+            i = -1;
         }
 
         if (beforeClipEndTime < time)
