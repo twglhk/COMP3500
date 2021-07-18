@@ -86,19 +86,19 @@ public class Program {
         };
         int airTime = 10;
 
-        int count = CodingMan.findMinClipsCount(clips, airTime);
-
-        assert (count == 1);
-
-        clips = new VideoClip[]{
-                new VideoClip(30, 60),
-                new VideoClip(0, 20)
-        };
-        airTime = 60;
-
-        count = CodingMan.findMinClipsCount(clips, airTime);
-
-        assert (count == -1);
+//        int count = CodingMan.findMinClipsCount(clips, airTime);
+//
+//        assert (count == 1);
+//
+//        clips = new VideoClip[]{
+//                new VideoClip(30, 60),
+//                new VideoClip(0, 20)
+//        };
+//        airTime = 60;
+//
+//        count = CodingMan.findMinClipsCount(clips, airTime);
+//
+//        assert (count == -1);
 
         clips = new VideoClip[]{
                 new VideoClip(0, 5),
@@ -110,7 +110,7 @@ public class Program {
         };
         airTime = 60;
 
-        count = CodingMan.findMinClipsCount(clips, airTime);
+        int count = CodingMan.findMinClipsCount(clips, airTime);
 
         assert (count == 4);
 

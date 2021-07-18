@@ -9,34 +9,55 @@ public class CodingMan {
         if (clips.length == 0)
             return -1;
 
-        int beforeClipStartTime = 0;
-        int beforeClipEndTime = 0;
-        HashMap<Integer, VideoClip> clipHashMap = new HashMap<Integer, VideoClip>();
+        VideoClip lastClip = null;
+        int lastClipIndex = -1;
+        int minClipCount = 0;
 
         // 종료 시간 순으로 정렬
-        quickSortByEndTime(clips);
+        quickSortByStartTime(clips);
 //        System.out.println();
 //        for (int i = 0; i < clips.length; ++i) {
 //            System.out.println(clips[i].getStartTime() + " , " + clips[i].getEndTime());
 //        }
 
         // 시작 클립 찾기
-        int longestZeroClipIndex = -1;
         for (int i = 0; i < clips.length; ++i) {
             if (clips[i].getStartTime() == 0) {
-                if (longestZeroClipIndex == -1)
-                    longestZeroClipIndex = i;
-                else if (clips[i].getEndTime() > clips[longestZeroClipIndex].getEndTime()) {
-                    longestZeroClipIndex = i;
+                lastClip = clips[i];
+                lastClipIndex = i;
+            } else
+                break;
+
+        }
+        if (lastClip == null)
+            return -1;
+        else
+            minClipCount++;
+
+        // 다음 최적 클립 찾기
+        VideoClip nextLongestClip = null;
+        for (int i = lastClipIndex + 1; i < clips.length; ++i) {
+            if (lastClip.getEndTime() >= time)
+                return minClipCount;
+
+            if (clips[i].getStartTime() <= lastClip.getEndTime()) {
+                if (nextLongestClip == null) {
+                    nextLongestClip = clips[i];
+                } else {
+                    if (nextLongestClip.getEndTime() < clips[i].getEndTime()) {
+                        nextLongestClip = clips[i];
+                    }
+                }
+            } else {
+                if (nextLongestClip != null){
+                    lastClip = nextLongestClip;
+                    nextLongestClip = null;
+                    minClipCount++;
+                    i--;
+                } else {
+                    return -1;
                 }
             }
-        }
-        if (longestZeroClipIndex == -1)
-            return -1;
-        else {
-            clipHashMap.put(longestZeroClipIndex, clips[longestZeroClipIndex]);
-            beforeClipStartTime = clips[longestZeroClipIndex].getStartTime();
-            beforeClipEndTime = clips[longestZeroClipIndex].getEndTime();
         }
 
         // 다음 최적 클립 찾기
@@ -60,50 +81,41 @@ public class CodingMan {
 //            currentIndex = -1;
 //        }
 
-        for (int i = 0; i < clips.length && beforeClipEndTime < time; ++i) {
-            if (clips[i].getStartTime() > beforeClipEndTime) continue;
-            if (clips[i].getStartTime() <= beforeClipStartTime) continue;
-            if (clipHashMap.containsKey(i)) continue;
-
-            clipHashMap.put(i, clips[i]);
-            beforeClipStartTime = clips[i].getStartTime();
-            beforeClipEndTime = clips[i].getEndTime();
-            i = -1;
-        }
-
-        if (beforeClipEndTime < time)
-            return -1;
-
 //        System.out.println("clip size : " + clipHashMap.size());
-        return clipHashMap.size();
+        return minClipCount;
     }
 
-    public static void quickSortByEndTime(final VideoClip[] videoClips) {
+    public static void quickSortByStartTime(final VideoClip[] videoClips) {
         if (videoClips == null)
             return;
         if (videoClips.length == 0)
             return;
 
-        quickSortRecursiveByEndTime(videoClips, 0, videoClips.length - 1);
+        quickSortRecursiveByStartTime(videoClips, 0, videoClips.length - 1);
     }
 
-    public static void quickSortRecursiveByEndTime(final VideoClip[] videoClips, int left, int right) {
+    public static void quickSortRecursiveByStartTime(final VideoClip[] videoClips, int left, int right) {
         if (left >= right)
             return;
 
-        int pivotPos = partitionByEndTime(videoClips, left, right);
+        int pivotPos = partitionByStartTime(videoClips, left, right);
 
-        quickSortRecursiveByEndTime(videoClips, left, pivotPos - 1);
-        quickSortRecursiveByEndTime(videoClips, pivotPos + 1, right);
+        quickSortRecursiveByStartTime(videoClips, left, pivotPos - 1);
+        quickSortRecursiveByStartTime(videoClips, pivotPos + 1, right);
     }
 
-    public static int partitionByEndTime(final VideoClip[] videoClips, int left, int right) {
-        int pivot = videoClips[right].getEndTime();
+    public static int partitionByStartTime(final VideoClip[] videoClips, int left, int right) {
+        int pivot = videoClips[right].getStartTime();
         int i = left - 1;
         for (int j = left; j < right; ++j) {
-            if (videoClips[j].getEndTime() > pivot) {
+            if (videoClips[j].getStartTime() < pivot) {
                 i++;
                 swap(videoClips, i, j);
+            } else if (videoClips[j].getStartTime() == videoClips[right].getStartTime()) {
+                if (videoClips[j].getEndTime() < videoClips[right].getEndTime()) {
+                    i++;
+                    swap(videoClips, i, j);
+                }
             }
         }
 
