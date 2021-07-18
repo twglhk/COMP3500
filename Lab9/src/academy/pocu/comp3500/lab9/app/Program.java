@@ -113,5 +113,22 @@ public class Program {
         count = CodingMan.findMinClipsCount(clips, airTime);
 
         assert (count == 4);
+
+        clips = new VideoClip[]{
+                new VideoClip(0, 5),
+                new VideoClip(0, 20),
+                new VideoClip(5, 30),
+                new VideoClip(5, 15),
+                new VideoClip(15, 30),
+                new VideoClip(25, 35),
+                new VideoClip(35, 70),
+                new VideoClip(50, 75),
+                new VideoClip(10, 60)
+        };
+        airTime = 60;
+
+        count = CodingMan.findMinClipsCount(clips, airTime);
+
+        assert (count == 2);
     }
 }

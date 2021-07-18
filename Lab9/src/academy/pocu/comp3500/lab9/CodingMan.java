@@ -15,6 +15,7 @@ public class CodingMan {
 
         // 종료 시간 순으로 정렬
         quickSortByEndTime(clips);
+//        System.out.println();
 //        for (int i = 0; i < clips.length; ++i) {
 //            System.out.println(clips[i].getStartTime() + " , " + clips[i].getEndTime());
 //        }
@@ -44,7 +45,6 @@ public class CodingMan {
             for (int i = 0; i < clips.length; ++i) {
                 if (clips[i].getStartTime() > beforeClipEndTime) continue;
                 if (clips[i].getStartTime() <= beforeClipStartTime) continue;
-                ;
                 if (clipHashMap.containsKey(i)) continue;
                 currentIndex = i;
                 break;
@@ -60,6 +60,7 @@ public class CodingMan {
             currentIndex = -1;
         }
 
+//        System.out.println("clip size : " + clipHashMap.size());
         return clipHashMap.size();
     }
 
@@ -86,7 +87,7 @@ public class CodingMan {
         int pivot = videoClips[right].getEndTime();
         int i = left - 1;
         for (int j = left; j < right; ++j) {
-            if (videoClips[j].getEndTime() < pivot) {
+            if (videoClips[j].getEndTime() > pivot) {
                 i++;
                 swap(videoClips, i, j);
             }
