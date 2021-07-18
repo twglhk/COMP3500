@@ -40,25 +40,39 @@ public class CodingMan {
         }
 
         // 다음 최적 클립 찾기
-        int currentIndex = -1;
-        while (beforeClipEndTime < time) {
-            for (int i = 0; i < clips.length; ++i) {
-                if (clips[i].getStartTime() > beforeClipEndTime) continue;
-                if (clips[i].getStartTime() <= beforeClipStartTime) continue;
-                if (clipHashMap.containsKey(i)) continue;
-                currentIndex = i;
-                break;
-            }
+//        int currentIndex = -1;
+//        while (beforeClipEndTime < time) {
+//            for (int i = 0; i < clips.length; ++i) {
+//                if (clips[i].getStartTime() > beforeClipEndTime) continue;
+//                if (clips[i].getStartTime() <= beforeClipStartTime) continue;
+//                if (clipHashMap.containsKey(i)) continue;
+//                currentIndex = i;
+//                break;
+//            }
+//
+//            if (currentIndex == -1) {
+//                return -1;
+//            }
+//
+//            clipHashMap.put(currentIndex, clips[currentIndex]);
+//            beforeClipStartTime = clips[currentIndex].getStartTime();
+//            beforeClipEndTime = clips[currentIndex].getEndTime();
+//            currentIndex = -1;
+//        }
 
-            if (currentIndex == -1) {
-                return -1;
-            }
+        for (int i = 0; i < clips.length && beforeClipEndTime < time; ++i) {
+            if (clips[i].getStartTime() > beforeClipEndTime) continue;
+            if (clips[i].getStartTime() <= beforeClipStartTime) continue;
+            if (clipHashMap.containsKey(i)) continue;
 
-            clipHashMap.put(currentIndex, clips[currentIndex]);
-            beforeClipStartTime = clips[currentIndex].getStartTime();
-            beforeClipEndTime = clips[currentIndex].getEndTime();
-            currentIndex = -1;
+            clipHashMap.put(i, clips[i]);
+            beforeClipStartTime = clips[i].getStartTime();
+            beforeClipEndTime = clips[i].getEndTime();
+            i = 0;
         }
+
+        if (beforeClipEndTime < time)
+            return -1;
 
 //        System.out.println("clip size : " + clipHashMap.size());
         return clipHashMap.size();
