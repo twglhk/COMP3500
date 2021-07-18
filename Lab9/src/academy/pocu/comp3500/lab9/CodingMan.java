@@ -37,9 +37,6 @@ public class CodingMan {
         // 다음 최적 클립 찾기
         VideoClip nextLongestClip = null;
         for (int i = lastClipIndex + 1; i < clips.length; ++i) {
-            if (lastClip.getEndTime() >= time)
-                return minClipCount;
-
             if (clips[i].getStartTime() <= lastClip.getEndTime()) {
                 if (nextLongestClip == null) {
                     nextLongestClip = clips[i];
@@ -58,30 +55,18 @@ public class CodingMan {
                     return -1;
                 }
             }
+
+            if (lastClip.getEndTime() >= time)
+                return minClipCount;
         }
 
-        // 다음 최적 클립 찾기
-//        int currentIndex = -1;
-//        while (beforeClipEndTime < time) {
-//            for (int i = 0; i < clips.length; ++i) {
-//                if (clips[i].getStartTime() > beforeClipEndTime) continue;
-//                if (clips[i].getStartTime() <= beforeClipStartTime) continue;
-//                if (clipHashMap.containsKey(i)) continue;
-//                currentIndex = i;
-//                break;
-//            }
-//
-//            if (currentIndex == -1) {
-//                return -1;
-//            }
-//
-//            clipHashMap.put(currentIndex, clips[currentIndex]);
-//            beforeClipStartTime = clips[currentIndex].getStartTime();
-//            beforeClipEndTime = clips[currentIndex].getEndTime();
-//            currentIndex = -1;
-//        }
+        if (nextLongestClip != null){
+            lastClip = nextLongestClip;
+            minClipCount++;
+        }
 
-//        System.out.println("clip size : " + clipHashMap.size());
+        if (lastClip.getEndTime() < time)
+            return -1;
         return minClipCount;
     }
 
