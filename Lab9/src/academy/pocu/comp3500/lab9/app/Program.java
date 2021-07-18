@@ -35,6 +35,10 @@ public class Program {
 
         assert (pyramidHeight == 3);
 
+        pyramidHeight = PyramidBuilder.findMaxHeight(new int[]{5, 5, 5, 5, 5, 5}, 10);
+
+        assert (pyramidHeight == 1);
+
         // ProfitCalculator
         Task[] tasks = new Task[]{
                 new Task(20, 30),

@@ -13,26 +13,34 @@ public class PyramidBuilder {
         }
 
         // 동상 페이즈
+//        System.out.println();
+//        System.out.println(statue);
         int totalWidth = 0;
         while (totalWidth <= statue || stoneNumber < minStoneNumber) {
             if (widthMinQueue.size() == 0)
                 return height;
-            totalWidth += widthMinQueue.poll();
+            var stone = widthMinQueue.poll();
+            totalWidth += stone;
             stoneNumber++;
+//            System.out.print(stone + " ");
         }
         height++;
-        minStoneNumber++;
+        minStoneNumber = stoneNumber + 1;
+//        System.out.println();
 
         // 벽돌 페이즈
         while (widthMinQueue.size() >= minStoneNumber) {
             stoneNumber = 0;
             while (stoneNumber < minStoneNumber) {
-                widthMinQueue.poll();
+                var stone = widthMinQueue.poll();
+//                System.out.print(stone + " ");
                 stoneNumber++;
             }
+//            System.out.println();
             minStoneNumber++;
             height++;
         }
+//        System.out.println();
         return height;
     }
 }
