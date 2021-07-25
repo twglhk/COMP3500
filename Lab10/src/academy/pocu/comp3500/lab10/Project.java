@@ -20,20 +20,7 @@ public class Project {
         HashMap<TaskNode, Boolean> visitDFSMap = new HashMap<TaskNode, Boolean>();
         ArrayList<TaskNode> dfsTaskNodeList = new ArrayList<>(tasks.length);
 
-        if (tasks[0].getPredecessors().size() != 0) {
-            for (int i = 1; i < tasks.length; ++i) {
-                if (tasks[i].getPredecessors().size() == 0) {
-                    var temp = tasks[0];
-                    tasks[0] = tasks[i];
-                    tasks[i] = temp;
-                }
-            }
-        }
-
-        TaskNode startNode = new TaskNode(tasks[0]);
-        taskNodeGraphMap.put(tasks[0], startNode);
-        visitDFSMap.put(startNode, false);
-        for (int i = 1; i < tasks.length; ++i) {
+        for (int i = 0; i < tasks.length; ++i) {
             if (!taskNodeGraphMap.containsKey(tasks[i])) {
                 TaskNode newTaskNode = new TaskNode(tasks[i]);
                 taskNodeGraphMap.put(tasks[i], newTaskNode);
@@ -53,7 +40,12 @@ public class Project {
             }
         }
 
-        dfsRecursive(startNode, dfsTaskNodeList, taskNodeGraphMap, visitDFSMap);
+        for (var taskNode : taskNodeGraphMap.entrySet()) {
+            if (taskNode.getValue().task.getPredecessors().size() == 0) {
+                dfsRecursive(taskNode.getValue(), dfsTaskNodeList, taskNodeGraphMap, visitDFSMap);
+            }
+        }
+
         for (int i = 1; i < tasks.length; ++i) {
             if (visitDFSMap.get(taskNodeGraphMap.get(tasks[i]))) continue;
             dfsRecursive(taskNodeGraphMap.get(tasks[i]), dfsTaskNodeList, taskNodeGraphMap, visitDFSMap);
