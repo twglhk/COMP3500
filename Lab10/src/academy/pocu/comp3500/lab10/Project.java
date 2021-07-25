@@ -88,8 +88,8 @@ public class Project {
     }
 
     private static void dfsTRecursive(final TaskNode taskNode,
-                                     final HashMap<Task, TaskNode> taskNodeGraphMap,
-                                     final HashMap<TaskNode, Boolean> visitDFSMap) {
+                                      final HashMap<Task, TaskNode> taskNodeGraphMap,
+                                      final HashMap<TaskNode, Boolean> visitDFSMap) {
         if (visitDFSMap.get(taskNode)) {
             return;
         }
