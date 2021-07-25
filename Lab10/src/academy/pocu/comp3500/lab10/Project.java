@@ -41,7 +41,7 @@ public class Project {
 //            sccNode.taskNodes.addLast(taskNode);
 //            taskNode.sccVisit = true;
 //            sccInsert(taskNode, dfsNodeMap, sccNode);
-            sccRecursive(taskNode, dfsNodeMap, sccNode);
+            sccRecursive(taskNode, null, dfsNodeMap, sccNode);
             sccList.addFirst(sccNode);
         }
 
@@ -72,8 +72,7 @@ public class Project {
             return;
         }
 
-        TaskNode taskNode = new TaskNode();
-        taskNode.task = task;
+        TaskNode taskNode = new TaskNode(task);
         taskNode.sccVisit = false;
         dfsNodeMap.put(task, taskNode);
 
@@ -88,13 +87,20 @@ public class Project {
     }
 
     private static void sccRecursive(TaskNode taskNode,
+                                     Task visitor,
                                      HashMap<Task, TaskNode> dfsNodeMap,
                                      SCCNode sccNode) {
-        if (taskNode.sccVisit) return;
-        taskNode.sccVisit = true;
+        if (taskNode.sccVisit)
+            return;
+
+        taskNode.visit(visitor);
+
+        if (!taskNode.sccVisit)
+            return;
+
         sccNode.taskNodes.addLast(taskNode);
         for (var nextTask : taskNode.nextTaskList) {
-            sccRecursive(dfsNodeMap.get(nextTask), dfsNodeMap, sccNode);
+            sccRecursive(dfsNodeMap.get(nextTask), taskNode.task, dfsNodeMap, sccNode);
         }
     }
 

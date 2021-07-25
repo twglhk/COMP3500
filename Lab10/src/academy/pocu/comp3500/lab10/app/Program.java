@@ -9,6 +9,38 @@ public class Program {
 
     public static void main(String[] args) {
         {
+            Task a = new Task("A", 12);
+            Task b = new Task("B", 7);
+            Task c = new Task("C", 10);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 8);
+            Task f = new Task("F", 11);
+
+            b.addPredecessor(a, e);
+            c.addPredecessor(b);
+            d.addPredecessor(c);
+            e.addPredecessor(d, f);
+            f.addPredecessor(c);
+
+            Task[] tasks = new Task[]{ a, b, c, d, e, f };
+
+            List<String> schedule = Project.findSchedule(tasks, true);
+            System.out.println("Test Case by fergcd");
+            for (String title : schedule) {
+                System.out.println(title);
+            }
+
+            assert (schedule.size() == 6);
+            assert (schedule.get(0).equals("A"));
+            assert (schedule.get(1).equals("B"));
+            assert (schedule.get(2).equals("C"));
+            assert (schedule.indexOf("C") < schedule.indexOf("D"));
+            assert (schedule.indexOf("C") < schedule.indexOf("F"));
+            assert (schedule.indexOf("D") < schedule.indexOf("E"));
+            assert (schedule.indexOf("F") < schedule.indexOf("E"));
+        }
+
+        {
             Task a = new Task("A", 15);
             Task b = new Task("B", 12);
             Task c = new Task("C", 11);
