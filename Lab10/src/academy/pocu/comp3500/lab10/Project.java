@@ -68,11 +68,9 @@ public class Project {
         }
 
         var sccList = new ArrayList<TaskNode>();
-        var sccStack = new Stack<TaskNode>();
         for (int i = dfsTaskNodeList.size() - 1; i >= 0; --i) {
             if (visitDFSMap.get(dfsTaskNodeList.get(i))) continue;
-            sccStack.clear();
-            dfsTRecursive(dfsTaskNodeList.get(i), null, sccList, sccStack, taskNodeGraphMap, visitDFSMap);
+            dfsTRecursive(dfsTaskNodeList.get(i), sccList, taskNodeGraphMap, visitDFSMap, false);
         }
 
         for (int i = 0; i < sccList.size(); ++i) {
@@ -99,37 +97,27 @@ public class Project {
     }
 
     private static void dfsTRecursive(final TaskNode taskNode,
-                                      TaskNode sccStart,
                                       final ArrayList<TaskNode> sccList,
-                                      final Stack<TaskNode> sccStack,
                                       final HashMap<Task, TaskNode> taskNodeGraphMap,
-                                      final HashMap<TaskNode, Boolean> visitDFSMap) {
+                                      final HashMap<TaskNode, Boolean> visitDFSMap,
+                                      boolean isSccStart) {
 
         visitDFSMap.put(taskNode, true);
         for (var beforeTask : taskNode.task.getPredecessors()) {
             var beforeTaskNode = taskNodeGraphMap.get(beforeTask);
             if (visitDFSMap.get(beforeTaskNode)) {
-                if (sccStart == beforeTaskNode) {
-                    taskNode.isScc = true;
-                    sccList.add(sccStart);
-                    sccList.add(taskNode);
-                    while (!sccStack.empty()) {
-                        sccList.add(sccStack.pop());
-                    }
-                }
+                continue;
             } else {
                 taskNode.isScc = true;
-                if (sccStart == null)
-                    sccStart = taskNode;
-                else {
-                    sccStack.push(taskNode);
+                beforeTaskNode.isScc = true;
+                if (!isSccStart) {
+                    sccList.add(taskNode);
+                    dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccList, taskNodeGraphMap, visitDFSMap, true);
+                    return;
                 }
-                dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccStart, sccList, sccStack, taskNodeGraphMap, visitDFSMap);
+                dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccList, taskNodeGraphMap, visitDFSMap, true);
             }
         }
-
-        if (!taskNode.isScc) {
-            sccList.add(taskNode);
-        }
+        sccList.add(taskNode);
     }
 }
