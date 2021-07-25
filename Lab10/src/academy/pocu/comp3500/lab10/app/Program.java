@@ -3,11 +3,86 @@ package academy.pocu.comp3500.lab10.app;
 import academy.pocu.comp3500.lab10.Project;
 import academy.pocu.comp3500.lab10.project.Task;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Program {
 
     public static void main(String[] args) {
+        {
+            Task a = new Task("A", 12);
+            Task b = new Task("B", 7);
+            Task c = new Task("C", 10);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 8);
+            Task f = new Task("F", 11);
+            Task g = new Task("G", 14);
+            b.addPredecessor(a);
+            c.addPredecessor(b, e);
+            d.addPredecessor(c);
+            e.addPredecessor(d);
+            f.addPredecessor(a);
+            g.addPredecessor(b, f);
+            Task[] tasks = new Task[]{a, b, c, d, e, f, g};
+            for (int i = 0; i < 10; ++i) {
+                Collections.shuffle(Arrays.asList(tasks));
+                System.out.println();
+                System.out.println("before");
+                for (var task : tasks) {
+                    System.out.print(task.getTitle() + " ");
+                }
+                List<String> schedule = Project.findSchedule(tasks, true);
+                System.out.println();
+                System.out.println("after");
+                for (var str : schedule) {
+                    System.out.print(str + " ");
+                }
+                System.out.println();
+                assert (schedule.size() == 7);
+                assert (schedule.get(0).equals("A"));
+                assert (schedule.indexOf("A") < schedule.indexOf("B"));
+                assert (schedule.indexOf("A") < schedule.indexOf("F"));
+                assert (schedule.indexOf("B") < schedule.indexOf("G"));
+                assert (schedule.indexOf("F") < schedule.indexOf("G"));
+                assert (schedule.indexOf("B") < schedule.indexOf("C"));
+                assert (schedule.indexOf("C") < schedule.indexOf("D"));
+                assert (schedule.indexOf("D") < schedule.indexOf("E"));
+            }
+        }
+
+        {
+            Task a = new Task("A", 15);
+            Task b = new Task("B", 12);
+            Task c = new Task("C", 11);
+            Task d = new Task("D", 15);
+            Task e = new Task("E", 12);
+            Task f = new Task("F", 11);
+            Task g = new Task("G", 11);
+            Task h = new Task("H", 10);
+            Task i = new Task("I", 10);
+            Task j = new Task("J", 10);
+
+            b.addPredecessor(a);
+            c.addPredecessor(b);
+            d.addPredecessor(b);
+            e.addPredecessor(d);
+            f.addPredecessor(e);
+            g.addPredecessor(d,j);
+            h.addPredecessor(f);
+            i.addPredecessor(h,g);
+            j.addPredecessor(i);
+
+            Task[] tasks = new Task[]{a,b,c,d,e,f,g,h,i,j};
+            List<String> schedule = Project.findSchedule(tasks, false);
+//            assert (schedule.size() == 10);
+            for (var str : schedule) {
+                System.out.print(str + " ");
+            }
+            System.out.println();
+            System.out.println();
+        }
+
         {
             Task a = new Task("A", 15);
             Task b = new Task("B", 12);
