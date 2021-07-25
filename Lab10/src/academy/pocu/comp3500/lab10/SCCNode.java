@@ -10,8 +10,7 @@ public class SCCNode {
     public int entryIndex;
     public LinkedList<TaskNode> taskNodes = new LinkedList<TaskNode>();
 
-    public void findEntryNode(HashMap<Task, TaskNode> dfsNodeMap)
-    {
+    public void findEntryNode(HashMap<Task, TaskNode> dfsNodeMap) {
         for (int i = 0; i < taskNodes.size(); ++i) {
             var predecessors = taskNodes.get(i).task.getPredecessors();
             for (var predecessor : predecessors) {
