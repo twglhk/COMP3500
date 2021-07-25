@@ -2,7 +2,12 @@ package academy.pocu.comp3500.lab10;
 
 import academy.pocu.comp3500.lab10.project.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 
 public class Project {
     public static List<String> findSchedule(final Task[] tasks, final boolean includeMaintenance) {
@@ -20,26 +25,36 @@ public class Project {
             dfsRecursive(tasks[i], null, dfsTaskNodeList, dfsNodeMap);
         }
 
+        for (var taskNode : dfsTaskNodeList) {
+            System.out.print(taskNode.task.getTitle() + " ");
+        }
+        System.out.println();
+
         // SCC 컨테이너
         var sccList = new LinkedList<SCCNode>();
         for (int i = dfsTaskNodeList.size() - 1; i >= 0; --i) {
             var taskNode = dfsTaskNodeList.get(i);
             if (taskNode.sccVisit) continue;
-            var sscNode = new SCCNode();
-            sccDfsRecursive(taskNode, dfsNodeMap, sscNode);
 
-            if (sscNode.taskNodes.size() > 1) {
+            var sccNode = new SCCNode();
+            sccNode.taskNodes.addLast(taskNode);
+            taskNode.sccVisit = true;
+            sccInsert(taskNode, dfsNodeMap, sccNode);
+
+            if (sccNode.taskNodes.size() > 1) {
                 if (!includeMaintenance)
                     continue;
             }
-            sccList.addFirst(sscNode);
+            sccList.addFirst(sccNode);
         }
 
         for (var sscNode : sccList) {
             for (var taskNode : sscNode.taskNodes) {
                 result.add(taskNode.task.getTitle());
+                System.out.println(taskNode.task.getTitle());
             }
         }
+        System.out.println();
 
         return result;
     }
@@ -71,18 +86,20 @@ public class Project {
         dfsTaskList.add(taskNode);
     }
 
-    private static void sccDfsRecursive(TaskNode taskNode,
-                                        HashMap<Task, TaskNode> dfsNodeMap,
-                                        SCCNode sccNode) {
-        if (taskNode.sccVisit) {
-            return;
-        }
-        taskNode.sccVisit = true;
-        sccNode.taskNodes.addLast(taskNode);
-        for (var nextTask : taskNode.nextTaskList) {
-            if (dfsNodeMap.get(nextTask).sccVisit)
-                continue;
-            sccDfsRecursive(dfsNodeMap.get(nextTask), dfsNodeMap, sccNode);
+    private static void sccInsert(TaskNode taskNode,
+                                  HashMap<Task, TaskNode> dfsNodeMap,
+                                  SCCNode sccNode) {
+        Queue<TaskNode> taskNodeQueue = new LinkedList<TaskNode>();
+        taskNodeQueue.add(taskNode);
+        while (taskNodeQueue.size() != 0) {
+            var currentNode = taskNodeQueue.poll();
+            for (var nextTask : currentNode.nextTaskList) {
+                if (dfsNodeMap.get(nextTask).sccVisit)
+                    continue;
+                sccNode.taskNodes.addLast(dfsNodeMap.get(nextTask));
+                dfsNodeMap.get(nextTask).sccVisit = true;
+                taskNodeQueue.add(dfsNodeMap.get(nextTask));
+            }
         }
     }
 }
