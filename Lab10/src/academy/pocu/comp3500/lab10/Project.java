@@ -66,11 +66,10 @@ public class Project {
         TaskNode taskNode = new TaskNode();
         taskNode.task = task;
         taskNode.sccVisit = false;
+        dfsNodeMap.put(task, taskNode);
 
         if (nextTask != null)
             taskNode.nextTaskList.add(nextTask);
-
-        dfsNodeMap.put(task, taskNode);
 
         var predecessorList = task.getPredecessors();
         for (var predecessor : predecessorList) {
