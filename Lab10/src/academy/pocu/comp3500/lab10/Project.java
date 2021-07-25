@@ -2,11 +2,7 @@ package academy.pocu.comp3500.lab10;
 
 import academy.pocu.comp3500.lab10.project.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 
 public class Project {
@@ -89,16 +85,29 @@ public class Project {
     private static void sccInsert(TaskNode taskNode,
                                   HashMap<Task, TaskNode> dfsNodeMap,
                                   SCCNode sccNode) {
-        Queue<TaskNode> taskNodeQueue = new LinkedList<TaskNode>();
-        taskNodeQueue.add(taskNode);
-        while (taskNodeQueue.size() != 0) {
-            var currentNode = taskNodeQueue.poll();
+//        Queue<TaskNode> taskNodeQueue = new LinkedList<TaskNode>();
+//        taskNodeQueue.add(taskNode);
+//        while (taskNodeQueue.size() != 0) {
+//            var currentNode = taskNodeQueue.poll();
+//            for (var nextTask : currentNode.nextTaskList) {
+//                if (dfsNodeMap.get(nextTask).sccVisit)
+//                    continue;
+//                sccNode.taskNodes.addLast(dfsNodeMap.get(nextTask));
+//                dfsNodeMap.get(nextTask).sccVisit = true;
+//                taskNodeQueue.add(dfsNodeMap.get(nextTask));
+//            }
+//        }
+
+        Stack<TaskNode> taskNodeStack = new Stack<TaskNode>();
+        taskNodeStack.push(taskNode);
+        while (taskNodeStack.size() != 0) {
+            var currentNode = taskNodeStack.pop();
             for (var nextTask : currentNode.nextTaskList) {
                 if (dfsNodeMap.get(nextTask).sccVisit)
                     continue;
                 sccNode.taskNodes.addLast(dfsNodeMap.get(nextTask));
                 dfsNodeMap.get(nextTask).sccVisit = true;
-                taskNodeQueue.add(dfsNodeMap.get(nextTask));
+                taskNodeStack.push(dfsNodeMap.get(nextTask));
             }
         }
     }
