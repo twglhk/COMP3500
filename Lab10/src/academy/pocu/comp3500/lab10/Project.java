@@ -54,6 +54,10 @@ public class Project {
         }
 
         dfsRecursive(startNode, dfsTaskNodeList, taskNodeGraphMap, visitDFSMap);
+        for (int i = 1; i < tasks.length; ++i) {
+            if (visitDFSMap.get(taskNodeGraphMap.get(tasks[i]))) continue;
+            dfsRecursive(taskNodeGraphMap.get(tasks[i]), dfsTaskNodeList, taskNodeGraphMap, visitDFSMap);
+        }
 
         for (var visit : visitDFSMap.entrySet()) {
             visit.setValue(false);

@@ -109,6 +109,26 @@ public class Program {
             assert (schedule.indexOf("D") < schedule.indexOf("G"));
             assert (schedule.indexOf("G") < schedule.indexOf("H"));
         }
+
+        {
+            Task a = new Task("A", 12);
+            Task b = new Task("B", 7);
+            Task c = new Task("C", 10);
+            Task d = new Task("D", 9);
+            Task e = new Task("E", 8);
+            Task f = new Task("F", 11);
+            Task g = new Task("G", 11);
+
+            b.addPredecessor(a);
+            c.addPredecessor(b);
+            d.addPredecessor(c);
+            f.addPredecessor(b,e);
+            g.addPredecessor(d,f);
+
+            Task[] tasks = new Task[]{ a,b,c,d,e,f,g };
+
+            List<String> schedule = Project.findSchedule(tasks, true);
+        }
     }
 
     private static Task[] createTasks() {
