@@ -64,17 +64,14 @@ public class BallBoy {
             Point n1 = edges.get(i).getNode1();
             Point n2 = edges.get(i).getNode2();
 
-            if (n1 == startPoint || n2 == startPoint) {
-                if (edgeCountHashMap.get(n1) == 1)
-                    continue;
-                if (edgeCountHashMap.get(n2) == 1)
-                    continue;
-            } else {
-                if (edgeCountHashMap.get(n1) == 2)
-                    continue;
-                if (edgeCountHashMap.get(n2) == 2)
-                    continue;
-            }
+            if (n1 == startPoint && edgeCountHashMap.get(n1) == 1)
+                continue;
+            if (n2 == startPoint && edgeCountHashMap.get(n2) == 1)
+                continue;
+            if (edgeCountHashMap.get(n1) == 2)
+                continue;
+            if (edgeCountHashMap.get(n2) == 2)
+                continue;
 
             Point root1 = set.find(n1);
             Point root2 = set.find(n2);
@@ -88,9 +85,10 @@ public class BallBoy {
             }
         }
 
-//        for (int i = 0; i < mst.size(); ++i) {
-//            System.out.println(mst.get(i).getNode1() + " => " + mst.get(i).getNode2());
-//        }
+        for (int i = 0; i < mst.size(); ++i) {
+            System.out.println(mst.get(i).getNode1() + " => " + mst.get(i).getNode2());
+        }
+        System.out.println();
 
         Point currentPoint = startPoint;
         while (mst.size() != 0) {
