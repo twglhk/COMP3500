@@ -24,13 +24,18 @@ public class DisjointSet {
         }
     }
 
+    public void addNode(final Point point) {
+        SetNode setNode = new SetNode(point, 1);
+        this.sets.put(point, setNode);
+    }
+
     // 인자로 들어온 노드가 속해 있는 집합의 루트를 반환
     public Point find(final Point node) {
         assert (this.sets.containsKey(node));
 
         SetNode n = this.sets.get(node);
         Point parent = n.parent;
-        if (parent.equals(node)) {	// 여기서 루트는 자기 자신을 가리키고 있으면 됨
+        if (parent.equals(node)) {    // 여기서 루트는 자기 자신을 가리키고 있으면 됨
             return node;
         }
 

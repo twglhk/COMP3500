@@ -2,9 +2,7 @@ package academy.pocu.comp3500.lab11;
 
 import academy.pocu.comp3500.lab11.data.Point;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 //LinkedList
 //ArrayList
 //Stack
@@ -20,38 +18,67 @@ public class BallBoy {
         //볼보이는 언제나 x = 0, y = 0 위치에서 시작하며 일이 끝나면 이 위치로 다시 돌아와야 합니다. 즉, 반환된 경로의 시작과 끝은 언제나 이 위치여야 합니다.
         //시작 위치에 골프공이 있는 경우는 없습니다.
 
-        ArrayList<Point> result = new ArrayList<Point>();
-        Point startPos = new Point(0, 0);
-        Point currentPos = startPos;
-        result.add(startPos);
+        ArrayList<Point> pointResult = new ArrayList<Point>(points.length + 2);
+        Point startPoint = new Point(0, 0);
+        pointResult.add(startPoint);
 
         if (points.length == 0) {
-            return result;
+            return pointResult;
         }
 
-        Point closestPoint = null;
-        var closestDistance = Integer.MAX_VALUE;
-        while (true) {
-            for (var point : points) {
-                if (point == currentPos) continue;
-                if (result.contains(point)) continue;
+        // 각 노드들로 트리를 하나씩 만들기
+        DisjointSet set = new DisjointSet(points);
+        set.addNode(startPoint);
 
-                int distance = (int)(Math.pow(point.getX() - currentPos.getX(), 2) + Math.pow(point.getY() - currentPos.getY(), 2));
-                if (distance < closestDistance) {
-                    closestPoint = point;
-                    closestDistance = distance;
-                }
-            }
+        // 최종 결과를 저장할 mst 생성. mst 변들의 리스트
+        ArrayList<Edge> mst = new ArrayList<>(points.length);
 
-            if (closestPoint == null) {
-                result.add(startPos);
-                break;
-            } else {
-                result.add(closestPoint);
-                closestPoint = null;
-                closestDistance = Integer.MAX_VALUE;
+        // Edge 데이터를 저장할 ArrayList
+        ArrayList<Edge> edges = new ArrayList<>((points.length) * (points.length));
+
+        // 시작점에서 변 데이터 생성
+        for (int i = 0; i < points.length; ++i) {
+            Edge edge = new Edge(startPoint, points[i]);
+            edges.add(edge);
+        }
+        // 각 지점에서 변 데이터 생성
+        for (int i = 0; i < points.length - 1; ++i) {
+            for (int j = i + 1; j < points.length; ++j) {
+                Edge edge = new Edge(points[i], points[j]);
+                edges.add(edge);
             }
         }
-        return result;
+
+        // 변을 오름차순으로 정렬
+        Collections.sort(edges);
+
+        // 이 변에 연결된 두 노드가 같은 집합 소속인지 확인
+        for (int i = 0; i < edges.size(); ++i) {
+            Point n1 = edges.get(i).getNode1();
+            Point n2 = edges.get(i).getNode2();
+
+            Point root1 = set.find(n1);
+            Point root2 = set.find(n2);
+
+            // 같은 집합 소속이 아니라면 mst에 이 변을 추가하고 두 집합을 합침
+            if (!root1.equals(root2)) {
+                mst.add(edges.get(i));
+                set.union(n1, n2);
+            }
+        }
+
+//        for (int i = 0; i < mst.size(); ++i) {
+//            System.out.println(mst.get(i).getNode1() + " => " + mst.get(i).getNode2());
+//        }
+
+        Point from = startPoint;
+        for (int i = 0; i < mst.size(); ++i) {
+            if (mst.get(i).getNode1() != from) continue;
+            pointResult.add(mst.get(i).getNode2());
+            from = mst.get(i).getNode2();
+            i = 0;
+        }
+        pointResult.add(startPoint);
+        return pointResult;
     }
 }

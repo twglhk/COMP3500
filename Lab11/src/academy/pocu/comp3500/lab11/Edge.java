@@ -10,7 +10,7 @@ public final class Edge implements Comparable<Edge> {
     public Edge(final Point point1, final Point point2) {
         this.point1 = point1;
         this.point2 = point2;
-        this.sqrDistance = (int)(Math.pow(point1.getX() - point2.getX(), 2) + Math.pow(point1.getY() - point2.getY(), 2));;
+        this.sqrDistance = (int) (Math.pow(point1.getX() - point2.getX(), 2) + Math.pow(point1.getY() - point2.getY(), 2));
     }
 
     public Point getNode1() {
