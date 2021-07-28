@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 //LinkedList
 //ArrayList
 //Stack
@@ -22,7 +23,9 @@ public class BallBoy {
         //시작 위치에 골프공이 있는 경우는 없습니다.
 
         ArrayList<Point> pointResult = new ArrayList<Point>(points.length + 2);
+        HashMap<Point, Integer> edgeCountHashMap = new HashMap<Point, Integer>();
         Point startPoint = new Point(0, 0);
+        edgeCountHashMap.put(startPoint, 0);
         pointResult.add(startPoint);
 
         if (points.length == 0) {
@@ -43,6 +46,7 @@ public class BallBoy {
         for (int i = 0; i < points.length; ++i) {
             Edge edge = new Edge(startPoint, points[i]);
             edges.add(edge);
+            edgeCountHashMap.put(points[i], 0);
         }
         // 각 지점에서 변 데이터 생성
         for (int i = 0; i < points.length - 1; ++i) {
@@ -60,6 +64,18 @@ public class BallBoy {
             Point n1 = edges.get(i).getNode1();
             Point n2 = edges.get(i).getNode2();
 
+            if (n1 == startPoint || n2 == startPoint) {
+                if (edgeCountHashMap.get(n1) == 1)
+                    continue;
+                if (edgeCountHashMap.get(n2) == 1)
+                    continue;
+            } else {
+                if (edgeCountHashMap.get(n1) == 2)
+                    continue;
+                if (edgeCountHashMap.get(n2) == 2)
+                    continue;
+            }
+
             Point root1 = set.find(n1);
             Point root2 = set.find(n2);
 
@@ -67,6 +83,8 @@ public class BallBoy {
             if (!root1.equals(root2)) {
                 mst.add(edges.get(i));
                 set.union(n1, n2);
+                edgeCountHashMap.put(n1, edgeCountHashMap.get(n1) + 1);
+                edgeCountHashMap.put(n2, edgeCountHashMap.get(n2) + 1);
             }
         }
 
@@ -86,7 +104,7 @@ public class BallBoy {
                     currentPoint = point2;
                     removeIndex = i;
                     break;
-                } else if (point2== currentPoint) {
+                } else if (point2 == currentPoint) {
                     pointResult.add(point1);
                     currentPoint = point1;
                     removeIndex = i;
