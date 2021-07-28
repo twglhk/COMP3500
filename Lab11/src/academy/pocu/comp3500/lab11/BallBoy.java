@@ -2,7 +2,10 @@ package academy.pocu.comp3500.lab11;
 
 import academy.pocu.comp3500.lab11.data.Point;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 //LinkedList
 //ArrayList
 //Stack
@@ -31,7 +34,7 @@ public class BallBoy {
         set.addNode(startPoint);
 
         // 최종 결과를 저장할 mst 생성. mst 변들의 리스트
-        ArrayList<Edge> mst = new ArrayList<>(points.length);
+        LinkedList<Edge> mst = new LinkedList<Edge>();
 
         // Edge 데이터를 저장할 ArrayList
         ArrayList<Edge> edges = new ArrayList<>((points.length) * (points.length));
@@ -71,12 +74,26 @@ public class BallBoy {
 //            System.out.println(mst.get(i).getNode1() + " => " + mst.get(i).getNode2());
 //        }
 
-        Point from = startPoint;
-        for (int i = 0; i < mst.size(); ++i) {
-            if (mst.get(i).getNode1() != from) continue;
-            pointResult.add(mst.get(i).getNode2());
-            from = mst.get(i).getNode2();
-            i = 0;
+        Point currentPoint = startPoint;
+        while (mst.size() != 0) {
+            var removeIndex = -1;
+            for (int i = 0; i < mst.size(); ++i) {
+                var point1 = mst.get(i).getNode1();
+                var point2 = mst.get(i).getNode2();
+
+                if (point1 == currentPoint) {
+                    pointResult.add(point2);
+                    currentPoint = point2;
+                    removeIndex = i;
+                    break;
+                } else if (point2== currentPoint) {
+                    pointResult.add(point1);
+                    currentPoint = point1;
+                    removeIndex = i;
+                    break;
+                }
+            }
+            mst.remove(removeIndex);
         }
         pointResult.add(startPoint);
         return pointResult;

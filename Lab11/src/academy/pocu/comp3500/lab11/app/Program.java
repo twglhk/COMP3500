@@ -12,6 +12,29 @@ public class Program {
 
         {
             Point[] points = {
+                    new Point(0, 80),
+                    new Point(0, 40),
+            };
+            String ballA = points[0].toString();
+            String ballB = points[1].toString();
+
+            List<Point> path = BallBoy.findPath(points);
+
+            assert (path.size() == points.length + 2);
+
+            String path0 = path.get(0).toString();
+            String path1 = path.get(1).toString();
+            String path2 = path.get(2).toString();
+            String path3 = path.get(3).toString();
+
+            assert (path0.equals(startPoint));
+            assert ((path1.equals(ballA) && path2.equals(ballB))
+                    || path1.equals(ballB) && path2.equals(ballA));
+            assert (path3.equals(startPoint));
+        }
+
+        {
+            Point[] points = {
                     new Point(20, 15),
                     new Point(20, 48),
                     new Point(0, 63)
