@@ -30,5 +30,9 @@ public final class Edge {
     public int getCurrentBonusCapacity() {
         return this.currentBonusCapacity;
     }
+
+    public void addCurrentBonusCapacity(int bonus) {
+        currentBonusCapacity += bonus;
+    }
 }
 
