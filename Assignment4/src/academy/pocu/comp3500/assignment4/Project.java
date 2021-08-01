@@ -2,8 +2,8 @@ package academy.pocu.comp3500.assignment4;
 
 import academy.pocu.comp3500.assignment4.project.Task;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public final class Project {
     //사용 가능 자료 구조
@@ -65,6 +65,120 @@ public final class Project {
     }
 
     public int findMaxBonusCount(final String task) {
-        return -1;
+        if (tasks.length == 1) {
+            return tasks[0].getEstimate();
+        }
+
+        HashMap<Task, LinkedList<Edge>> taskEdgeListHashMap = new HashMap<Task, LinkedList<Edge>>();
+        LinkedList<Task> startTaskList = new LinkedList<Task>();
+        createEdge(taskEdgeListHashMap, startTaskList);
+
+        return bfsFindMaxBonusCount(taskEdgeListHashMap, startTaskList, taskNodeGraphMap.get(task));
+    }
+
+    private void createEdge(HashMap<Task, LinkedList<Edge>> taskEdgeListHashMap,
+                            LinkedList<Task> startTaskList) {
+        for (var task : tasks) {
+            var predecessors = task.getPredecessors();
+            if (predecessors.size() == 0) {
+                startTaskList.add(task);
+                continue;
+            }
+
+            for (var predecessor : predecessors) {
+                var edge = new Edge(predecessor, task, false);
+                var backEdge = new Edge(task, predecessor, true);
+
+                edge.setSymmetricEdge(backEdge);
+                backEdge.setSymmetricEdge(edge);
+
+                LinkedList<Edge> predecessorEdgeList;
+                if (taskEdgeListHashMap.containsKey(predecessor)) {
+                    predecessorEdgeList = taskEdgeListHashMap.get(predecessor);
+                } else {
+                    predecessorEdgeList = new LinkedList<Edge>();
+                    taskEdgeListHashMap.put(predecessor, predecessorEdgeList);
+                }
+                predecessorEdgeList.add(edge);
+
+
+                LinkedList<Edge> myEdgeList;
+                if (taskEdgeListHashMap.containsKey(task)) {
+                    myEdgeList = taskEdgeListHashMap.get(task);
+                } else {
+                    myEdgeList = new LinkedList<Edge>();
+                    taskEdgeListHashMap.put(task, myEdgeList);
+                }
+                myEdgeList.add(backEdge);
+            }
+        }
+    }
+
+    private int bfsFindMaxBonusCount(HashMap<Task, LinkedList<Edge>> taskEdgeListHashMap,
+                                     LinkedList<Task> startTaskList,
+                                     final Task endTask) {
+        LinkedList<Task> queue = new LinkedList<Task>();
+        HashMap<Task, Edge> pathHashMap = new HashMap<Task, Edge>();
+        HashMap<Task, Task> visitHashMap = new HashMap<Task, Task>();
+        for (var startTask : startTaskList) {
+            queue.add(startTask);
+            while (queue.size() != 0) {
+                var task = queue.removeFirst();
+                if (task == endTask) {
+                    // 최소 유량 구하기
+                    var minBonusCapacity = Integer.MAX_VALUE;
+                    var currentTask = endTask;
+                    while (currentTask != startTask) {
+                        var edge = pathHashMap.get(currentTask);
+                        var currentBonusCapacity = edge.getBonusCapacity();
+                        if (minBonusCapacity > currentBonusCapacity) {
+                            minBonusCapacity = currentBonusCapacity;
+                        }
+                        currentTask = edge.getTaskFrom();
+                    }
+
+                    // 유량 더하기
+                    currentTask = endTask;
+                    while (currentTask != startTask) {
+                        var edge = pathHashMap.get(currentTask);
+                        edge.updateBonusCapacity(minBonusCapacity);
+                        currentTask = edge.getTaskFrom();
+                    }
+
+                    queue.clear();
+                    visitHashMap.clear();
+                    queue.add(startTask);
+                }
+
+                // 경로 찾기
+                if (visitHashMap.containsKey(task)) continue;
+                if (!taskEdgeListHashMap.containsKey(task)) continue;
+
+                visitHashMap.put(task, task);
+
+                var edgeList = taskEdgeListHashMap.get(task);
+                for (var edge : edgeList) {
+                    if (edge.isBonusCapacityMax()) continue;
+                    if (visitHashMap.containsKey(edge.getTaskTo())) continue;
+                    queue.addLast(edge.getTaskTo());
+                    pathHashMap.put(edge.getTaskTo(), edge);
+                }
+            }
+
+            queue.clear();
+            visitHashMap.clear();
+            pathHashMap.clear();
+        }
+
+        var result = 0;
+        for (var edge : taskEdgeListHashMap.get(endTask)) {
+            result += edge.getBonusCapacity();
+        }
+
+        if (result > endTask.getEstimate()) {
+            result = endTask.getEstimate();
+        }
+
+        return result;
     }
 }

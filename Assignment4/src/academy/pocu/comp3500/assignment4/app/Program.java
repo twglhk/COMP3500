@@ -6,9 +6,8 @@ import academy.pocu.comp3500.assignment4.project.Task;
 public class Program {
 
     public static void main(String[] args) {
-	    // write your code here
-
         Task[] tasks = createTasks();
+
         Project project = new Project(tasks);
 
         int manMonths1 = project.findTotalManMonths("ms1");
@@ -22,6 +21,12 @@ public class Program {
 
         int minDuration2 = project.findMinDuration("ms2");
         assert (minDuration2 == 32);
+
+        int bonusCount1 = project.findMaxBonusCount("ms1");
+        assert (bonusCount1 == 6);
+
+        int bonusCount2 = project.findMaxBonusCount("ms2");
+        assert (bonusCount2 == 6);
     }
 
     private static Task[] createTasks() {
