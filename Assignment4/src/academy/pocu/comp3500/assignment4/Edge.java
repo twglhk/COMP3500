@@ -35,6 +35,11 @@ public final class Edge {
         return this.maxBonusCapacity - this.currentBonusCapacity;
     }
 
+    public int getFinalBonusCapacity() {
+        if (maxBonusCapacity != 0) return 0;
+        return -currentBonusCapacity;
+    }
+
     public void setSymmetricEdge(Edge symmetricEdge) {
         this.symmetricEdge = symmetricEdge;
     }
