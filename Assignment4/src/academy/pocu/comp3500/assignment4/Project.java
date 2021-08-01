@@ -73,6 +73,15 @@ public final class Project {
         LinkedList<Task> startTaskList = new LinkedList<Task>();
         createEdge(taskEdgeListHashMap, startTaskList);
 
+//        for (var taskEdgePair : taskEdgeListHashMap.entrySet()) {
+//            System.out.print(taskEdgePair.getKey().getTitle() + " => ");
+//            for (var edge : taskEdgePair.getValue()) {
+//                if (edge.isBackEdge) continue;
+//                System.out.print(edge.getTaskTo().getTitle() + ",");
+//            }
+//            System.out.println();
+//        }
+
         return bfsFindMaxBonusCount(taskEdgeListHashMap, startTaskList, taskNodeGraphMap.get(task));
     }
 
@@ -128,6 +137,7 @@ public final class Project {
                     // 최소 유량 구하기
                     var minBonusCapacity = Integer.MAX_VALUE;
                     var currentTask = endTask;
+//                    System.out.print("BFS 경로 : " + endTask.getTitle() + " <= ");
                     while (currentTask != startTask) {
                         var edge = pathHashMap.get(currentTask);
                         var currentBonusCapacity = edge.getBonusCapacity();
@@ -135,7 +145,11 @@ public final class Project {
                             minBonusCapacity = currentBonusCapacity;
                         }
                         currentTask = edge.getTaskFrom();
+
+//                        System.out.print(edge.getTaskFrom().getTitle() + " <= ");
                     }
+//                    System.out.print("최대 유량 : " + minBonusCapacity);
+//                    System.out.println();
 
                     // 유량 더하기
                     currentTask = endTask;
@@ -148,6 +162,7 @@ public final class Project {
                     queue.clear();
                     visitHashMap.clear();
                     queue.add(startTask);
+                    continue;
                 }
 
                 // 경로 찾기
@@ -160,6 +175,7 @@ public final class Project {
                 for (var edge : edgeList) {
                     if (edge.isBonusCapacityMax()) continue;
                     if (visitHashMap.containsKey(edge.getTaskTo())) continue;
+                    if (task != edge.getTaskFrom()) continue;
                     queue.addLast(edge.getTaskTo());
                     pathHashMap.put(edge.getTaskTo(), edge);
                 }
@@ -172,7 +188,7 @@ public final class Project {
 
         var result = 0;
         for (var edge : taskEdgeListHashMap.get(endTask)) {
-            result += edge.getBonusCapacity();
+            result += edge.getFinalBonusCapacity();
         }
 
         if (result > endTask.getEstimate()) {

@@ -10,10 +10,12 @@ public final class Edge {
     private final int maxBonusCapacity;
     private int currentBonusCapacity;
     private Edge symmetricEdge;
+    public boolean isBackEdge;
 
     public Edge(final Task taskFrom, final Task taskTo, boolean isBackEdge) {
         this.taskFrom = taskFrom;
         this.taskTo = taskTo;
+        this.isBackEdge = isBackEdge;
 
         if (!isBackEdge) {
             this.maxBonusCapacity = taskFrom.getEstimate();
@@ -36,7 +38,7 @@ public final class Edge {
     }
 
     public int getFinalBonusCapacity() {
-        if (maxBonusCapacity != 0) return 0;
+        if (!isBackEdge) return 0;
         return -currentBonusCapacity;
     }
 
