@@ -2,35 +2,22 @@ package academy.pocu.comp3500.assignment4;
 
 import academy.pocu.comp3500.assignment4.project.Task;
 
-import javax.naming.InterruptedNamingException;
-
 public final class Edge {
-    private final Task taskFrom;
-    private final Task taskTo;
     private final int maxBonusCapacity;
-    private int currentBonusCapacity;
+    private int currentBonusCapacity = 0;
     private Edge symmetricEdge;
     public boolean isBackEdge;
 
-    public Edge(final Task taskFrom, final Task taskTo, boolean isBackEdge) {
-        this.taskFrom = taskFrom;
-        this.taskTo = taskTo;
+    public Edge(final TaskNode taskNodeFrom, final TaskNode taskNodeTo, boolean isBackEdge) {
         this.isBackEdge = isBackEdge;
 
-        if (!isBackEdge) {
-            this.maxBonusCapacity = taskFrom.getEstimate();
-        } else {
-            this.maxBonusCapacity = 0;
-        }
-        this.currentBonusCapacity = 0;
-    }
+        var fromNodeEstimate = taskNodeFrom.getTask().getEstimate();
+        var toNodeEstimate = taskNodeTo.getTask().getEstimate();
 
-    public Task getTaskFrom() {
-        return this.taskFrom;
-    }
-
-    public Task getTaskTo() {
-        return this.taskTo;
+        if (!isBackEdge)
+            maxBonusCapacity = Math.min(fromNodeEstimate, toNodeEstimate);
+        else
+            maxBonusCapacity = 0;
     }
 
     public int getBonusCapacity() {
