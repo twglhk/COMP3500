@@ -21,56 +21,58 @@ public final class Project {
     public int findTotalManMonths(final String task) {
         // 코사라주 돌리면서 순환 scc를 제외하고 estimate 저장해서 다음 노드에 넘겨주기. 해당 노드가  맨먼스 반환
         HashMap<Task, TaskNode> taskNodeGraphMap = new HashMap<Task, TaskNode>();
-        ArrayList<TaskNode> taskNodeList = kosaraju(tasks, taskNodeGraphMap, false);
-        var result = -1;
+        HashMap<Task, TaskNode> visitTaskNodeHashMap = new HashMap<Task, TaskNode>();
+        HashMap<Task, TaskNode> sccTaskNodeHashMap = kosaraju(tasks, taskNodeGraphMap, false);
+        var result = 0;
 
-        for (var taskNode : taskNodeList) {
-//            System.out.print("현재 노드 : " + taskNode.task.getTitle() + " / 현재 맨먼스 : " + taskNode.getEstimate() + " / ");
-
-            if (taskNode.task.getTitle().equals(task)) {
-//                System.out.print(" 종료");
-                result = taskNode.getEstimate();
-//                for (var node : taskNode.addedTaskNodeHashMap.entrySet()) {
-//                    System.out.print(node.getKey().task.getTitle() + ",");
-//                }
-                break;
+        TaskNode targetTaskNode = null;
+        for (var taskNodePair : sccTaskNodeHashMap.entrySet()) {
+            if (taskNodePair.getKey().getTitle().equals(task)) {
+                targetTaskNode = taskNodePair.getValue();
             }
-
-//            System.out.print("다음 노드 : ");
-            for (var nextTaskNode : taskNode.nextTaskNodeList) {
-//                System.out.print(nextTaskNode.task.getTitle() + " ");
-//                if (nextTaskNode.task.getTitle().equals(task)) {
-//                    System.out.print(task + "에 + " + taskNode.getEstimate());
-//                }
-
-                nextTaskNode.addTotalManMonthTaskNode(taskNode);
-            }
-//            System.out.println();
         }
-//        System.out.println();
-//        System.out.println();
+
+        if (targetTaskNode == null) {
+            return result;
+        }
+
+        result = dfsFindTotalManMonths(targetTaskNode.task, visitTaskNodeHashMap, sccTaskNodeHashMap);
 
         return result;
     }
 
+    private int dfsFindTotalManMonths(Task task,
+                                      HashMap<Task, TaskNode> visitTaskNodeHashMap,
+                                      HashMap<Task, TaskNode> sccTaskNodeHashMap) {
+        var result = 0;
+        if (!sccTaskNodeHashMap.containsKey(task)) return result;
+        if (visitTaskNodeHashMap.containsKey(task)) return result;
+        visitTaskNodeHashMap.put(task, sccTaskNodeHashMap.get(task));
+
+        for (var predecessorTask : task.getPredecessors()) {
+            result += dfsFindTotalManMonths(predecessorTask, visitTaskNodeHashMap, sccTaskNodeHashMap);
+        }
+        return result + task.getEstimate();
+    }
+
     public int findMinDuration(final String task) {
         // 코사라주 돌리면서 순환 scc를 제외하고 estimate 저장해서 다음 노드에 넘겨주기. 해당 노드가 본인에게 들어온 맨먼스 중에서 최대값만 취함
-        HashMap<Task, TaskNode> taskNodeGraphMap = new HashMap<Task, TaskNode>();
-        ArrayList<TaskNode> taskNodeList = kosaraju(tasks, taskNodeGraphMap, false);
-        var result = -1;
-
-        for (var taskNode : taskNodeList) {
-            if (taskNode.task.getTitle().equals(task)) {
-                result = taskNode.getMinDuration();
-                break;
-            }
-
-            for (var nextTaskNode : taskNode.nextTaskNodeList) {
-                nextTaskNode.updateMinDuration(taskNode.getMinDuration());
-            }
-        }
-
-        return result;
+//        HashMap<Task, TaskNode> taskNodeGraphMap = new HashMap<Task, TaskNode>();
+//        ArrayList<TaskNode> taskNodeList = kosaraju(tasks, taskNodeGraphMap, false);
+//        var result = -1;
+//
+//        for (var taskNode : taskNodeList) {
+//            if (taskNode.task.getTitle().equals(task)) {
+//                result = taskNode.getMinDuration();
+//                break;
+//            }
+//
+//            for (var nextTaskNode : taskNode.nextTaskNodeList) {
+//                nextTaskNode.updateMinDuration(taskNode.getMinDuration());
+//            }
+//        }
+//
+        return -1;
     }
 
     public int findMaxBonusCount(final String task) {
@@ -80,10 +82,10 @@ public final class Project {
         return -1;
     }
 
-    public static ArrayList<TaskNode> kosaraju(final Task[] tasks,
+    public static HashMap<Task, TaskNode> kosaraju(final Task[] tasks,
                                                final HashMap<Task, TaskNode> taskNodeGraphMap,
                                                boolean includeMaintenance) {
-        ArrayList<TaskNode> result = new ArrayList<TaskNode>(tasks.length);
+        HashMap<Task, TaskNode> result = new HashMap<Task, TaskNode>();
 
         if (tasks.length == 0)
             return result;
@@ -132,16 +134,16 @@ public final class Project {
             visit.setValue(false);
         }
 
-        var sccList = new ArrayList<TaskNode>();
+        var sccHashMap = new HashMap<Task, TaskNode>();
         for (int i = dfsTaskNodeList.size() - 1; i >= 0; --i) {
             if (visitDFSMap.get(dfsTaskNodeList.get(i))) continue;
-            dfsTRecursive(dfsTaskNodeList.get(i), sccList, taskNodeGraphMap, visitDFSMap, false);
+            dfsTRecursive(dfsTaskNodeList.get(i), sccHashMap, taskNodeGraphMap, visitDFSMap, false);
         }
 
-        for (int i = 0; i < sccList.size(); ++i) {
+        for (var taskNode : sccHashMap.entrySet()) {
             if (!includeMaintenance)
-                if (sccList.get(i).isScc) continue;
-            result.add(sccList.get(i));
+                if (taskNode.getValue().isScc) continue;
+            result.put(taskNode.getKey(), taskNode.getValue());
         }
         return result;
     }
@@ -161,7 +163,7 @@ public final class Project {
     }
 
     private static void dfsTRecursive(final TaskNode taskNode,
-                                      final ArrayList<TaskNode> sccList,
+                                      final HashMap<Task, TaskNode> sccHashMap,
                                       final HashMap<Task, TaskNode> taskNodeGraphMap,
                                       final HashMap<TaskNode, Boolean> visitDFSMap,
                                       boolean isSccStart) {
@@ -175,13 +177,13 @@ public final class Project {
                 taskNode.isScc = true;
                 beforeTaskNode.isScc = true;
                 if (!isSccStart) {
-                    sccList.add(taskNode);
-                    dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccList, taskNodeGraphMap, visitDFSMap, true);
+                    sccHashMap.put(taskNode.task, taskNode);
+                    dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccHashMap, taskNodeGraphMap, visitDFSMap, true);
                     return;
                 }
-                dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccList, taskNodeGraphMap, visitDFSMap, true);
+                dfsTRecursive(taskNodeGraphMap.get(beforeTask), sccHashMap, taskNodeGraphMap, visitDFSMap, true);
             }
         }
-        sccList.add(taskNode);
+        sccHashMap.put(taskNode.task, taskNode);
     }
 }
