@@ -13,20 +13,23 @@ public final class Project {
     //PriorityQueue
     //Hashmap
     private Task[] tasks;
+    HashMap<Task, TaskNode> taskNodeGraphMap;
+    private HashMap<Task, TaskNode> includeMaintenanceSccHashMap;
+    private HashMap<Task, TaskNode> nonIncludeMaintenanceSccHashMap;
 
     public Project(final Task[] tasks) {
         this.tasks = tasks;
+        taskNodeGraphMap = new HashMap<Task, TaskNode>();
+        nonIncludeMaintenanceSccHashMap = kosaraju(tasks, taskNodeGraphMap, false);
+        includeMaintenanceSccHashMap = kosaraju(tasks, taskNodeGraphMap, true);
     }
 
     public int findTotalManMonths(final String task) {
-        // 코사라주 돌리면서 순환 scc를 제외하고 estimate 저장해서 다음 노드에 넘겨주기. 해당 노드가  맨먼스 반환
-        HashMap<Task, TaskNode> taskNodeGraphMap = new HashMap<Task, TaskNode>();
         HashMap<Task, TaskNode> visitTaskNodeHashMap = new HashMap<Task, TaskNode>();
-        HashMap<Task, TaskNode> sccTaskNodeHashMap = kosaraju(tasks, taskNodeGraphMap, false);
         var result = 0;
 
         TaskNode targetTaskNode = null;
-        for (var taskNodePair : sccTaskNodeHashMap.entrySet()) {
+        for (var taskNodePair : nonIncludeMaintenanceSccHashMap.entrySet()) {
             if (taskNodePair.getKey().getTitle().equals(task)) {
                 targetTaskNode = taskNodePair.getValue();
             }
@@ -36,7 +39,7 @@ public final class Project {
             return result;
         }
 
-        result = dfsFindTotalManMonths(targetTaskNode.task, visitTaskNodeHashMap, sccTaskNodeHashMap);
+        result = dfsFindTotalManMonths(targetTaskNode.task, visitTaskNodeHashMap, nonIncludeMaintenanceSccHashMap);
 
         return result;
     }
@@ -82,9 +85,9 @@ public final class Project {
         return -1;
     }
 
-    public static HashMap<Task, TaskNode> kosaraju(final Task[] tasks,
-                                               final HashMap<Task, TaskNode> taskNodeGraphMap,
-                                               boolean includeMaintenance) {
+    public HashMap<Task, TaskNode> kosaraju(final Task[] tasks,
+                                                   final HashMap<Task, TaskNode> taskNodeGraphMap,
+                                                   boolean includeMaintenance) {
         HashMap<Task, TaskNode> result = new HashMap<Task, TaskNode>();
 
         if (tasks.length == 0)
@@ -95,22 +98,24 @@ public final class Project {
         ArrayList<TaskNode> dfsTaskNodeList = new ArrayList<>(tasks.length);
 
         for (int i = 0; i < tasks.length; ++i) {
+            TaskNode newTaskNode;
             if (!taskNodeGraphMap.containsKey(tasks[i])) {
-                TaskNode newTaskNode = new TaskNode(tasks[i]);
+                newTaskNode = new TaskNode(tasks[i]);
                 taskNodeGraphMap.put(tasks[i], newTaskNode);
-                visitDFSMap.put(newTaskNode, false);
+            } else {
+                newTaskNode = taskNodeGraphMap.get(tasks[i]);
             }
+            visitDFSMap.put(newTaskNode, false);
 
             for (var predecessor : tasks[i].getPredecessors()) {
                 TaskNode predecessorTaskNode;
                 if (!taskNodeGraphMap.containsKey(predecessor)) {
                     predecessorTaskNode = new TaskNode(predecessor);
                     taskNodeGraphMap.put(predecessor, predecessorTaskNode);
-                    visitDFSMap.put(predecessorTaskNode, false);
                 } else {
                     predecessorTaskNode = taskNodeGraphMap.get(predecessor);
                 }
-
+                visitDFSMap.put(predecessorTaskNode, false);
                 predecessorTaskNode.nextTaskNodeList.add(taskNodeGraphMap.get(tasks[i]));
             }
         }
@@ -148,7 +153,7 @@ public final class Project {
         return result;
     }
 
-    private static void dfsRecursive(final TaskNode taskNode,
+    private void dfsRecursive(final TaskNode taskNode,
                                      final ArrayList<TaskNode> dfsTaskList,
                                      final HashMap<Task, TaskNode> taskNodeGraphMap,
                                      final HashMap<TaskNode, Boolean> visitDFSMap) {
@@ -162,7 +167,7 @@ public final class Project {
         dfsTaskList.add(taskNode);
     }
 
-    private static void dfsTRecursive(final TaskNode taskNode,
+    private void dfsTRecursive(final TaskNode taskNode,
                                       final HashMap<Task, TaskNode> sccHashMap,
                                       final HashMap<Task, TaskNode> taskNodeGraphMap,
                                       final HashMap<TaskNode, Boolean> visitDFSMap,
