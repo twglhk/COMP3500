@@ -13,47 +13,36 @@ public final class Project {
     //PriorityQueue
     //Hashmap
     private Task[] tasks;
-    HashMap<Task, TaskNode> taskNodeGraphMap;
+    HashMap<String, Task> taskNodeGraphMap;
     private HashMap<Task, TaskNode> includeMaintenanceSccHashMap;
     private HashMap<Task, TaskNode> nonIncludeMaintenanceSccHashMap;
 
     public Project(final Task[] tasks) {
         this.tasks = tasks;
-        taskNodeGraphMap = new HashMap<Task, TaskNode>();
-        nonIncludeMaintenanceSccHashMap = kosaraju(tasks, taskNodeGraphMap, false);
-        includeMaintenanceSccHashMap = kosaraju(tasks, taskNodeGraphMap, true);
+        taskNodeGraphMap = new HashMap<String, Task>();
+        for (var task : tasks) {
+            taskNodeGraphMap.put(task.getTitle(), task);
+        }
     }
 
     public int findTotalManMonths(final String task) {
-        HashMap<Task, TaskNode> visitTaskNodeHashMap = new HashMap<Task, TaskNode>();
+        HashMap<String, Task> visitTaskNodeHashMap = new HashMap<String, Task>();
         var result = 0;
-
-        TaskNode targetTaskNode = null;
-        for (var taskNodePair : nonIncludeMaintenanceSccHashMap.entrySet()) {
-            if (taskNodePair.getKey().getTitle().equals(task)) {
-                targetTaskNode = taskNodePair.getValue();
-            }
-        }
-
-        if (targetTaskNode == null) {
-            return result;
-        }
-
-        result = dfsFindTotalManMonths(targetTaskNode.task, visitTaskNodeHashMap, nonIncludeMaintenanceSccHashMap);
-
+        result = dfsFindTotalManMonths(task, visitTaskNodeHashMap);
         return result;
     }
 
-    private int dfsFindTotalManMonths(Task task,
-                                      HashMap<Task, TaskNode> visitTaskNodeHashMap,
-                                      HashMap<Task, TaskNode> sccTaskNodeHashMap) {
+    private int dfsFindTotalManMonths(String taskTitle,
+                                      HashMap<String, Task> visitTaskNodeHashMap) {
         var result = 0;
-        if (!sccTaskNodeHashMap.containsKey(task)) return result;
-        if (visitTaskNodeHashMap.containsKey(task)) return result;
-        visitTaskNodeHashMap.put(task, sccTaskNodeHashMap.get(task));
+        if (visitTaskNodeHashMap.containsKey(taskTitle))
+            return result;
+
+        var task = taskNodeGraphMap.get(taskTitle);
+        visitTaskNodeHashMap.put(taskTitle, task);
 
         for (var predecessorTask : task.getPredecessors()) {
-            result += dfsFindTotalManMonths(predecessorTask, visitTaskNodeHashMap, sccTaskNodeHashMap);
+            result += dfsFindTotalManMonths(predecessorTask.getTitle(), visitTaskNodeHashMap);
         }
         return result + task.getEstimate();
     }
@@ -86,8 +75,8 @@ public final class Project {
     }
 
     public HashMap<Task, TaskNode> kosaraju(final Task[] tasks,
-                                                   final HashMap<Task, TaskNode> taskNodeGraphMap,
-                                                   boolean includeMaintenance) {
+                                            final HashMap<Task, TaskNode> taskNodeGraphMap,
+                                            boolean includeMaintenance) {
         HashMap<Task, TaskNode> result = new HashMap<Task, TaskNode>();
 
         if (tasks.length == 0)
@@ -154,9 +143,9 @@ public final class Project {
     }
 
     private void dfsRecursive(final TaskNode taskNode,
-                                     final ArrayList<TaskNode> dfsTaskList,
-                                     final HashMap<Task, TaskNode> taskNodeGraphMap,
-                                     final HashMap<TaskNode, Boolean> visitDFSMap) {
+                              final ArrayList<TaskNode> dfsTaskList,
+                              final HashMap<Task, TaskNode> taskNodeGraphMap,
+                              final HashMap<TaskNode, Boolean> visitDFSMap) {
         if (visitDFSMap.get(taskNode))
             return;
 
@@ -168,10 +157,10 @@ public final class Project {
     }
 
     private void dfsTRecursive(final TaskNode taskNode,
-                                      final HashMap<Task, TaskNode> sccHashMap,
-                                      final HashMap<Task, TaskNode> taskNodeGraphMap,
-                                      final HashMap<TaskNode, Boolean> visitDFSMap,
-                                      boolean isSccStart) {
+                               final HashMap<Task, TaskNode> sccHashMap,
+                               final HashMap<Task, TaskNode> taskNodeGraphMap,
+                               final HashMap<TaskNode, Boolean> visitDFSMap,
+                               boolean isSccStart) {
 
         visitDFSMap.put(taskNode, true);
         for (var beforeTask : taskNode.task.getPredecessors()) {
